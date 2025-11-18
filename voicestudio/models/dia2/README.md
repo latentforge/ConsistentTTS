@@ -10,6 +10,11 @@ The model does not need the entire text to produce the audio, and can start gene
 
 We provide model checkpoints (1B, 2B) and inference code to accelerate research. The model only supports up to 2 minutes of generation in English.
 
+## Upcoming
+
+- Dia2 TTS Server: Real streaming support
+- Sori: Dia2-powered speech-to-speech engine written in Rust
+
 ## Quickstart
 
 > **Requirement** — install [uv](https://docs.astral.sh/uv/) and use CUDA 12.8+
@@ -29,7 +34,7 @@ We provide model checkpoints (1B, 2B) and inference code to accelerate research.
      --cuda-graph --verbose \
      output.wav
    ```
-   The first run downloads weights/tokenizer/Mimi.
+   The first run downloads weights/tokenizer/Mimi. The CLI auto-selects CUDA when available (otherwise CPU) and defaults to bfloat16 precision—override with `--device` / `--dtype` if needed.
 4. **Conditional Generation (optional):**
    ```bash
    uv run -m dia2.cli \
