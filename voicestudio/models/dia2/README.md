@@ -4,6 +4,8 @@
   <a href="https://github.com/nari-labs/dia2/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge"></a>
 </div>
 
+![Header](header.gif)
+
 **Dia2** is a **streaming dialogue TTS model** created by Nari Labs.
 
 The model does not need the entire text to produce the audio, and can start generating as the first few words are given as input. You can condition the output on audio, enabling natural conversations in realtime.
