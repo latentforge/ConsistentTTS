@@ -16,6 +16,7 @@
 Dia is a 1.6B parameter text to speech model created by Nari Labs.
 
 **UPDATE 🤗(06/27)**: Dia is now available through [Hugging Face Transformers](https://github.com/huggingface/transformers)!
+
 **UPDATE 🚀(11/19)**: Dia2 is released on Github and HuggingFace [link](https://github.com/nari-labs/dia2)!
 
 Dia **directly generates highly realistic dialogue from a transcript**. You can condition the output on audio, enabling emotion and tone control. The model can also produce nonverbal communications like laughter, coughing, clearing throat, etc.
