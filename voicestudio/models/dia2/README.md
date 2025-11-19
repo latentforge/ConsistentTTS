@@ -1,10 +1,11 @@
+![Banner](banner.gif)
+
 <div align="center">
   <a href="https://huggingface.co/nari-labs/Dia2-2B"><img src="https://img.shields.io/badge/HF%20Repo-Dia2--2B-orange?style=for-the-badge"></a>
   <a href="https://discord.gg/bJq6vjRRKv"><img src="https://img.shields.io/badge/Discord-Join%20Chat-7289DA?logo=discord&style=for-the-badge"></a>
   <a href="https://github.com/nari-labs/dia2/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge"></a>
 </div>
 
-![Banner](banner.gif)
 
 **Dia2** is a **streaming dialogue TTS model** created by Nari Labs.
 
