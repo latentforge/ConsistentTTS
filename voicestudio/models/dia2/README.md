@@ -4,13 +4,15 @@
   <a href="https://github.com/nari-labs/dia2/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge"></a>
 </div>
 
-![Header](header.gif)
+![Banner](banner.gif)
 
 **Dia2** is a **streaming dialogue TTS model** created by Nari Labs.
 
 The model does not need the entire text to produce the audio, and can start generating as the first few words are given as input. You can condition the output on audio, enabling natural conversations in realtime.
 
 We provide model checkpoints (1B, 2B) and inference code to accelerate research. The model only supports up to 2 minutes of generation in English.
+
+⚠️ Quality and voices vary per generation, as the model is not fine-tuned on a specific voice. Use with prefix or fine-tune in order to obtain stable output.
 
 ## Upcoming
 
@@ -32,23 +34,25 @@ We provide model checkpoints (1B, 2B) and inference code to accelerate research.
    uv run -m dia2.cli \
      --hf nari-labs/Dia2-2B \
      --input input.txt \
-     --cfg 2.0 --temperature 0.8 \
+     --cfg 6.0 --temperature 0.8 \
      --cuda-graph --verbose \
      output.wav
    ```
    The first run downloads weights/tokenizer/Mimi. The CLI auto-selects CUDA when available (otherwise CPU) and defaults to bfloat16 precision—override with `--device` / `--dtype` if needed.
-4. **Conditional Generation (optional):**
+4. **Conditional Generation (recommended for stable use):**
    ```bash
    uv run -m dia2.cli \
      --hf nari-labs/Dia2-2B \
      --input input.txt \
-     --prefix-speaker-1 prefix_speaker1.wav \
-     --prefix-speaker-2 prefix_speaker2.wav \
+     --prefix-speaker-1 example_prefix1.wav \
+     --prefix-speaker-2 example_prefix2.wav \
      --cuda-graph --verbose \
      output_conditioned.wav
    ```
    Condition the generation on previous conversational context in order to generate natural output for your speech-to-speech system. For example, place the voice of your assistant as prefix speaker 1, place user's audio input as prefix speaker 2, and generate the response to user's input.
-5. **Gradio for Easy Usage**
+
+   Whisper is used to transcribe each prefix file, which takes additional time. We include example prefix files as `example_prefix1.wav` and `example_prefix2.wav` (both files are output created by the model).
+6. **Gradio for Easy Usage**
    ```bash
    uv run gradio_app.py
    ```
