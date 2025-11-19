@@ -36,18 +36,26 @@ def _concat_script(turn_count: int, turn_values: List[str]) -> str:
     return "\n".join(lines)
 
 
-EXAMPLES: dict[str, List[str]] = {
-    "Intro": [
-        "Hello Dia2 fans! Today we're unveiling the new open TTS model.",
-        "Sounds exciting. Can you show a sample right now?",
-        "Absolutely. (laughs) Just press generate.",
-    ],
-    "Customer Support": [
-        "Thanks for calling. How can I help you today?",
-        "My parcel never arrived and it's been two weeks.",
-        "I'm sorry about that. Let me check your tracking number.",
-        "Appreciate it. I really need that package soon.",
-    ],
+EXAMPLES: dict[str, dict[str, List[str] | str | None]] = {
+    "Intro": {
+        "turns": [
+            "Hello Dia2 fans! Today we're unveiling the new open TTS model.",
+            "Sounds exciting. Can you show a sample right now?",
+            "Absolutely. (laughs) Just press generate.",
+        ],
+        "voice_s1": "example_prefix1.wav",
+        "voice_s2": "example_prefix2.wav",
+    },
+    "Customer Support": {
+        "turns": [
+            "Thanks for calling. How can I help you today?",
+            "My parcel never arrived and it's been two weeks.",
+            "I'm sorry about that. Let me check your tracking number.",
+            "Appreciate it. I really need that package soon.",
+        ],
+        "voice_s1": "example_prefix1.wav",
+        "voice_s2": "example_prefix2.wav",
+    },
 }
 
 
@@ -68,15 +76,18 @@ def _remove_turn(count: int):
 def _load_example(name: str, count: int):
     data = EXAMPLES.get(name)
     if not data:
-        return (count, *_apply_turn_visibility(count))
-    new_count = min(len(data), MAX_TURNS)
+        return (count, *_apply_turn_visibility(count), None, None)
+    turns = data.get("turns", [])
+    voice_s1_path = data.get("voice_s1")
+    voice_s2_path = data.get("voice_s2")
+    new_count = min(len(turns), MAX_TURNS)
     updates: List[gr.Update] = []
     for idx in range(MAX_TURNS):
         if idx < new_count:
-            updates.append(gr.update(value=data[idx], visible=True))
+            updates.append(gr.update(value=turns[idx], visible=True))
         else:
             updates.append(gr.update(value="", visible=idx < INITIAL_TURNS))
-    return (new_count, *updates)
+    return (new_count, *updates, voice_s1_path, voice_s2_path)
 
 
 def _prepare_prefix(file_path: str | None) -> str | None:
@@ -223,7 +234,7 @@ Compose dialogue, attach optional voice prompts, and generate audio (CUDA graphs
         example_dropdown.change(
             lambda name, c: _load_example(name, c),
             inputs=[example_dropdown, turn_state],
-            outputs=[turn_state, *controls],
+            outputs=[turn_state, *controls, voice_s1, voice_s2],
         )
 
         generate_btn.click(
