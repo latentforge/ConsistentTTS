@@ -16,14 +16,9 @@ We provide model checkpoints (1B, 2B) and inference code to accelerate research.
 
 ## Upcoming
 
+- Bonsai (JAX) implementation
 - Dia2 TTS Server: Real streaming support
 - Sori: Dia2-powered speech-to-speech engine written in Rust
-
-## Examples
-
-<audio controls src="https://huggingface.co/nari-labs/Dia2-2B/resolve/main/example_1.wav"></audio>
-
-<audio controls src="https://huggingface.co/nari-labs/Dia2-2B/resolve/main/example_2.wav"></audio>
 
 ## Quickstart
 
