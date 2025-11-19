@@ -15,6 +15,8 @@ We provide model checkpoints (1B, 2B) and inference code to accelerate research.
 
 ⚠️ Quality and voices vary per generation, as the model is not fine-tuned on a specific voice. Use with prefix or fine-tune in order to obtain stable output.
 
+Try it now on Hugging Face [Spaces](https://huggingface.co/spaces/nari-labs/Dia2-2B)
+
 ## Upcoming
 
 - Bonsai (JAX) implementation
