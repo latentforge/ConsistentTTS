@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import torch
 
-
+@torch.jit.script
 def sample_token(
     logits: torch.Tensor,
-    *,
     temp: float,
     top_k: int = 0,
 ) -> torch.Tensor:
@@ -33,5 +32,5 @@ def sample_token(
         picks = torch.gather(indices, dim=-1, index=draws)
     else:
         picks = torch.multinomial(flat, num_samples=1)
-    picks = picks.reshape(*probs.shape[:-1], 1)
+    picks = picks.reshape([i for i in probs.shape[:-1]] + [1])
     return picks

@@ -1,16 +1,23 @@
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
-from typing import Optional, Tuple, Union, List
+from typing import Optional, Sequence, Tuple
 
 import torch
 from torch import nn
 import torch.nn.functional as F
 
+from dia2.config import DiaConfig
+
 
 class RotaryEmbedding(nn.Module):
-    def __init__(self, head_dim: int, min_timescale: int, max_timescale: int):
+    def __init__(
+      self,
+      head_dim: int,
+      min_timescale: int,
+      max_timescale: int,
+      device: Optional[torch.device] = None,
+    ):
         super().__init__()
         if head_dim % 2 != 0:
             raise ValueError("RoPE dimension must be even")
@@ -18,7 +25,7 @@ class RotaryEmbedding(nn.Module):
         fraction = (2.0 * torch.arange(0, half_dim)) / head_dim
         timescale = min_timescale * (max_timescale / min_timescale) ** fraction
         inv_freq = 1.0 / timescale
-        self.register_buffer("inv_freq", inv_freq.to(torch.float32), persistent=False)
+        self.register_buffer("inv_freq", inv_freq.to(dtype=torch.float32, device=device), persistent=False)
 
     def forward(self, x: torch.Tensor, position_ids: torch.Tensor) -> torch.Tensor:
         pos = position_ids.to(self.inv_freq.dtype)
@@ -66,7 +73,13 @@ class AttentionShape:
 class Attention(nn.Module):
     """Byte-for-byte port of dia_v2 Attention.forward_incremental."""
 
-    def __init__(self, config: DiaConfig, dim: int, compute_dtype: torch.dtype) -> None:
+    def __init__(
+        self,
+        config: DiaConfig,
+        dim: int,
+        compute_dtype: torch.dtype,
+        device: Optional[torch.device] = None,
+    ):
         super().__init__()
         dec = config.model.decoder
         self.num_query_heads = dec.gqa_query_heads
@@ -74,17 +87,18 @@ class Attention(nn.Module):
         self.head_dim = dec.gqa_head_dim
         self.num_gqa_groups = self.num_query_heads // max(self.num_kv_heads, 1)
         self.compute_dtype = compute_dtype
-        self.q_proj = nn.Linear(dim, self.num_query_heads * self.head_dim, bias=False)
-        self.k_proj = nn.Linear(dim, self.num_kv_heads * self.head_dim, bias=False)
-        self.v_proj = nn.Linear(dim, self.num_kv_heads * self.head_dim, bias=False)
-        self.o_proj = nn.Linear(self.num_query_heads * self.head_dim, dim, bias=False)
+        self.q_proj = nn.Linear(dim, self.num_query_heads * self.head_dim, bias=False, device=device)
+        self.k_proj = nn.Linear(dim, self.num_kv_heads * self.head_dim, bias=False, device=device)
+        self.v_proj = nn.Linear(dim, self.num_kv_heads * self.head_dim, bias=False, device=device)
+        self.o_proj = nn.Linear(self.num_query_heads * self.head_dim, dim, bias=False, device=device)
         eps = config.model.normalization_layer_epsilon
-        self.q_norm = nn.RMSNorm(self.head_dim, eps=eps, dtype=torch.float32)
-        self.k_norm = nn.RMSNorm(self.head_dim, eps=eps, dtype=torch.float32)
+        self.q_norm = nn.RMSNorm(self.head_dim, eps=eps, dtype=torch.float32, device=device)
+        self.k_norm = nn.RMSNorm(self.head_dim, eps=eps, dtype=torch.float32, device=device)
         self.rotary = RotaryEmbedding(
             self.head_dim,
             config.model.rope_min_timescale,
             config.model.rope_max_timescale,
+            device=device,
         )
 
     def forward_incremental(
@@ -153,14 +167,16 @@ class MultiStreamEmbedding(nn.Module):
         *,
         output_dtype: torch.dtype,
         low_rank_dim: Optional[int] = None,
+        device: Optional[torch.device] = None,
     ) -> None:
         super().__init__()
         self.pad_id = pad_id
         self.dtype = output_dtype
         base_dim = low_rank_dim if low_rank_dim is not None else dim
-        self.embedding = nn.Embedding(vocab_size, base_dim)
-        self.main_proj = nn.Linear(base_dim, dim, bias=False)
-        self.second_proj = nn.Linear(base_dim, dim, bias=False)
+        self.embedding = nn.Embedding(vocab_size, base_dim, device=device)
+        self.main_proj = nn.Linear(base_dim, dim, bias=False, device=device)
+        self.second_proj = nn.Linear(base_dim, dim, bias=False, device=device)
+
 
     def forward(self, main_inputs: torch.Tensor, second_inputs: torch.Tensor) -> torch.Tensor:
         main_inputs = main_inputs.long()
@@ -189,6 +205,7 @@ class Mlp(nn.Module):
         hidden: int,
         compute_dtype: torch.dtype,
         activations: Sequence[str],
+        device: Optional[torch.device] = None,
     ) -> None:
         super().__init__()
         if len(activations) != 2:
@@ -196,9 +213,10 @@ class Mlp(nn.Module):
         self.dtype = compute_dtype
         self.hidden = hidden
         self.branch_count = len(activations)
-        self.wi = nn.Linear(dim, self.branch_count * hidden, bias=False)
-        self.wo = nn.Linear(hidden, dim, bias=False)
+        self.wi = nn.Linear(dim, self.branch_count * hidden, bias=False, device=device)
+        self.wo = nn.Linear(hidden, dim, bias=False, device=device)
         self.activation_fns = [_get_activation(activations[0]), _get_activation(activations[1])]
+
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         proj = self.wi(x.to(torch.float32))
