@@ -1,8 +1,6 @@
 <div align="center">
 
-<p style="font-size: 30px; font-weight: bold; margin: 0;">
-    Chroma-4B: A Real-Time End-to-End Spoken Dialogue Model with Customized Voice Cloning
-</p>
+# Chroma-4B: A Real-Time End-to-End Spoken Dialogue Model with Customized Voice Cloning
 
 [![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://github.com/FlashLabs-AI-Corp/FlashLabs-Chroma)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-Collection-orange?logo=huggingface)](https://huggingface.co/FlashLabs/Chroma-4B)
