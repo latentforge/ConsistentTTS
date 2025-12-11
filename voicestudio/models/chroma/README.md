@@ -1,18 +1,3 @@
----
-license: apache-2.0
-library_name: transformers
-tags:
-- chroma
-- audio
-- multimodal
-- text-to-speech
-- speech-to-speech
-- voice-clone
-inference: false
-language:
-- en
----
-
 <div align="center">
 
 <p style="font-size: 28px; font-weight: bold; margin: 0;">
