@@ -8,33 +8,9 @@
 [![Playground](https://img.shields.io/badge/Chroma-Playground-9C276A)](https://chroma.flashintel.ai)
 </div>
 
-<div style="display: flex; justify-content: center; margin: 2rem 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
-  <div style="display: flex; align-items: center; gap: 18px; font-size: 1.25rem;">
-    <svg width="80" height="50" viewBox="0 0 48 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.5));">
-      <path
-        d="M14 21C10.134 21 7 17.866 7 14C7 10.134 10.134 7 14 7C17.5 7 20 9 21.5 11L26.5 17C28 19 30.5 21 34 21C37.866 21 41 17.866 41 14C41 10.134 37.866 7 34 7C30.5 7 28 9 26.5 11L21.5 17C20 19 17.5 21 14 21Z"
-        stroke="url(#apple_chroma_gradient)"
-        stroke-width="3.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <defs>
-        <linearGradient id="apple_chroma_gradient" x1="7" y1="21" x2="41" y2="7" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#A855F7" />
-          <stop offset="0.5" stop-color="#EC4899" />
-          <stop offset="1" stop-color="#F97316" />
-        </linearGradient>
-      </defs>
-    </svg>
-    <div style="display: flex; align-items: baseline; gap: 6px;">
-      <span style="background: linear-gradient(to right, #A855F7, #EC4899, #F97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 2.1rem; letter-spacing: -0.5px; white-space: nowrap;">
-        Chroma
-      </span>
-      <span style="color: #94a3b8; font-size: 1.15rem; font-weight: 500; letter-spacing: 0.5px; white-space: nowrap;">
-        by <span style="color: #e2e8f0;">Flash</span><span style="color: #60a5fa;">Labs</span>
-      </span>
-    </div>
-  </div>
+<br>
+<div align="center">
+<img src="figures/logo.svg" alt="FlashLabs Chroma Logo" width="400px"/>
 </div>
 
 ## Model Description
