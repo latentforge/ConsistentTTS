@@ -1,6 +1,6 @@
 <div align="center">
 
-# Chroma-4B: A Real-Time End-to-End Spoken Dialogue Model with Personalized Voice Cloning
+# FlashLabs Chroma 1.0: A Real-Time End-to-End Spoken Dialogue Model with Personalized Voice Cloning
 
 [![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://github.com/FlashLabs-AI-Corp/FlashLabs-Chroma)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-Collection-orange?logo=huggingface)](https://huggingface.co/FlashLabs/Chroma-4B)
@@ -15,7 +15,7 @@
 
 ## Model Description
 
-**Chroma-4B** is an advanced multimodal model developed by **[FlashLabs](https://flashlabs.ai)**. It is designed to understand and generate content across multiple modalities, including text and audio. As a virtual human model, Chroma possesses the ability to process auditory inputs and respond with both text and synthesized speech, enabling natural voice interactions.
+**Chroma 1.0** is an advanced multimodal model developed by **[FlashLabs](https://flashlabs.ai)**. It is designed to understand and generate content across multiple modalities, including text and audio. As a virtual human model, Chroma possesses the ability to process auditory inputs and respond with both text and synthesized speech, enabling natural voice interactions.
 
 - **Model Type:** Multimodal Causal Language Model
 - **Developed by:** FlashLabs
@@ -34,7 +34,7 @@
 
 ## Capabilities
 
-Chroma-4B is capable of:
+Chroma 1.0 is capable of:
 - **Speech Understanding:** Processing user audio input directly.
 - **Multimodal Generation:** Generating coherent text and speech responses simultaneously.
 - **Voice Cloning:** utilizing reference audio prompts to guide speech generation style.
