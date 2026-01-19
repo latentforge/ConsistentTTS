@@ -8,7 +8,7 @@
 <div align="center">
 <img src="figures/logo.svg" alt="FlashLabs Chroma Logo" width="400px"/>
 
-<h3>🚀 Get Started with Chroma</h3>
+<h3>🚀 Get Started with <a href="https://www.flashlabs.ai/flashai-voice-agents">Voice Agents</a>!</h3>
 
 <p><strong>Production-ready voice AI solutions</strong> powered by Chroma | <strong>Open-source model</strong> for developers & researchers</p>
 
