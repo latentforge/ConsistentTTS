@@ -139,14 +139,14 @@ Audio(audio_values[0].cpu().detach().numpy(), rate=24_000)
 If you use Chroma in your research, please cite:
 
 ```bibtex
-@misc{xxx,
+@misc{chen2026flashlabschroma10realtime,
       title={FlashLabs Chroma 1.0: A Real-Time End-to-End Spoken Dialogue Model with Personalized Voice Cloning}, 
-      author={Tairan Chen and Tairan Chen and Kai Shen and Zhenghua Bao and Chris Zhang and Man Yuan and Yi Shi},
-      year={2025},
-      eprint={xxx},
+      author={Tanyu Chen and Tairan Chen and Kai Shen and Zhenghua Bao and Zhihui Zhang and Man Yuan and Yi Shi},
+      year={2026},
+      eprint={2601.11141},
       archivePrefix={arXiv},
-      primaryClass={cs.Sound},
-      url={https://arxiv.org/abs/xxx}, 
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2601.11141}, 
 }
 ```
 
