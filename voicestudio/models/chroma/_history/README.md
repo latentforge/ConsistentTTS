@@ -48,10 +48,24 @@ Chroma 1.0 is capable of:
 
 ### Installation
 
-Ensure you have the necessary dependencies installed. You may need the latest versions of `transformers` and `torch`.
+#### Requirements
+- Python 3.11 or higher
+- CUDA 12.6 or compatible version (for GPU support)
+
+#### Quick Install
 
 ```bash
-pip install transformers torch
+# Clone the repository
+git clone https://github.com/FlashLabs-AI/Chroma.git
+cd Chroma
+
+# Optional: Create a new conda environment with Python 3.11
+conda create -n chroma python=3.11 -y
+conda activate chroma
+
+# Install dependencies in the correct order
+pip install -r requirements.txt
+
 ```
 
 ### Loading the Model
@@ -145,6 +159,36 @@ audio_values = model.codec_model.decode(output.permute(0, 2, 1)).audio_values
 
 # Save or play audio (e.g., in Jupyter)
 Audio(audio_values[0].cpu().detach().numpy(), rate=24_000)
+```
+
+## Troubleshooting
+
+### Common Issues
+
+#### TypeError: argument of type 'NoneType' is not iterable
+
+**Problem:** This error occurs when loading the processor if `torchvision` is not properly detected during `transformers` module initialization.
+
+**Solution:**
+1. Ensure you install packages in the correct order (PyTorch/torchvision before transformers)
+2. If you already installed them, reinstall in the correct order:
+   ```bash
+   pip uninstall transformers torchvision torch -y
+   pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+   pip install transformers==5.0.0rc0
+   ```
+3. Restart your Python kernel/session after reinstalling
+
+#### CUDA out of memory
+
+**Solution:** Use `device_map="auto"` when loading the model, or specify GPU device explicitly:
+```python
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype=torch.bfloat16  # Use bfloat16 to reduce memory usage
+)
 ```
 
 ## Citation
