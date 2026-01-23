@@ -93,9 +93,7 @@ MUSICGEN_PRETRAINED_MODEL_ARCHIVE_LIST = [
     # See all ParlerTTS models at https://huggingface.co/models?filter=parler_tts
 ]
 
-
 NEED_SETUP_CACHE_CLASSES_MAPPING = {"static": StaticCache, "sliding_window": SlidingWindowCache}
-
 
 
 @dataclass
@@ -158,6 +156,7 @@ class ParlerTTSSeq2SeqLMOutput(ModelOutput):
     encoder_attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
     per_codebook_losses: Optional[List[torch.FloatTensor]] = None
 
+
 @dataclass
 class ParlerTTSCausalLMOutputWithCrossAttentions(ModelOutput):
     """
@@ -201,6 +200,7 @@ class ParlerTTSCausalLMOutputWithCrossAttentions(ModelOutput):
     attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
     cross_attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
     per_codebook_losses: Optional[List[torch.FloatTensor]] = None
+
 
 def apply_delay_pattern_mask(input_ids, decoder_pad_token_mask):
     """Apply a delay pattern mask to the decoder input ids, only preserving predictions where

@@ -3,6 +3,7 @@ from transformers.pytorch_utils import isin_mps_friendly
 import math
 import torch
 
+
 class ParlerTTSLogitsProcessor(LogitsProcessor):
     r"""This processor ensures that the delayed pattern mask constraints are respected.
 
