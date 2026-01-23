@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Modifications by LatentForge:
+# - Let this package to be installed as a dependency of voicestudio
 
 import os
 
@@ -55,12 +58,15 @@ with open(os.path.join(here, "parler_tts", "__init__.py"), encoding="utf-8") as 
         raise RuntimeError("Unable to find version string.")
 
 setuptools.setup(
-    name="parler_tts",
+    name="voicestudio-parler-tts",
     version=version,
     description="Toolkit for using and training Parler-TTS, a high-quality text-to-speech model.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
+    packages=["voicestudio._parler_tts", "voicestudio._parler_tts.dac_wrapper"],
+    package_dir={
+        "voicestudio._parler_tts": "parler_tts",
+    },
     install_requires=_deps,
     extras_require={
         "dev": _extras_dev_deps,
