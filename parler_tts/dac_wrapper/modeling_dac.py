@@ -1,3 +1,20 @@
+# coding=utf-8
+# Copyright 2024 The HuggingFace Inc. team. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Modifications by LatentForge:
+#- Replaced deprecated `torch.nn.utils.weight_norm` with `torch.nn.utils.parametrizations.weight_norm`.
 import torch
 from dac.model import DAC
 from torch import nn
@@ -143,12 +160,12 @@ class DACModel(PreTrainedModel):
 
     def forward(self, tensor):
         raise ValueError("`DACModel.forward` not implemented yet")
-    
 
     def apply_weight_norm(self):
-        weight_norm = nn.utils.weight_norm
         if hasattr(nn.utils.parametrizations, "weight_norm"):
             weight_norm = nn.utils.parametrizations.weight_norm
+        else:  # fallback for older PyTorch versions
+            weight_norm = nn.utils.weight_norm
 
         def _apply_weight_norm(module):
             if isinstance(module, nn.Conv1d) or isinstance(module, nn.ConvTranspose1d):
@@ -156,9 +173,16 @@ class DACModel(PreTrainedModel):
 
         self.apply(_apply_weight_norm)
 
-
     def remove_weight_norm(self):
         def _remove_weight_norm(module):
             if isinstance(module, nn.Conv1d) or isinstance(module, nn.ConvTranspose1d):
-                nn.utils.remove_weight_norm(module)
+                if hasattr(nn.utils.parametrizations, "remove_weight_norm"):
+                    try:
+                        nn.utils.parametrizations.remove_weight_norm(module)
+                    except (ValueError, KeyError):  # fallback for older PyTorch versions
+                        if hasattr(nn.utils, "remove_weight_norm"):
+                            nn.utils.remove_weight_norm(module)
+                else:
+                    nn.utils.remove_weight_norm(module)
+
         self.apply(_remove_weight_norm)
