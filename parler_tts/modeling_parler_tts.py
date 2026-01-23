@@ -12,6 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# Modifications by LatentForge:
+#- Updated ParlerTTS model classes to explicitly inherit from `GenerationMixin`, restoring `generate()` functionality and ensuring compatibility with Transformers v4.50+.
 """ PyTorch ParlerTTS model."""
 import copy
 import inspect
@@ -49,6 +52,7 @@ from transformers.modeling_outputs import (
     Seq2SeqLMOutput,
 )
 from transformers.modeling_utils import PreTrainedModel
+from transformers.generation import GenerationMixin
 from transformers.utils import (
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
@@ -1821,7 +1825,7 @@ class ParlerTTSModel(ParlerTTSPreTrainedModel):
     "The Parler-TTS decoder model with a language modelling head on top.",
     MUSICGEN_START_DOCSTRING,
 )
-class ParlerTTSForCausalLM(ParlerTTSPreTrainedModel):
+class ParlerTTSForCausalLM(ParlerTTSPreTrainedModel, GenerationMixin):
     def __init__(self, config: ParlerTTSDecoderConfig):
         super().__init__(config)
 
@@ -2303,7 +2307,7 @@ class ParlerTTSForCausalLM(ParlerTTSPreTrainedModel):
     "for music generation tasks with one or both of text and audio prompts.",
     MUSICGEN_START_DOCSTRING,
 )
-class ParlerTTSForConditionalGeneration(PreTrainedModel):
+class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
     config_class = ParlerTTSConfig
     base_model_prefix = "encoder_decoder"
     main_input_name = "input_ids"
@@ -2312,6 +2316,9 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel):
     _supports_sdpa = True
     _supports_cache_class = True
     _supports_static_cache = True
+    _tied_weights_keys = {
+        "text_encoder.encoder.embed_tokens.weight": "text_encoder.shared.weight"
+    }
 
     def __init__(
         self,
@@ -2435,7 +2442,10 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel):
             if module.padding_idx is not None:
                 module.weight.data[module.padding_idx].zero_()
 
-    def tie_weights(self):
+    def tie_weights(self, *args, **kwargs):
+        """Tie the weights between the input embeddings and the output embeddings."""
+        super().tie_weights(*args, **kwargs)
+
         # tie text encoder & decoder if needed
         if self.config.tie_encoder_decoder:
             # tie text encoder and decoder base model
