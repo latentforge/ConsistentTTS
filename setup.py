@@ -23,7 +23,7 @@ _deps = [
     "sentencepiece",
     "descript-audio-codec",
     "descript-audiotools @ git+https://github.com/latentforge/audiotools", # temporary fix as long as 0.7.4 is not published
-    "protobuf>=4.0.0"
+    #"protobuf>=4.0.0"
 ]
 
 _extras_dev_deps = [
