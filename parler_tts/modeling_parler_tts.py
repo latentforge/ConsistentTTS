@@ -1763,6 +1763,7 @@ class ParlerTTSModel(ParlerTTSPreTrainedModel):
         super().__init__(config)
         self.decoder = ParlerTTSDecoder(config)
         self.config = config
+
         # Initialize weights and apply final processing
         self.post_init()
 
@@ -2440,7 +2441,7 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
         audio_type = audio_encoder.config.model_type
         if audio_type in {"encodec", "dac_on_the_hub"} or (audio_type == "dac" and not is_dac_integrated_to_transformers):
             self.use_4dim_audio_codes = True 
- 
+
         # Initialize projection and embedding layers and tie text encoder and decoder weights if set accordingly
         self.post_init()
 
