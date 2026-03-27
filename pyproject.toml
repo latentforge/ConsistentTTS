@@ -38,25 +38,22 @@ dependencies = [
     "torchaudio>=2.8.0",
     "torchcodec>=0.9.1",
     "librosa>=0.11.0",
-    #"transformers>=5.0.0rc2",
-    "transformers>=4.57.3",
+    "transformers>=5.3.0",
     "hf-xet>=1.1.8",
     "tqdm>=4.67.1",
     # -----------------------------------------
     # Model Namespace Packages
     # -----------------------------------------
-    "voicestudio-parler-tts",  # Apache 2.0 License
-    "voicestudio-higgs-audio",  # Apache 2.0 License
-    "voicestudio-qwen3-tts",  # Apache 2.0 License
-    "voicestudio-chroma",  # Apache 2.0 License
-    "voicestudio-spark-tts",  # Apache 2.0 License
-    "voicestudio-cosyvoice",  # Apache 2.0 License
-    "voicestudio-f5-tts",  # MIT License
+    #"voicestudio-parler-tts",  # Apache 2.0 License
+    #"voicestudio-qwen3-tts",  # Apache 2.0 License
+    #"voicestudio-chroma",  # Apache 2.0 License
+    #"voicestudio-spark-tts",  # Apache 2.0 License
+    #"voicestudio-cosyvoice",  # Apache 2.0 License
+    #"voicestudio-f5-tts",  # MIT License
     # -----------------------------------------
     # Audio Processing Dependencies
     # -----------------------------------------
-    "descript-audiotools",  # for Parler TTS, Higgs Audio
-    "vocos",  # for F5 TTS
+    #"vocos",  # for F5 TTS
 ]
 [project.optional-dependencies]
 all = [
@@ -87,10 +84,7 @@ onnx = [  # for Qwen3-TTS, CosyVoice
     "onnxruntime>=1.18.0 ; platform_system == 'Darwin'",
     "onnx",
 ]
-# -----------------------------------------
-# Voice Studio Web
-# -----------------------------------------
-web = [
+web = [  # Voice Studio Web
     "fastapi>=0.126.0",
 ]
 
@@ -118,14 +112,6 @@ flash-attn = [
     { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp313-cp313-win_amd64.whl", marker = "python_version == '3.13' and platform_system == 'Windows'" },
     { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp314-cp314-win_amd64.whl", marker = "python_version == '3.14' and platform_system == 'Windows'" },
 ]
-voicestudio-parler-tts = { git = "https://github.com/latentforge/parler-tts", rev = "namespace" }
-voicestudio-higgs-audio = { git = "https://github.com/latentforge/higgs-audio", rev = "namespace" }
-voicestudio-qwen3-tts = { git = "https://github.com/latentforge/Qwen3-TTS", rev = "namespace" }
-voicestudio-chroma = { git = "https://github.com/latentforge/Chroma", rev = "namespace" }
-voicestudio-spark-tts = { git = "https://github.com/latentforge/Spark-TTS", rev = "namespace" }
-voicestudio-cosyvoice = { git = "https://github.com/latentforge/CosyVoice", rev = "namespace" }
-voicestudio-f5-tts = { git = "https://github.com/latentforge/f5-tts", rev = "namespace" }
-descript-audiotools = { git = "https://github.com/latentforge/audiotools" }
 vocos = { git = "https://github.com/latentforge/vocos" }
 speechbrain = { git = "https://github.com/latentforge/speechbrain", rev = "fix/support_torch2.9" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
