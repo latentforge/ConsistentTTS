@@ -33,12 +33,13 @@ from transformers.cache_utils import (
     Cache,
     DynamicCache,
     EncoderDecoderCache,
-    SlidingWindowCache,
     StaticCache,
 )
-from transformers.generation.configuration_utils import GenerationConfig, GenerationMode
-from transformers.generation.generation_parler_tts import LogitsProcessorList
+from transformers.generation.configuration_utils import (
+    GenerationConfig, GenerationMode, STATIC_CACHE_IMPLEMENTATIONS, DYNAMIC_CACHE_IMPLEMENTATIONS
+)
 from transformers.generation.stopping_criteria import StoppingCriteriaList
+from transformers.generation.logits_process import LogitsProcessorList
 from transformers.modeling_attn_mask_utils import (
     AttentionMaskConverter,
     _prepare_4d_attention_mask,
@@ -47,9 +48,7 @@ from transformers.modeling_attn_mask_utils import (
 from transformers.modeling_outputs import (
     BaseModelOutput,
     BaseModelOutputWithPastAndCrossAttentions,
-    CausalLMOutputWithCrossAttentions,
     ModelOutput,
-    Seq2SeqLMOutput,
 )
 from transformers.modeling_utils import PreTrainedModel
 from transformers.generation import GenerationMixin
@@ -58,24 +57,11 @@ from transformers.utils import (
     add_start_docstrings_to_model_forward,
     logging,
     replace_return_docstrings,
-    is_torchdynamo_compiling,
 )
 from transformers.utils.import_utils import is_flash_attn_2_available, is_flash_attn_greater_or_equal_2_10
 
 from .configuration_parler_tts import ParlerTTSConfig, ParlerTTSDecoderConfig
-from .dac_wrapper import DACConfig, DACModel
 from .generation_parler_tts import ParlerTTSLogitsProcessor
-
-from importlib.metadata import version
-from packaging.version import Version
-
-is_dac_integrated_to_transformers = Version(version("transformers")) > Version("4.44.2dev")
-if not is_dac_integrated_to_transformers:
-    AutoConfig.register("dac", DACConfig)
-else:
-    AutoConfig.register("dac_on_the_hub", DACConfig)
-
-AutoModel.register(DACConfig, DACModel)
 
 if TYPE_CHECKING:
     from transformers.generation.streamers import BaseStreamer
@@ -96,8 +82,6 @@ MUSICGEN_PRETRAINED_MODEL_ARCHIVE_LIST = [
     "parler-tts/parler-tts-mini-v1",
     # See all ParlerTTS models at https://huggingface.co/models?filter=parler_tts
 ]
-
-NEED_SETUP_CACHE_CLASSES_MAPPING = {"static": StaticCache, "sliding_window": SlidingWindowCache}
 
 
 @dataclass
@@ -2439,7 +2423,7 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
 
         self.use_4dim_audio_codes = False
         audio_type = audio_encoder.config.model_type
-        if audio_type in {"encodec", "dac_on_the_hub"} or (audio_type == "dac" and not is_dac_integrated_to_transformers):
+        if audio_type == "encodec":
             self.use_4dim_audio_codes = True 
 
         # Initialize projection and embedding layers and tie text encoder and decoder weights if set accordingly
@@ -3282,7 +3266,12 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
 
         Returns the resulting cache object.
         """
-        cache_cls: Cache = NEED_SETUP_CACHE_CLASSES_MAPPING[cache_implementation]
+        if cache_implementation in STATIC_CACHE_IMPLEMENTATIONS:
+            cache_cls: Cache = StaticCache
+        else:
+            raise ValueError(
+                f"This model only supports " + "".join(STATIC_CACHE_IMPLEMENTATIONS) + f" cache implementations, got: {cache_implementation}"
+            )
         requires_cross_attention_cache = (
             self.config.is_encoder_decoder or model_kwargs.get("encoder_outputs") is not None
         )
@@ -3290,8 +3279,24 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
         if hasattr(self, "_cache"):
             cache_to_check = self._cache.self_attention_cache if requires_cross_attention_cache else self._cache
 
+        if hasattr(self.config, "_pre_quantization_dtype"):
+            cache_dtype = self.config._pre_quantization_dtype
+        else:
+            cache_dtype = self.dtype
+        cache_kwargs = {
+            "config": self.config.decoder,
+            "max_batch_size": max_batch_size,
+            "max_cache_len": max_cache_len,
+            "device": self.device,
+            "dtype": cache_dtype,
+        }
+
         if cache_implementation == "sliding_window":
-            max_cache_len = min(self.config.sliding_window, max_cache_len)
+            if hasattr(self.config.decoder, "sliding_window") and self.config.decoder.sliding_window is not None:
+                cache_kwargs["max_cache_len"] = min(self.config.decoder.sliding_window, max_cache_len)
+
+        if cache_implementation == "offloaded_static":
+            cache_kwargs["offloading"] = True
 
         need_new_cache = (
             not hasattr(self, "_cache")
@@ -3307,21 +3312,12 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
             )
 
         if need_new_cache:
-            if hasattr(self.config, "_pre_quantization_dtype"):
-                cache_dtype = self.config._pre_quantization_dtype
-            else:
-                cache_dtype = self.dtype
-            cache_kwargs = {
-                "config": self.config.decoder,
-                "max_batch_size": max_batch_size,
-                "max_cache_len": max_cache_len,
-                "device": self.device,
-                "dtype": cache_dtype,
-            }
             self._cache = cache_cls(**cache_kwargs)
             if requires_cross_attention_cache:
                 encoder_kwargs = cache_kwargs.copy()
                 encoder_kwargs["max_cache_len"] = model_kwargs["encoder_outputs"][0].shape[1]
+                if "offloading" in encoder_kwargs:  # offloading is not supported for cross attention cache
+                    del encoder_kwargs["offloading"]
                 config_cross_attention_cache = copy.deepcopy(self.config.decoder)
                 config_cross_attention_cache.update(
                     {"num_key_value_heads": self.config.decoder.num_cross_attention_key_value_heads}
@@ -3330,6 +3326,7 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
                 self._cache = EncoderDecoderCache(self._cache, cache_cls(**encoder_kwargs))
         else:
             self._cache.reset()
+
         return self._cache
 
     def freeze_encoders(self, freeze_text_encoder=True):
@@ -3498,8 +3495,8 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
                 "Cache object) is unsupported. Please use only one of the two."
             )
         elif generation_config.cache_implementation is not None:
-            if generation_config.cache_implementation in NEED_SETUP_CACHE_CLASSES_MAPPING:
-                if generation_config.cache_implementation == "static" and not self._supports_static_cache:
+            if generation_config.cache_implementation in STATIC_CACHE_IMPLEMENTATIONS:
+                if generation_config.cache_implementation in ("static", "offloaded_static") and not self._supports_static_cache:
                     raise ValueError(
                         "This model does not support `cache_implementation='static'`. Please check the following "
                         "issue: https://github.com/huggingface/transformers/issues/28981"
