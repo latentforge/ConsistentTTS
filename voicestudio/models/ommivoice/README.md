@@ -314,6 +314,12 @@ See [examples/](examples/) for the complete pipeline — from data preparation t
 
 ---
 
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for how to get started.
+
+---
+
 ## Discussion & Communication
 
 You can directly discuss on [GitHub Issues](https://github.com/k2-fsa/OmniVoice/issues).

@@ -89,6 +89,9 @@ constraint-dependencies = [
     "torchaudio==2.8.0",
 ]
 
+[tool.ruff.lint]
+ignore = ["F401", "E402", "F403", "F841", "E741"]
+
 [tool.hatch.build.targets.sdist]
 include = ["omnivoice"]
 
