@@ -184,7 +184,8 @@ Update this table as each model's migration lands.
 |---|---|---|
 | Qwen3-TTS | In progress | Model/config are import relays to transformers-tts. Processor subclass adds `encode`/`encode_voice_design`/`encode_custom_voice` task dispatch with `RuntimeError` on task mismatch. `encode_voice_clone` raises `NotImplementedError`: transformers-tts's `Qwen3TTSProcessor` has no reference-audio input path yet. |
 | Parler-TTS | Not started | Second in migration order. Target: use HF-registered `dac`, closest transformers lineage TBD |
-| Higgs-Audio (v2/v3) | Not started | Reference processor pattern for other audio-tokenizer models |
+| Higgs-Audio v2 | Done | Import relay to transformers-tts. Reference processor pattern for other audio-tokenizer models |
+| Higgs-Audio v3 | In progress | `bosonai/higgs-tts-3-4b`. Weights-only checkpoint (no upstream v3 code); backbone is a plain `Qwen3Model` (no dual-FFN). Reuses transformers-tts's `Qwen3Model`, `HiggsAudioV2Embeddings`, `HiggsAudioV2PreTrainedModel`, and `HiggsAudioV2TokenizerModel`; `HiggsAudioV3Model`/`ForConditionalGeneration` are new since v2's dual-FFN decoder layer does not fit. No checkpoint conversion or real-weights test run yet; the reference-audio prompt layout in `HiggsAudioV3Processor` is unverified against the real checkpoint. |
 | Chroma | In progress | Backbone/decoder/generation loop reimplemented against transformers-tts's Llama, Qwen2.5-Omni thinker, and Mimi codec classes (no full Chroma architecture exists upstream in transformers-tts to relay to). Processor subclasses `Qwen2_5OmniProcessor` to add the reference-audio voice-cloning prompt. |
 | Spark-TTS | Not started | Already vendored in `dep/Spark-TTS` |
 | Dia | Not started | Already marked "fully tested (by HF)" in old README |
