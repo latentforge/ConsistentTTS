@@ -221,7 +221,7 @@ class CosyVoiceV1LLM(CosyVoiceV1PreTrainedModel):
         seq_len = lm_input.size(1)
         attn_bias = self._causal_bias(seq_len, lm_input.dtype, device)
 
-        hidden_states, _ = self.llm(lm_input, attention_bias=attn_bias)[0], None
+        hidden_states = self.llm(lm_input, attention_bias=attn_bias).last_hidden_state
         logits = self.llm_decoder(hidden_states)
 
         loss = None
