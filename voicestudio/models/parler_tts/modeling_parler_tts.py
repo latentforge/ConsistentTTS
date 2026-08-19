@@ -1581,7 +1581,10 @@ class ParlerTTSForCausalLM(ParlerTTSPreTrainedModel, GenerationMixin):
             labels = labels.masked_fill(labels == self.config.bos_token_id, -100)
 
             # we use every codebooks token AND one single EOS at the end of each codebooks
-            mask = (input_ids.transpose(1, 2) != self.config.eos_token_id) & ((labels != -100))
+            # input_ids arrives as (bsz * num_codebooks, seq_len); reshape to (bsz, num_codebooks, seq_len)
+            # before transposing to match labels' (bsz, seq_len, num_codebooks) layout.
+            input_ids_by_codebook = input_ids.reshape(-1, self.config.num_codebooks, input_ids.shape[-1])
+            mask = (input_ids_by_codebook.transpose(1, 2) != self.config.eos_token_id) & (labels != -100)
 
             # per codebook cross-entropy
             for codebook in range(self.config.num_codebooks):
