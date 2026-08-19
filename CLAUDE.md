@@ -13,6 +13,11 @@ work progresses instead of tracking migration state only in conversation.
 
 ## Model code conventions
 
+- Every migrated model must be trainable, not inference-only. Its top-level
+  `*ForConditionalGeneration`/`*ForCausalLM` `forward()` must accept `labels` and return
+  a cross-entropy loss (the standard `transformers` pattern: `ModelOutput` with a `loss`
+  field, computed the same way the model it inherits from computes it). A model whose
+  `forward()` only supports `generate()`/inference is not a valid migration.
 - Follow `transformers` model file conventions: `modeling_<model>.py`,
   `configuration_<model>.py`, standard class inheritance from existing `transformers`
   base classes. Do not add source files that fall outside this layout.

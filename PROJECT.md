@@ -30,6 +30,14 @@ Both `dep/` and `ckpts/` are gitignored.
   default `~/.cache/huggingface` location. Pass an explicit local target, do not rely on
   `HF_HOME`/cache defaults pointing there implicitly without checking.
 
+### GPU verification
+
+The Google Colab CLI (`pip install google-colab-cli`) provisions a remote Colab
+runtime and runs scripts on it: `colab new --gpu T4 --auth oauth2` once to
+authenticate, then `colab exec -f script.py` or `colab run --gpu T4 script.py` per
+run. Use it when a migrated model needs to run on an actual GPU to verify parity with
+the original implementation.
+
 ## Migration order
 
 1. Qwen3-TTS (depends on the `transformers-tts` merge, see below)
@@ -104,6 +112,9 @@ and the vendored copy is removed from `dep/`.
 
 ## Rules for the rewritten model code
 
+- Every model must be trainable with cross-entropy loss, matching the standard
+  `transformers` convention: `forward()` accepts `labels` and returns a `loss` on the
+  output. Inference-only forward passes are not acceptable.
 - Follow `transformers` model file conventions strictly: `modeling_<model>.py`,
   `configuration_<model>.py`, standard class inheritance, etc. Do not create files that
   fall outside the `transformers` model layout.
