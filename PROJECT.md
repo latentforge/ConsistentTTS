@@ -199,7 +199,7 @@ pretrained checkpoint yet; see "Runtime-verified" for that.
 | PromptTTS++ (`prompt_tts_pp`) | Yes | No | No | `FastSpeech2Conformer`/`FastSpeech2ConformerHifiGan` from transformers-tts, conditioned via a newly-implemented BERT-based prompt encoder. `return_dict=False` tuple-indexing bug fixed. No public upstream checkpoint exists. |
 | OmniVoice | Yes | No | No | No transformers-tts lineage (closest in spirit to CSM/Moshi); modeling code is new, audio tokenizer reused from transformers-tts's `HiggsAudioV2TokenizerModel`. Training-time sample masking and reference-audio auto-transcription (ASR) not ported. |
 | audiotools dependency removal | Not started | | | |
-| vocos dependency removal | Not started | | | |
+| vocos dependency removal | Done | | | Dependency was declared in `pyproject.toml` but never imported anywhere in the codebase; `F5TTSProcessor.decode` already took a generic `vocoder` callable rather than importing `vocos` directly. Removed the unused `pyproject.toml` entry and reworded docstrings/README that named `vocos` as if required. No transformers-tts-native vocoder matches F5-TTS's mel config (24kHz, 100 mel channels), so a caller-supplied vocoder is still required at `decode()` time; repo not deleted per task instructions. |
 | speechbrain fork removal | Not started | | | Check if upstream now supports the required torch version |
 | UTMOSv2 decoupling | Not started | | | Route through `evaluate`, may need `voicestudio/metrics/` |
 
