@@ -218,10 +218,9 @@ class PromptTTSppForConditionalGeneration(PromptTTSppPreTrainedModel):
         )
 
         if not return_dict:
-            has_missing_labels = (
-                spectrogram_labels is None or duration_labels is None or pitch_labels is None or energy_labels is None
-            )
-            spectrogram = model_outputs[0] if has_missing_labels else model_outputs[1]
+            # `FastSpeech2ConformerModel` prepends `loss` to the tuple only when `self.training` is
+            # true (the branch that computes it), regardless of which labels were passed.
+            spectrogram = model_outputs[1] if self.training else model_outputs[0]
         else:
             spectrogram = model_outputs["spectrogram"]
         waveform = self.vocoder(spectrogram)
