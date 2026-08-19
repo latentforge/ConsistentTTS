@@ -1,3 +1,5 @@
+"""Configuration class for Chroma."""
+
 from typing import Optional
 
 from transformers.configuration_utils import PretrainedConfig

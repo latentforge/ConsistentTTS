@@ -39,6 +39,7 @@ from einx import get_at
 from transformers.modeling_outputs import ModelOutput
 from transformers.modeling_utils import PreTrainedModel
 from transformers.models.dac.modeling_dac import Snake1d
+from transformers.models.qwen2.modeling_qwen2 import Qwen2ForCausalLM
 from transformers.utils import logging
 
 from .configuration_spark_tts import SparkTTSConfig
@@ -1819,7 +1820,6 @@ class BiCodecModel(BiCodecPreTrainedModel):
 
         # Decoder expects (B, C, T), d_vector is (B, D)
         x = self.prenet(z_q, d_vector)
-        pred_feat = self.postnet(x)
         x = x + d_vector.unsqueeze(-1)
         wav_recon = self.decoder(x).squeeze(1)
 
@@ -1859,7 +1859,6 @@ class BiCodecModel(BiCodecPreTrainedModel):
 
         # Decode
         x = self.prenet(vq_outputs["z_q"], d_vector)
-        pred_feat = self.postnet(x)
         x = x + d_vector.unsqueeze(-1)
         wav_recon = self.decoder(x).squeeze(1)
 
@@ -1927,8 +1926,9 @@ class SparkTTSForConditionalGeneration(SparkTTSPreTrainedModel):
         # Initialize BiCodec
         self.bicodec = BiCodecModel(config)
 
-        # LLM and Wav2Vec2 will be loaded separately via from_pretrained
-        self.llm = None
+        self.llm = Qwen2ForCausalLM(config.llm_config)
+        self.tokenizer = None
+        self.processor = None
         self.wav2vec2 = None
         self.wav2vec2_feature_extractor = None
 
@@ -1967,6 +1967,18 @@ class SparkTTSForConditionalGeneration(SparkTTSPreTrainedModel):
         bicodec_path = Path(pretrained_model_name_or_path) / config.bicodec_path
         bicodec_weights = load_file(bicodec_path / "model.safetensors")
         model.bicodec.load_state_dict(bicodec_weights, strict=False)
+
+        from .processing_spark_tts import SparkTTSProcessor
+
+        model.processor = SparkTTSProcessor(
+            feature_extractor=model.wav2vec2_feature_extractor,
+            bicodec=model.bicodec,
+            wav2vec2=model.wav2vec2,
+            sample_rate=config.sample_rate,
+            ref_segment_duration=config.ref_segment_duration,
+            latent_hop_length=config.latent_hop_length,
+            volume_normalize=config.volume_normalize,
+        )
 
         return model
 
@@ -2142,38 +2154,21 @@ class SparkTTSForConditionalGeneration(SparkTTSPreTrainedModel):
         - Zero-shot: Only global tokens (speaker timbre)
         - Few-shot: Global tokens + semantic tokens (timbre + prosody/rhythm)
         """
+        if self.processor is None:
+            raise RuntimeError("Processor not loaded. Use `from_pretrained` to load the model.")
+
         # Load reference audio if path provided
         if reference_audio_path is not None:
-            import soundfile as sf
-            audio_data, sr = sf.read(reference_audio_path)
-            reference_waveform = torch.from_numpy(audio_data).float()
-            if reference_waveform.dim() == 1:
-                reference_waveform = reference_waveform.unsqueeze(0)
-            # Resample if needed
-            if sr != self.config.sample_rate:
-                import torchaudio.transforms as T
-                resampler = T.Resample(sr, self.config.sample_rate)
-                reference_waveform = resampler(reference_waveform)
+            reference_waveform = torch.from_numpy(
+                self.processor.load_audio(reference_audio_path, sampling_rate=self.config.sample_rate)
+            ).unsqueeze(0)
+        elif reference_waveform.dim() == 1:
+            reference_waveform = reference_waveform.unsqueeze(0)
 
-        # Extract global tokens from reference audio (use 3-second segment)
         with torch.no_grad():
-            # Truncate to ref_segment_duration (default 3 seconds) as per original
-            ref_segment_length = int(self.config.sample_rate * self.config.ref_segment_duration)
-            ref_segment_length = (ref_segment_length // 320) * 320  # Align to latent_hop_length
-
-            # Get reference segment for global tokens
-            wav_for_global = reference_waveform.squeeze()
-            if len(wav_for_global) > ref_segment_length:
-                wav_for_global = wav_for_global[:ref_segment_length]
-            elif len(wav_for_global) < ref_segment_length:
-                # Repeat if too short
-                repeats = ref_segment_length // len(wav_for_global) + 1
-                wav_for_global = wav_for_global.repeat(repeats)[:ref_segment_length]
-
-            wav_for_global = wav_for_global.unsqueeze(0)  # Add batch dimension
-
-            mel = self.bicodec.get_mel_spectrogram(wav_for_global.unsqueeze(1)).squeeze(1)
-            global_token_ids = self.bicodec.speaker_encoder.tokenize(mel.transpose(1, 2))
+            semantic_token_ids, global_token_ids = self.processor.tokenize(
+                reference_waveform.squeeze(0), reference_audio=reference_waveform.squeeze(0)
+            )
 
         # Convert global tokens to special token strings
         global_tokens_str = "".join(
@@ -2187,32 +2182,6 @@ class SparkTTSForConditionalGeneration(SparkTTSPreTrainedModel):
         # Build prompt based on whether prompt_text is provided
         if prompt_text is not None:
             # Few-shot mode: Include prompt text and semantic tokens
-            # Extract semantic tokens from reference audio
-            with torch.no_grad():
-                # Use FULL reference audio for semantic tokens (prosody/rhythm)
-                # Only global tokens use truncated segment
-
-                # Extract Wav2Vec2 features (encoder expects these, not raw waveform)
-                # Wav2Vec2 expects 16kHz audio
-                wav_16k = reference_waveform
-                if self.config.sample_rate != 16000:
-                    import torchaudio.transforms as T
-                    resampler = T.Resample(self.config.sample_rate, 16000)
-                    wav_16k = resampler(reference_waveform)
-
-                wav_16k = wav_16k.to(self.wav2vec2.device)
-
-                # Extract Wav2Vec2 features
-                outputs = self.wav2vec2(wav_16k, output_hidden_states=True)
-                # Mix layers 11, 14, 16 as per original Spark-TTS
-                feat = (outputs.hidden_states[11] + outputs.hidden_states[14] + outputs.hidden_states[16]) / 3
-
-                # Encoder expects [B, C, T]
-                z = self.bicodec.encoder(feat.transpose(1, 2))
-                # Quantize to get semantic tokens
-                vq_outputs = self.bicodec.quantizer(z)
-                semantic_token_ids = vq_outputs["indices"]
-
             semantic_tokens_str = "".join(
                 [f"<|bicodec_semantic_{i}|>" for i in semantic_token_ids.squeeze().cpu().tolist()]
             )
@@ -2335,48 +2304,27 @@ class SparkTTSForConditionalGeneration(SparkTTSPreTrainedModel):
         if hasattr(self, '_cached_global_tokens') and self._cached_global_tokens is not None:
             return self._cached_global_tokens
 
+        if self.processor is None:
+            raise RuntimeError("Processor not loaded. Use `from_pretrained` to load the model.")
+
         # Load audio if path provided
         if reference_audio_path is not None:
-            import soundfile as sf
-            audio_data, sr = sf.read(reference_audio_path)
-            reference_waveform = torch.from_numpy(audio_data).float()
-            if reference_waveform.dim() == 1:
-                reference_waveform = reference_waveform.unsqueeze(0)
-            # Resample if needed
-            if sr != self.config.sample_rate:
-                import torchaudio.transforms as T
-                resampler = T.Resample(sr, self.config.sample_rate)
-                reference_waveform = resampler(reference_waveform)
+            reference_waveform = torch.from_numpy(
+                self.processor.load_audio(reference_audio_path, sampling_rate=self.config.sample_rate)
+            ).unsqueeze(0)
         elif hasattr(self, '_cached_reference_waveform'):
             reference_waveform = self._cached_reference_waveform
 
         if reference_waveform is None:
             raise ValueError("No reference audio provided")
 
-        # Extract global tokens using BiCodec speaker encoder (use 3-second segment)
+        if reference_waveform.dim() == 1:
+            reference_waveform = reference_waveform.unsqueeze(0)
+
         with torch.no_grad():
-            # Ensure correct shape
-            if reference_waveform.dim() == 1:
-                reference_waveform = reference_waveform.unsqueeze(0)
-
-            # Truncate to ref_segment_duration (default 3 seconds) as per original
-            ref_segment_length = int(self.config.sample_rate * self.config.ref_segment_duration)
-            ref_segment_length = (ref_segment_length // 320) * 320  # Align to latent_hop_length
-
-            # Get reference segment for global tokens
-            wav_for_global = reference_waveform.squeeze()
-            if len(wav_for_global) > ref_segment_length:
-                wav_for_global = wav_for_global[:ref_segment_length]
-            elif len(wav_for_global) < ref_segment_length:
-                # Repeat if too short
-                repeats = ref_segment_length // len(wav_for_global) + 1
-                wav_for_global = wav_for_global.repeat(repeats)[:ref_segment_length]
-
-            wav_for_global = wav_for_global.unsqueeze(0)  # Add batch dimension
-
-            # Extract mel spectrogram and tokenize
-            mel = self.bicodec.get_mel_spectrogram(wav_for_global.unsqueeze(1)).squeeze(1)
-            global_tokens = self.bicodec.speaker_encoder.tokenize(mel.transpose(1, 2))
+            _, global_tokens = self.processor.tokenize(
+                reference_waveform.squeeze(0), reference_audio=reference_waveform.squeeze(0)
+            )
 
         return global_tokens
 

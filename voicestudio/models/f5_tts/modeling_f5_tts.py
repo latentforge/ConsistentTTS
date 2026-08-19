@@ -540,6 +540,79 @@ class F5TTSModel(F5TTSPreTrainedModel):
 
         return torch.where(cond_mask, cond, hidden_states)
 
+    def compute_training_loss(
+        self,
+        cond_mel: torch.Tensor,
+        text_ids: torch.Tensor,
+        labels: torch.Tensor,
+        mask: torch.Tensor | None = None,
+        drop_audio_cond: bool = False,
+        drop_text: bool = False,
+        frac_lengths_min: float = 0.7,
+        frac_lengths_max: float = 1.0,
+    ) -> F5TTSOutput:
+        """
+        Rectified-flow-matching training step, `labels` playing the role of the standard `transformers` training
+        target: it is the clean mel spectrogram to learn to generate. Internally samples a Gaussian noise source
+        and a flow-matching timestep, interpolates between them to build the DiT input, masks a random contiguous
+        span of `labels` out of the conditioning stream (the span the model must infill), and returns the
+        resulting velocity-prediction MSE loss over that span, matching the original F5-TTS `CFM` training
+        objective.
+
+        Args:
+            cond_mel (`torch.FloatTensor` of shape `(batch_size, sequence_length, mel_dim)`):
+                Reference mel spectrogram; the random infill span described above is zeroed out of it internally.
+            text_ids (`torch.LongTensor` of shape `(batch_size, text_sequence_length)`):
+                Text token ids, right-padded with `-1`.
+            labels (`torch.FloatTensor` of shape `(batch_size, sequence_length, mel_dim)`):
+                Clean target mel spectrogram to train the flow-matching objective towards.
+            mask (`torch.BoolTensor` of shape `(batch_size, sequence_length)`, *optional*):
+                Mask over the mel sequence dimension, `True` for valid (non-padding) positions.
+            drop_audio_cond (`bool`, *optional*, defaults to `False`):
+                Zero out the reference conditioning mel, used to train the unconditional branch for CFG.
+            drop_text (`bool`, *optional*, defaults to `False`):
+                Zero out the text stream, used to train the unconditional branch for CFG.
+            frac_lengths_min (`float`, *optional*, defaults to 0.7):
+                Lower bound of the fraction of each sequence covered by the random infill span.
+            frac_lengths_max (`float`, *optional*, defaults to 1.0):
+                Upper bound of the fraction of each sequence covered by the random infill span.
+
+        Returns:
+            [`F5TTSOutput`] with `loss` populated.
+        """
+        batch_size, seq_len, _ = labels.shape
+        if mask is None:
+            mask = labels.new_ones((batch_size, seq_len), dtype=torch.bool)
+        lengths = mask.sum(dim=-1)
+
+        noise = torch.randn_like(labels)
+        timestep = torch.rand(batch_size, device=labels.device, dtype=labels.dtype)
+        t = timestep[:, None, None]
+        noisy_mel = (1 - t) * noise + t * labels
+        target = labels - noise
+
+        frac = torch.empty(batch_size, device=labels.device).uniform_(frac_lengths_min, frac_lengths_max)
+        span_lengths = (frac * lengths).long()
+        max_start = (lengths - span_lengths).clamp(min=0)
+        start = (torch.rand(batch_size, device=labels.device) * (max_start + 1).float()).long()
+        positions = torch.arange(seq_len, device=labels.device)[None, :]
+        span_mask = (positions >= start[:, None]) & (positions < (start + span_lengths)[:, None])
+        loss_mask = span_mask & mask
+
+        cond = torch.where(span_mask.unsqueeze(-1), torch.zeros_like(labels), cond_mel)
+
+        return self(
+            noisy_mel=noisy_mel,
+            cond_mel=cond,
+            text_ids=text_ids,
+            timestep=timestep,
+            mask=mask,
+            drop_audio_cond=drop_audio_cond,
+            drop_text=drop_text,
+            target=target,
+            loss_mask=loss_mask,
+        )
+
 
 class F5TTSForConditionalGeneration(F5TTSPreTrainedModel):
     r"""
@@ -552,7 +625,18 @@ class F5TTSForConditionalGeneration(F5TTSPreTrainedModel):
         self.model = F5TTSModel(config)
         self.post_init()
 
-    def forward(self, *args, **kwargs) -> F5TTSOutput:
+    def forward(self, *args, labels: torch.Tensor | None = None, **kwargs) -> F5TTSOutput:
+        """
+        Standard `transformers` training entry point. When `labels` (the clean target mel spectrogram) is given,
+        delegates to [`~F5TTSModel.compute_training_loss`] to sample the flow-matching timestep/noise/infill span
+        and return the resulting loss on the output, the same way any other `*ForConditionalGeneration` model
+        computes its training loss from `labels`. F5-TTS has no discrete-token stage, so this loss is the model's
+        native rectified-flow-matching MSE objective rather than cross-entropy. Without `labels`, forwards
+        straight through to [`~F5TTSModel.forward`] for inference-style calls that already supply
+        `noisy_mel`/`timestep`/`target` directly.
+        """
+        if labels is not None:
+            return self.model.compute_training_loss(*args, labels=labels, **kwargs)
         return self.model(*args, **kwargs)
 
     @torch.no_grad()
