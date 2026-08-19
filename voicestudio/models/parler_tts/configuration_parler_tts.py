@@ -1,28 +1,9 @@
-# coding=utf-8
-# Copyright 2024 and The HuggingFace Inc. team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-""" Parler-TTS model configuration"""
+"""Configuration class for Parler-TTS."""
 
 from transformers import AutoConfig, logging
 from transformers.configuration_utils import PretrainedConfig
 
 logger = logging.get_logger(__name__)
-
-PARLER_TTS_PRETRAINED_CONFIG_ARCHIVE_MAP = {
-    "parler-tts/parler-tts-mini-v1": "https://huggingface.co/parler-tts/parler-tts-mini-v1/resolve/main/config.json",
-    # See all ParlerTTS models at https://huggingface.co/models?filter=parler_tts
-}
 
 
 class ParlerTTSDecoderConfig(PretrainedConfig):
@@ -96,6 +77,9 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
             Whether to fuse audio LM heads instead of applying them sequentially.
         codebook_weights(`List[int]`, *optional*):
             Weights applied to each codebook when computing the loss.
+        audio_channels (`int`, *optional*, defaults to 1):
+            Number of audio channels the underlying audio codec operates on. Parler-TTS checkpoints are mono
+            (1 channel); a value of 2 duplicates each codebook to cover a stereo left/right pair.
     """
 
     model_type = "parler_tts_decoder"
@@ -130,6 +114,7 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
         cross_attention_implementation_strategy=None,
         use_fused_lm_heads=False,
         codebook_weights=None,
+        audio_channels=1,
         **kwargs,
     ):
         self.vocab_size = vocab_size
@@ -168,6 +153,7 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
         self.cross_attention_implementation_strategy = cross_attention_implementation_strategy
         self.use_fused_lm_heads = use_fused_lm_heads
         self.codebook_weights = codebook_weights
+        self.audio_channels = audio_channels
 
         if codebook_weights is not None and len(codebook_weights) != num_codebooks:
             raise ValueError(f"`codebook_weights` has length {len(codebook_weights)} when it should be of length {num_codebooks}.")
