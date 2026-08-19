@@ -179,7 +179,7 @@ Update this table as each model's migration lands.
 | Dia | Not started | Already marked "fully tested (by HF)" in old README |
 | CosyVoice (v1/v2/v3) | Not started | Already vendored in `dep/CosyVoice` |
 | F5-TTS | Not started | Already vendored in `dep/F5-TTS` |
-| promptttspp | Not started | |
+| promptttspp | In progress | Acoustic model and vocoder are `FastSpeech2Conformer`/`FastSpeech2ConformerHifiGan` from transformers-tts, conditioned via `speaker_embedding`. The BERT-based prompt encoder is newly implemented since it has no equivalent in transformers-tts. No pretrained checkpoint conversion done yet (upstream ships no public checkpoint). |
 | audiotools dependency removal | Not started | |
 | vocos dependency removal | Not started | |
 | speechbrain fork removal | Not started | Check if upstream now supports the required torch version |
