@@ -13,15 +13,12 @@ dependencies = [
     "torchaudio>=2.8.0",
     "torchcodec>=0.9.1",
     "librosa>=0.11.0",
-    "transformers==4.57.6",
     "datasets",
     "voicestudio[all]>=1.0.1",
     "hf-xet>=1.1.8",
     "tqdm>=4.67.1",
-    "descript-audiotools",
     "speechbrain",
     "utmosv2",
-    "flash-attn",
 ]
 
 [tool.uv]
@@ -38,26 +35,9 @@ torch = [
 torchaudio = [
     { index = "pytorch-windows", marker = "platform_system == 'Windows'" },
 ]
-flash-attn = [
-    # Linux x86_64 (manylinux)
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.11' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.12' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.13' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.14' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
-    # Linux aarch64 (manylinux)
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp311-cp311-manylinux_2_34_aarch64.whl", marker = "python_version == '3.11' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp312-cp312-manylinux_2_34_aarch64.whl", marker = "python_version == '3.12' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp313-cp313-manylinux_2_34_aarch64.whl", marker = "python_version == '3.13' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp314-cp314-manylinux_2_34_aarch64.whl", marker = "python_version == '3.14' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
-    # Windows x86_64
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp311-cp311-win_amd64.whl", marker = "python_version == '3.11' and platform_system == 'Windows'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp312-cp312-win_amd64.whl", marker = "python_version == '3.12' and platform_system == 'Windows'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp313-cp313-win_amd64.whl", marker = "python_version == '3.13' and platform_system == 'Windows'" },
-    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp314-cp314-win_amd64.whl", marker = "python_version == '3.14' and platform_system == 'Windows'" },
-]
-descript-audiotools = { git = "https://github.com/latentforge/audiotools" }
 speechbrain = { git = "https://github.com/speechbrain/speechbrain" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
+voicestudio = { git = "https://github.com/latentforge/VoiceStudio", branch = "develop" }
 
 [tool.uv.extra-build-dependencies]
 flash-attn = [ "torch" ]
