@@ -64,6 +64,9 @@ eval = [
     "speechbrain",
     "utmosv2",
 ]
+f5_tts = [
+    "pypinyin>=0.51.0",
+]
 onnx = [  # for Qwen3-TTS, CosyVoice
     "onnxruntime-gpu[cuda,cudnn]>=1.18.0 ; platform_system == 'Linux' or platform_system == 'Windows'",
     "onnxruntime>=1.18.0 ; platform_system == 'Darwin'",
