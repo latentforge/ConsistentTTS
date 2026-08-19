@@ -1,44 +1,59 @@
-# coding=utf-8
-# Copyright 2025 The FlashLabs team. All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+from typing import Optional
 
-
-from typing import Optional, Dict, Any
-
-from transformers.utils import logging
 from transformers.configuration_utils import PretrainedConfig
+from transformers.modeling_rope_utils import RopeParameters, RotaryEmbeddingConfigMixin
+from transformers.models.mimi.configuration_mimi import MimiConfig
+from transformers.models.qwen2_5_omni.configuration_qwen2_5_omni import Qwen2_5OmniThinkerConfig
+from transformers.utils import logging
 
-# Transformers 4.x.x compatibility: Qwen2_5OmniThinkerConfig may not exist
-try:
-    from transformers.models.qwen2_5_omni.configuration_qwen2_5_omni import Qwen2_5OmniThinkerConfig
-    _HAS_QWEN_OMNI = True
-except ImportError:
-    Qwen2_5OmniThinkerConfig = None
-    _HAS_QWEN_OMNI = False
-
-# Transformers 4.x.x compatibility: MimiConfig may not exist
-try:
-    from transformers.models.mimi.configuration_mimi import MimiConfig
-    _HAS_MIMI = True
-except ImportError:
-    MimiConfig = None
-    _HAS_MIMI = False
 
 logger = logging.get_logger(__name__)
 
 
-class ChromaBackboneConfig(PretrainedConfig):
+class ChromaBackboneConfig(PretrainedConfig, RotaryEmbeddingConfigMixin):
+    r"""
+    This is the configuration class to store the configuration of a [`ChromaBackboneForCausalLM`]. It is used to
+    instantiate the Llama-based backbone that consumes the thinker's hidden states and text/audio prompt
+    embeddings and autoregressively predicts the first-codebook audio token at each frame.
+
+    Args:
+        audio_num_codebooks (`int`, *optional*, defaults to 8):
+            Number of codec codebooks per audio frame.
+        vocab_size (`int`, *optional*, defaults to 2051):
+            Vocabulary size of the codebook-0 head, i.e. the number of distinct codec codes per codebook plus the
+            padding and end-of-sequence tokens.
+        max_position_embeddings (`int`, *optional*, defaults to 2048):
+            The maximum sequence length the backbone can process.
+        hidden_size (`int`, *optional*, defaults to 2048):
+            Dimensionality of the backbone's hidden states.
+        intermediate_size (`int`, *optional*, defaults to 8192):
+            Dimensionality of the MLP representations.
+        num_hidden_layers (`int`, *optional*, defaults to 16):
+            Number of hidden layers.
+        num_attention_heads (`int`, *optional*, defaults to 32):
+            Number of attention heads for each attention layer.
+        num_key_value_heads (`int`, *optional*, defaults to 8):
+            Number of key/value heads for grouped-query attention.
+        hidden_act (`str`, *optional*, defaults to `"silu"`):
+            The non-linear activation function in the MLP.
+        initializer_range (`float`, *optional*, defaults to 0.02):
+            The standard deviation of the truncated normal initializer for weight matrices.
+        rms_norm_eps (`float`, *optional*, defaults to 1e-5):
+            The epsilon used by the RMS normalization layers.
+        use_cache (`bool`, *optional*, defaults to `True`):
+            Whether the model should return the last key/value attentions.
+        rope_parameters (`RopeParameters` or `dict`, *optional*):
+            Rotary position embedding configuration.
+        head_dim (`int`, *optional*, defaults to 64):
+            Dimensionality of each attention head.
+        attention_bias (`bool`, *optional*, defaults to `False`):
+            Whether to use a bias in the query, key, value and output projection layers.
+        attention_dropout (`float`, *optional*, defaults to 0.0):
+            The dropout ratio for the attention probabilities.
+        mlp_bias (`bool`, *optional*, defaults to `False`):
+            Whether to use a bias in the MLP layers.
+    """
+
     model_type = "chroma_backbone"
 
     def __init__(
@@ -53,16 +68,14 @@ class ChromaBackboneConfig(PretrainedConfig):
         num_key_value_heads: Optional[int] = 8,
         hidden_act: Optional[str] = "silu",
         initializer_range: Optional[float] = 0.02,
-        rms_norm_eps: Optional[int] = 1e-5,
+        rms_norm_eps: Optional[float] = 1e-5,
         use_cache: Optional[bool] = True,
-        rope_parameters: Optional[Dict[str, Any]] = None,  # RopeParameters -> Dict
-        rope_scaling: Optional[Dict[str, Any]] = None,      # 4.x compatibility
-        rope_theta: Optional[float] = 500000.0,
+        rope_parameters: Optional[RopeParameters | dict[str, RopeParameters]] = None,
         head_dim: Optional[int] = 64,
         attention_bias: Optional[bool] = False,
         attention_dropout: Optional[float] = 0.0,
         mlp_bias: Optional[bool] = False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.audio_num_codebooks = audio_num_codebooks
@@ -82,12 +95,60 @@ class ChromaBackboneConfig(PretrainedConfig):
         self.attention_dropout = attention_dropout
         self.mlp_bias = mlp_bias
 
-        # transformers 4.x compatibility: use rope_scaling instead of rope_parameters
-        self.rope_theta = rope_theta
-        self.rope_scaling = rope_scaling or rope_parameters
+        rope_scaling = kwargs.pop("rope_scaling", None)
+        self.rope_parameters = rope_scaling or rope_parameters or {}
+        self.rope_parameters.setdefault("rope_theta", kwargs.pop("rope_theta", 500000.0))
+        self.standardize_rope_params()
+        self.validate_rope()
 
 
-class ChromaDecoderConfig(PretrainedConfig):
+class ChromaDecoderConfig(PretrainedConfig, RotaryEmbeddingConfigMixin):
+    r"""
+    This is the configuration class to store the configuration of a [`ChromaDecoderForCausalLM`]. It is used to
+    instantiate the small Llama-based decoder that autoregressively predicts codebooks 1 through
+    `audio_num_codebooks - 1` of an audio frame, conditioned on the backbone's hidden state for that frame.
+
+    Args:
+        audio_num_codebooks (`int`, *optional*, defaults to 8):
+            Number of codec codebooks per audio frame.
+        audio_embedding_dim (`int`, *optional*, defaults to 2048):
+            Dimensionality of the audio token embeddings shared with [`ChromaBackboneForCausalLM`], before the
+            decoder's input projection.
+        vocab_size (`int`, *optional*, defaults to 2051):
+            Vocabulary size of each codebook head.
+        max_position_embeddings (`int`, *optional*, defaults to 33):
+            The maximum sequence length the decoder can process, i.e. one backbone hidden state plus one token
+            per remaining codebook.
+        hidden_size (`int`, *optional*, defaults to 1024):
+            Dimensionality of the decoder's hidden states.
+        intermediate_size (`int`, *optional*, defaults to 8192):
+            Dimensionality of the MLP representations.
+        num_hidden_layers (`int`, *optional*, defaults to 4):
+            Number of hidden layers.
+        num_attention_heads (`int`, *optional*, defaults to 8):
+            Number of attention heads for each attention layer.
+        num_key_value_heads (`int`, *optional*, defaults to 2):
+            Number of key/value heads for grouped-query attention.
+        hidden_act (`str`, *optional*, defaults to `"silu"`):
+            The non-linear activation function in the MLP.
+        initializer_range (`float`, *optional*, defaults to 0.02):
+            The standard deviation of the truncated normal initializer for weight matrices.
+        rms_norm_eps (`float`, *optional*, defaults to 1e-5):
+            The epsilon used by the RMS normalization layers.
+        use_cache (`bool`, *optional*, defaults to `True`):
+            Whether the model should return the last key/value attentions.
+        rope_parameters (`RopeParameters` or `dict`, *optional*):
+            Rotary position embedding configuration.
+        head_dim (`int`, *optional*, defaults to 128):
+            Dimensionality of each attention head.
+        attention_bias (`bool`, *optional*, defaults to `False`):
+            Whether to use a bias in the query, key, value and output projection layers.
+        attention_dropout (`float`, *optional*, defaults to 0.0):
+            The dropout ratio for the attention probabilities.
+        mlp_bias (`bool`, *optional*, defaults to `False`):
+            Whether to use a bias in the MLP layers.
+    """
+
     model_type = "chroma_decoder"
 
     def __init__(
@@ -105,14 +166,12 @@ class ChromaDecoderConfig(PretrainedConfig):
         initializer_range: Optional[float] = 0.02,
         rms_norm_eps: Optional[float] = 1e-5,
         use_cache: Optional[bool] = True,
-        rope_parameters: Optional[Dict[str, Any]] = None,  # RopeParameters -> Dict
-        rope_scaling: Optional[Dict[str, Any]] = None,      # 4.x compatibility
-        rope_theta: Optional[float] = 500000.0,
+        rope_parameters: Optional[RopeParameters | dict[str, RopeParameters]] = None,
         head_dim: Optional[int] = 128,
-        attention_bias=False,
-        attention_dropout=0.0,
-        mlp_bias=False,
-        **kwargs
+        attention_bias: Optional[bool] = False,
+        attention_dropout: Optional[float] = 0.0,
+        mlp_bias: Optional[bool] = False,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         self.audio_num_codebooks = audio_num_codebooks
@@ -133,24 +192,53 @@ class ChromaDecoderConfig(PretrainedConfig):
         self.mlp_bias = mlp_bias
         self.head_dim = head_dim
 
-        # transformers 4.x compatibility: use rope_scaling instead of rope_parameters
-        self.rope_theta = rope_theta
-        self.rope_scaling = rope_scaling or rope_parameters
+        rope_scaling = kwargs.pop("rope_scaling", None)
+        self.rope_parameters = rope_scaling or rope_parameters or {}
+        self.rope_parameters.setdefault("rope_theta", kwargs.pop("rope_theta", 500000.0))
+        self.standardize_rope_params()
+        self.validate_rope()
 
 
 class ChromaConfig(PretrainedConfig):
-    model_type = "chroma"
+    r"""
+    This is the configuration class to store the configuration of a [`ChromaForConditionalGeneration`]. It is
+    used to instantiate a Chroma model according to the specified sub-configurations, defining the reasoner
+    (thinker), backbone, decoder, and audio codec.
 
-    # Transformers 4.x.x compatibility: sub_configs is only supported in 5.x.x
-    # Build sub_configs dynamically based on available classes
+    Args:
+        thinker_config (`dict` or [`Qwen2_5OmniThinkerConfig`], *optional*):
+            Configuration for the Qwen2.5-Omni-based multimodal reasoner that consumes text and audio input and
+            produces text tokens and hidden states conditioning speech generation.
+        backbone_config (`dict` or [`ChromaBackboneConfig`], *optional*):
+            Configuration for the backbone that predicts the first codebook of each audio frame.
+        decoder_config (`dict` or [`ChromaDecoderConfig`], *optional*):
+            Configuration for the decoder that predicts the remaining codebooks of each audio frame.
+        codec_config (`dict` or [`MimiConfig`], *optional*):
+            Configuration for the Mimi audio codec used to encode reference audio and decode generated audio
+            codes into waveforms.
+        codebook_pad_token_id (`int`, *optional*, defaults to 2050):
+            Token id used to pad finished sequences in a batch during generation.
+        codebook_eos_token_id (`int`, *optional*, defaults to 0):
+            Token id that marks the end of the generated audio when present in every codebook of a frame.
+        audio_num_codebooks (`int`, *optional*, defaults to 8):
+            Number of codec codebooks per audio frame.
+        text_start_token_id (`int`, *optional*, defaults to 151665):
+            Token id marking the start of the text prompt segment in the backbone's input sequence.
+        text_end_token_id (`int`, *optional*, defaults to 151666):
+            Token id marking the end of the text prompt segment in the backbone's input sequence.
+        im_end_token_id (`int`, *optional*, defaults to 151645):
+            Token id that marks the end of a thinker generation turn.
+        audio_frame_freq (`int`, *optional*, defaults to 1920):
+            Number of audio samples per codec frame, used to align reference audio cutoffs with codec frames.
+    """
+
+    model_type = "chroma"
     sub_configs = {
+        "thinker_config": Qwen2_5OmniThinkerConfig,
+        "codec_config": MimiConfig,
         "backbone_config": ChromaBackboneConfig,
-        "decoder_config": ChromaDecoderConfig
+        "decoder_config": ChromaDecoderConfig,
     }
-    if _HAS_QWEN_OMNI and Qwen2_5OmniThinkerConfig is not None:
-        sub_configs["thinker_config"] = Qwen2_5OmniThinkerConfig
-    if _HAS_MIMI and MimiConfig is not None:
-        sub_configs["codec_config"] = MimiConfig
 
     def __init__(
         self,
@@ -165,47 +253,35 @@ class ChromaConfig(PretrainedConfig):
         text_end_token_id=151666,
         im_end_token_id=151645,
         audio_frame_freq=1920,
-        **kwargs
+        **kwargs,
     ):
-        # thinker config (Transformers 4.x.x compatibility)
-        if _HAS_QWEN_OMNI and Qwen2_5OmniThinkerConfig is not None:
-            if isinstance(thinker_config, dict):
-                self.thinker_config = Qwen2_5OmniThinkerConfig(**thinker_config)
-            elif isinstance(thinker_config, Qwen2_5OmniThinkerConfig):
-                self.thinker_config = thinker_config
-            elif thinker_config is None:
-                self.thinker_config = Qwen2_5OmniThinkerConfig()
-        else:
-            # Fallback for Transformers 4.x.x: store as dict or None
+        if isinstance(thinker_config, dict):
+            self.thinker_config = Qwen2_5OmniThinkerConfig(**thinker_config)
+        elif isinstance(thinker_config, Qwen2_5OmniThinkerConfig):
             self.thinker_config = thinker_config
+        else:
+            self.thinker_config = Qwen2_5OmniThinkerConfig()
 
-        # backbone config
         if isinstance(backbone_config, dict):
             self.backbone_config = ChromaBackboneConfig(**backbone_config)
         elif isinstance(backbone_config, ChromaBackboneConfig):
             self.backbone_config = backbone_config
-        elif backbone_config is None:
+        else:
             self.backbone_config = ChromaBackboneConfig(audio_num_codebooks=audio_num_codebooks)
 
-        # decoder config
         if isinstance(decoder_config, dict):
             self.decoder_config = ChromaDecoderConfig(**decoder_config)
         elif isinstance(decoder_config, ChromaDecoderConfig):
             self.decoder_config = decoder_config
-        elif decoder_config is None:
+        else:
             self.decoder_config = ChromaDecoderConfig(audio_num_codebooks=audio_num_codebooks)
 
-        # codec config (Mimi) - Transformers 4.x.x compatibility
-        if _HAS_MIMI and MimiConfig is not None:
-            if isinstance(codec_config, dict):
-                self.codec_config = MimiConfig(**codec_config)
-            elif isinstance(codec_config, MimiConfig):
-                self.codec_config = codec_config
-            elif codec_config is None:
-                self.codec_config = MimiConfig(num_quantizers=audio_num_codebooks, frame_rate=12.5)
-        else:
-            # Fallback for Transformers 4.x.x: store as dict or None
+        if isinstance(codec_config, dict):
+            self.codec_config = MimiConfig(**codec_config)
+        elif isinstance(codec_config, MimiConfig):
             self.codec_config = codec_config
+        else:
+            self.codec_config = MimiConfig(num_quantizers=audio_num_codebooks, frame_rate=12.5)
 
         self.audio_num_codebooks = audio_num_codebooks
         self.codebook_pad_token_id = codebook_pad_token_id
@@ -215,3 +291,6 @@ class ChromaConfig(PretrainedConfig):
         self.im_end_token_id = im_end_token_id
         self.audio_frame_freq = audio_frame_freq
         super().__init__(**kwargs)
+
+
+__all__ = ["ChromaBackboneConfig", "ChromaDecoderConfig", "ChromaConfig"]
