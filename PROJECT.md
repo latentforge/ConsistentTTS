@@ -100,8 +100,9 @@ and the vendored copy is removed from `dep/`.
 
 - **https://github.com/latentforge/audiotools** — analyze what depends on it, remove the
   dependency, then delete the repo.
-- **https://github.com/latentforge/vocos** — analyze what depends on it, remove the
-  dependency, then delete the repo.
+- **https://github.com/latentforge/vocos** — dependency was unused anywhere in this repo
+  (`F5TTSProcessor.decode` already took a generic vocoder callable), dropped. Repo not
+  yet deleted.
 - **https://github.com/latentforge/speechbrain** — this fork exists only to support a
   newer torch version. Upstream speechbrain has caught up (v1.1.0 supports
   `torch>=2.1.0` with no upper bound), and the dependency turned out to be unused
@@ -200,7 +201,7 @@ pretrained checkpoint yet; see "Runtime-verified" for that.
 | PromptTTS++ (`prompt_tts_pp`) | Yes | No | No | `FastSpeech2Conformer`/`FastSpeech2ConformerHifiGan` from transformers-tts, conditioned via a newly-implemented BERT-based prompt encoder. `return_dict=False` tuple-indexing bug fixed. No public upstream checkpoint exists. |
 | OmniVoice | Yes | No | No | No transformers-tts lineage (closest in spirit to CSM/Moshi); modeling code is new, audio tokenizer reused from transformers-tts's `HiggsAudioV2TokenizerModel`. Training-time sample masking and reference-audio auto-transcription (ASR) not ported. |
 | audiotools dependency removal | Done | | | No reference to `audiotools` remains in `pyproject.toml` or `voicestudio/`; already dead after the model migrations, nothing to change. |
-| vocos dependency removal | Not started | | | |
+| vocos dependency removal | Done | | | Dependency was declared in `pyproject.toml` but never imported anywhere in the codebase; `F5TTSProcessor.decode` already took a generic `vocoder` callable rather than importing `vocos` directly. Removed the unused `pyproject.toml` entry and reworded docstrings/README that named `vocos` as if required. No transformers-tts-native vocoder matches F5-TTS's mel config (24kHz, 100 mel channels), so a caller-supplied vocoder is still required at `decode()` time; repo not deleted per task instructions. |
 | speechbrain fork removal | Done | | | Unused in repo; dependency dropped entirely (not switched to upstream). |
 | UTMOSv2 decoupling | Done | | | `voicestudio/metrics/utmos.py` adapts UTMOSv2 to the `evaluate.Metric` interface; `utmosv2` git dependency dropped from `pyproject.toml`, now an optional runtime import. Upstream model code (five-fold SSL + image-classifier ensemble, hydra config system) not vendored, see module docstring. |
 

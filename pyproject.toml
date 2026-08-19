@@ -92,7 +92,6 @@ torchaudio = [
     { index = "pytorch-windows", marker = "platform_system == 'Windows'" },
 ]
 transformers = { git = "https://github.com/latentforge/transformers-tts", branch = "research" }
-vocos = { git = "https://github.com/latentforge/vocos" }
 
 [[tool.uv.index]]
 name = "pytorch-windows"

@@ -11,7 +11,7 @@ from .tokenization_f5_tts import F5TTSTokenizer
 
 class F5TTSMelFeatureExtractor(torch.nn.Module):
     """
-    Extracts the log mel spectrogram F5-TTS conditions on and predicts, matching the `vocos`-style front-end
+    Extracts the log mel spectrogram F5-TTS conditions on and predicts, matching the vocoder front-end
     (power 1, centered STFT) the released F5-TTS checkpoints were trained with.
     """
 
@@ -145,8 +145,9 @@ class F5TTSProcessor(ProcessorMixin):
             mel (`torch.FloatTensor` of shape `(batch_size, sequence_length, mel_dim)`):
                 Mel spectrogram produced by [`F5TTSForConditionalGeneration.generate`].
             vocoder (callable, *optional*):
-                A vocoder mapping `(batch_size, mel_dim, sequence_length)` log-mel spectrograms to waveforms
-                (e.g. a `vocos` `Vocos` instance). Required, since F5-TTS itself only predicts mel spectrograms.
+                A vocoder mapping `(batch_size, mel_dim, sequence_length)` log-mel spectrograms to waveforms.
+                Required, since F5-TTS itself only predicts mel spectrograms. Any callable with this signature
+                works; no specific vocoder package is required by this processor.
 
         Returns:
             `torch.FloatTensor`: Waveform of shape `(batch_size, num_samples)`.
@@ -156,8 +157,8 @@ class F5TTSProcessor(ProcessorMixin):
         """
         if vocoder is None:
             raise ValueError(
-                "F5TTSProcessor.decode requires a vocoder (e.g. a `vocos` Vocos instance) to render mel "
-                "spectrograms to waveforms; F5-TTS itself only predicts mel spectrograms."
+                "F5TTSProcessor.decode requires a vocoder callable to render mel spectrograms to waveforms; "
+                "F5-TTS itself only predicts mel spectrograms."
             )
         return vocoder(mel.transpose(1, 2))
 
