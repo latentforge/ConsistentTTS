@@ -230,7 +230,3 @@ wandb/
 # AI Agents
 .claude
 .agents
-
-# VoiceStudio migration workspace (vendored source + downloaded checkpoints)
-/dep
-/ckpts
