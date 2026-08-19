@@ -61,7 +61,7 @@ eval = [
     "pyworld>=0.3.5",
     "pysptk>=1.0.1",
     "jiwer>=4.0.0",
-    "utmosv2",
+    "evaluate>=0.4.0",
 ]
 f5_tts = [
     "pypinyin>=0.51.0",
@@ -93,7 +93,6 @@ torchaudio = [
 ]
 transformers = { git = "https://github.com/latentforge/transformers-tts", branch = "research" }
 vocos = { git = "https://github.com/latentforge/vocos" }
-utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
 
 [[tool.uv.index]]
 name = "pytorch-windows"

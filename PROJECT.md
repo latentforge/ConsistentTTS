@@ -202,7 +202,7 @@ pretrained checkpoint yet; see "Runtime-verified" for that.
 | audiotools dependency removal | Done | | | No reference to `audiotools` remains in `pyproject.toml` or `voicestudio/`; already dead after the model migrations, nothing to change. |
 | vocos dependency removal | Not started | | | |
 | speechbrain fork removal | Done | | | Unused in repo; dependency dropped entirely (not switched to upstream). |
-| UTMOSv2 decoupling | Not started | | | Route through `evaluate`, may need `voicestudio/metrics/` |
+| UTMOSv2 decoupling | Done | | | `voicestudio/metrics/utmos.py` adapts UTMOSv2 to the `evaluate.Metric` interface; `utmosv2` git dependency dropped from `pyproject.toml`, now an optional runtime import. Upstream model code (five-fold SSL + image-classifier ensemble, hydra config system) not vendored, see module docstring. |
 
 ### Known gap: upstream git history
 
