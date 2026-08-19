@@ -38,6 +38,7 @@ from einx import get_at
 
 from transformers.modeling_outputs import ModelOutput
 from transformers.modeling_utils import PreTrainedModel
+from transformers.models.dac.modeling_dac import Snake1d
 from transformers.utils import logging
 
 from .configuration_spark_tts import SparkTTSConfig
@@ -127,16 +128,6 @@ def WNConvTranspose1d(*args, **kwargs):
     return weight_norm(nn.ConvTranspose1d(*args, **kwargs))
 
 
-@torch.jit.script
-def snake(x, alpha):
-    """Snake activation function (JIT compiled for speed)."""
-    shape = x.shape
-    x = x.reshape(shape[0], shape[1], -1)
-    x = x + (alpha + 1e-9).reciprocal() * torch.sin(alpha * x).pow(2)
-    x = x.reshape(shape)
-    return x
-
-
 def init_weights(m):
     """Initialize weights for Conv1d layers."""
     if isinstance(m, nn.Conv1d):
@@ -205,22 +196,6 @@ class SparkTTSOutput(ModelOutput):
 # ----------------------------------------------------------------------------
 # 3.1: Basic Building Blocks
 # ----------------------------------------------------------------------------
-
-class Snake1d(nn.Module):
-    """
-    Snake activation function for 1D convolutions.
-    
-    Args:
-        channels (`int`): Number of channels.
-    """
-
-    def __init__(self, channels: int):
-        super().__init__()
-        self.alpha = nn.Parameter(torch.ones(1, channels, 1))
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return snake(x, self.alpha)
-
 
 class ResidualUnit(nn.Module):
     """
