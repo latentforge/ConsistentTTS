@@ -1106,20 +1106,11 @@ class ParlerTTSDecoder(ParlerTTSPreTrainedModel):
             prepended_sequence_length = prompt_hidden_states.shape[-2]
             inputs_embeds = torch.cat([prompt_hidden_states, inputs_embeds], dim=1)
 
-        return_legacy_cache = False
         return_self_attention_cache = False
         if use_cache or past_key_values is not None:
             if isinstance(past_key_values, Cache) and not isinstance(past_key_values, EncoderDecoderCache):
                 return_self_attention_cache = True
                 past_key_values = EncoderDecoderCache(past_key_values, DynamicCache())
-            elif not isinstance(past_key_values, EncoderDecoderCache):
-                return_legacy_cache = True
-                logger.warning_once(
-                    "Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.43.0. "
-                    "You should pass an instance of `EncoderDecoderCache` instead, e.g. "
-                    "`past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`."
-                )
-                past_key_values = EncoderDecoderCache.from_legacy_cache(past_key_values)
 
         past_key_values_length = 0
         if cache_position is not None:
@@ -1294,8 +1285,6 @@ class ParlerTTSDecoder(ParlerTTSPreTrainedModel):
         next_cache = past_key_values if use_cache else None
         if return_self_attention_cache:
             next_cache = past_key_values.self_attention_cache
-        if return_legacy_cache:
-            next_cache = past_key_values.to_legacy_cache()
         if not return_dict:
             return tuple(
                 v
@@ -1592,7 +1581,10 @@ class ParlerTTSForCausalLM(ParlerTTSPreTrainedModel, GenerationMixin):
             labels = labels.masked_fill(labels == self.config.bos_token_id, -100)
 
             # we use every codebooks token AND one single EOS at the end of each codebooks
-            mask = (input_ids.transpose(1, 2) != self.config.eos_token_id) & ((labels != -100))
+            # input_ids arrives as (bsz * num_codebooks, seq_len); reshape to (bsz, num_codebooks, seq_len)
+            # before transposing to match labels' (bsz, seq_len, num_codebooks) layout.
+            input_ids_by_codebook = input_ids.reshape(-1, self.config.num_codebooks, input_ids.shape[-1])
+            mask = (input_ids_by_codebook.transpose(1, 2) != self.config.eos_token_id) & (labels != -100)
 
             # per codebook cross-entropy
             for codebook in range(self.config.num_codebooks):
@@ -3187,12 +3179,6 @@ class ParlerTTSForConditionalGeneration(PreTrainedModel, GenerationMixin):
                     DynamicCache()
                     if not requires_cross_attention_cache
                     else EncoderDecoderCache(DynamicCache(), DynamicCache())
-                )
-            elif isinstance(past, tuple):
-                model_kwargs["past_key_values"] = (
-                    DynamicCache.from_legacy_cache(past)
-                    if not requires_cross_attention_cache
-                    else EncoderDecoderCache.from_legacy_cache(past)
                 )
 
         # build the delay pattern mask for offsetting each codebook prediction by 1 (this behaviour is specific to Parler-TTS)
