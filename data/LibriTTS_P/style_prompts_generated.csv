@@ -1,0 +1,54 @@
+M_p-low_s-slow_e-low|A male speaker speaks with a deep tone, employing a sluggish tempo and subdued manner.
+M_p-low_s-slow_e-normal|A man delivers speech at a leisurely pace with a deep tone and normal enthusiasm.
+M_p-low_s-slow_e-high|A male speaker delivers speech at a deliberate speed with a deep tone and vibrant tone.
+M_p-low_s-normal_e-low|A male narrator talks in a low-pitched voice at a normal tempo, exhibiting subdued manner.
+M_p-low_s-normal_e-normal|A male narrator talks in a resonant bass at a regular rate, exhibiting balanced intensity.
+M_p-low_s-normal_e-high|With vibrant tone, a male voice articulates at a steady pace using a resonant bass.
+M_p-low_s-fast_e-low|With muted energy, a male speaker articulates at a fast speed using a deep tone.
+M_p-low_s-fast_e-normal|A male voice delivers speech at a rapid pace with a resonant bass and normal enthusiasm.
+M_p-low_s-fast_e-high|A gentleman speaks with a deep tone, employing a brisk tempo and spirited enthusiasm.
+M_p-normal_s-slow_e-low|A male speaker delivers speech at a deliberate speed with a standard pitch and relaxed intensity.
+M_p-normal_s-slow_e-normal|A man talks in a standard pitch at a slow rate, exhibiting standard vigor.
+M_p-normal_s-slow_e-high|A male voice speaks with a moderate pitch, employing a sluggish tempo and spirited enthusiasm.
+M_p-normal_s-normal_e-low|A male voice speaks with a standard pitch, employing a steady pace and subdued manner.
+M_p-normal_s-normal_e-normal|With balanced intensity, a gentleman articulates at a conversational speed using a normal pitch.
+M_p-normal_s-normal_e-high|A male speaker talks in a moderate pitch at a regular rate, exhibiting spirited enthusiasm.
+M_p-normal_s-fast_e-low|A male voice speaks with a standard pitch, employing a quick delivery and relaxed intensity.
+M_p-normal_s-fast_e-normal|With balanced intensity, a gentleman articulates at a fast speed using a normal pitch.
+M_p-normal_s-fast_e-high|A man talks in a moderate pitch at a brisk tempo, exhibiting high intensity.
+M_p-high_s-slow_e-low|A male voice delivers speech at a deliberate speed with a elevated pitch and low vigor.
+M_p-high_s-slow_e-normal|A male speaker talks in a high-pitched voice at a deliberate speed, exhibiting balanced intensity.
+M_p-high_s-slow_e-high|A male narrator talks in a high-pitched voice at a slow rate, exhibiting high intensity.
+M_p-high_s-normal_e-low|With muted energy, a male narrator articulates at a regular rate using a soprano-like tone.
+M_p-high_s-normal_e-normal|A male voice speaks with a high-pitched voice, employing a conversational speed and normal enthusiasm.
+M_p-high_s-normal_e-high|A gentleman delivers speech at a conversational speed with a high-pitched voice and vibrant tone.
+M_p-high_s-fast_e-low|A male voice speaks with a elevated pitch, employing a quick delivery and relaxed intensity.
+M_p-high_s-fast_e-normal|A male narrator delivers speech at a brisk tempo with a high-pitched voice and normal enthusiasm.
+M_p-high_s-fast_e-high|A male speaker delivers speech at a brisk tempo with a soprano-like tone and vibrant tone.
+F_p-low_s-slow_e-low|A woman delivers speech at a leisurely pace with a deep tone and low vigor.
+F_p-low_s-slow_e-normal|A female speaker speaks with a low-pitched voice, employing a deliberate speed and normal enthusiasm.
+F_p-low_s-slow_e-high|With vibrant tone, a female voice articulates at a deliberate speed using a low pitch.
+F_p-low_s-normal_e-low|A lady delivers speech at a normal tempo with a resonant bass and low vigor.
+F_p-low_s-normal_e-normal|A woman delivers speech at a regular rate with a low-pitched voice and standard vigor.
+F_p-low_s-normal_e-high|A female speaker delivers speech at a steady pace with a low-pitched voice and dynamic energy.
+F_p-low_s-fast_e-low|With muted energy, a female narrator articulates at a rapid pace using a low-pitched voice.
+F_p-low_s-fast_e-normal|A female narrator speaks with a low-pitched voice, employing a brisk tempo and normal enthusiasm.
+F_p-low_s-fast_e-high|A female speaker talks in a low-pitched voice at a fast speed, exhibiting vibrant tone.
+F_p-normal_s-slow_e-low|A lady talks in a moderate pitch at a leisurely pace, exhibiting muted energy.
+F_p-normal_s-slow_e-normal|A female voice delivers speech at a slow rate with a normal pitch and normal enthusiasm.
+F_p-normal_s-slow_e-high|A female narrator delivers speech at a slow rate with a standard pitch and spirited enthusiasm.
+F_p-normal_s-normal_e-low|A woman speaks with a moderate pitch, employing a steady pace and low vigor.
+F_p-normal_s-normal_e-normal|A lady speaks with a moderate pitch, employing a conversational speed and normal enthusiasm.
+F_p-normal_s-normal_e-high|A female narrator delivers speech at a regular rate with a normal pitch and dynamic energy.
+F_p-normal_s-fast_e-low|A female narrator talks in a moderate pitch at a quick delivery, exhibiting low vigor.
+F_p-normal_s-fast_e-normal|A lady speaks with a moderate pitch, employing a fast speed and moderate energy.
+F_p-normal_s-fast_e-high|A lady talks in a standard pitch at a fast speed, exhibiting spirited enthusiasm.
+F_p-high_s-slow_e-low|A female voice speaks with a high pitch, employing a slow rate and subdued manner.
+F_p-high_s-slow_e-normal|With moderate energy, a female voice articulates at a leisurely pace using a elevated pitch.
+F_p-high_s-slow_e-high|A female narrator delivers speech at a slow rate with a high-pitched voice and vibrant tone.
+F_p-high_s-normal_e-low|A female speaker delivers speech at a steady pace with a high-pitched voice and muted energy.
+F_p-high_s-normal_e-normal|A woman delivers speech at a regular rate with a high pitch and balanced intensity.
+F_p-high_s-normal_e-high|With spirited enthusiasm, a female speaker articulates at a normal tempo using a high-pitched voice.
+F_p-high_s-fast_e-low|A woman talks in a soprano-like tone at a quick delivery, exhibiting relaxed intensity.
+F_p-high_s-fast_e-normal|A woman delivers speech at a fast speed with a soprano-like tone and standard vigor.
+F_p-high_s-fast_e-high|A female narrator speaks with a high pitch, employing a rapid pace and dynamic energy.
