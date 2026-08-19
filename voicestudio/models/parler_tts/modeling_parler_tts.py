@@ -52,7 +52,6 @@ from transformers.modeling_outputs import (
     ModelOutput,
 )
 from transformers.modeling_utils import PreTrainedModel
-from transformers.pytorch_utils import isin_mps_friendly
 from transformers.utils import (
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
@@ -109,7 +108,7 @@ class ParlerTTSLogitsProcessor(LogitsProcessor):
         self.max_codebooks = max_codebooks
 
     def __call__(self, input_ids: torch.LongTensor, scores: torch.FloatTensor) -> torch.FloatTensor:
-        is_eos = isin_mps_friendly(input_ids, self.eos_token_id).sum(1)
+        is_eos = torch.isin(input_ids, self.eos_token_id).sum(1)
 
         self.first_codebooks_unfinished = torch.where(
             (is_eos[self.first_codebooks_unfinished] > 0) & (self.first_codebooks_unfinished < self.max_codebooks),
