@@ -1,36 +1,11 @@
-[build-system]
-requires = [ "hatchling" ]
-build-backend = "hatchling.build"
-
 [project]
-name = "voicestudio"
-version = "1.0.1"
-description = "VoiceStudio: A unified toolkit for text-style prompted speech synthesis, voice adaptation, and editing"
+name = "spk_incon"
+version = "0.1.0"
+description = "InterSpeech 2026 Paper Codebase"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [
-    { name = "LatentForge", email = "brew.airesearch@gmail.com" }
-]
-keywords = [ "text-to-speech", "voice-synthesis", "audio-generation", "lora", "hypernetworks" ]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Multimedia :: Sound/Audio :: Speech",
-]
 dependencies = [
-    # -----------------------------------------
-    # General dependencies
-    # -----------------------------------------
     "numpy>=2.3.5",
     "torch ; platform_system == 'Windows'",
     "torch>=2.8.0",
@@ -38,51 +13,22 @@ dependencies = [
     "torchaudio>=2.8.0",
     "torchcodec>=0.9.1",
     "librosa>=0.11.0",
-    "transformers>=5.3.0",  # see [tool.uv.sources]
-    "kernels>=0.10.0",
+    "transformers==4.57.6",
+    "datasets",
+    "voicestudio[all]>=1.0.1",
     "hf-xet>=1.1.8",
     "tqdm>=4.67.1",
-]
-[project.optional-dependencies]
-all = [
-    "voicestudio[train]",
-    "voicestudio[eval]",
-    "voicestudio[onnx]",
-    "voicestudio[web]",
-]
-train = [
-    "accelerate>=1.10.0",
-    "matplotlib>=3.10.5",
-    "wandb>=0.21.1",
-    "notebook>=7.4.5",
-    "ipywidgets>=8.1.7",
-]
-eval = [
-    "pyworld>=0.3.5",
-    "pysptk>=1.0.1",
-    "jiwer>=4.0.0",
+    "descript-audiotools",
     "speechbrain",
     "utmosv2",
+    "flash-attn",
 ]
-f5_tts = [
-    "pypinyin>=0.51.0",
-]
-spark_tts = [
-    "einops>=0.8.0",
-    "einx>=0.3.0",
-    "soxr>=0.5.0",
-    "soundfile>=0.13.0",
-]
-onnx = [  # for Qwen3-TTS, CosyVoice
-    "onnxruntime-gpu[cuda,cudnn]>=1.18.0 ; platform_system == 'Linux' or platform_system == 'Windows'",
-    "onnxruntime>=1.18.0 ; platform_system == 'Darwin'",
-    "onnx",
-]
-web = [  # Voice Studio Web
-    "fastapi>=0.126.0",
-]
-chroma = [
-    "av>=12.0.0",
+
+[tool.uv]
+override-dependencies = [
+    "onnx>=1.20.0",
+    "protobuf>=4.25.1",
+    "encodec>=0.1.1"
 ]
 
 [tool.uv.sources]
@@ -92,19 +38,31 @@ torch = [
 torchaudio = [
     { index = "pytorch-windows", marker = "platform_system == 'Windows'" },
 ]
-transformers = { git = "https://github.com/latentforge/transformers-tts", branch = "research" }
-vocos = { git = "https://github.com/latentforge/vocos" }
-speechbrain = { git = "https://github.com/latentforge/speechbrain", rev = "fix/support_torch2.9" }
+flash-attn = [
+    # Linux x86_64 (manylinux)
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.11' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.12' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp313-cp313-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.13' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", marker = "python_version == '3.14' and platform_system == 'Linux' and platform_machine == 'x86_64'" },
+    # Linux aarch64 (manylinux)
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp311-cp311-manylinux_2_34_aarch64.whl", marker = "python_version == '3.11' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp312-cp312-manylinux_2_34_aarch64.whl", marker = "python_version == '3.12' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp313-cp313-manylinux_2_34_aarch64.whl", marker = "python_version == '3.13' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu128torch2.10-cp314-cp314-manylinux_2_34_aarch64.whl", marker = "python_version == '3.14' and platform_system == 'Linux' and platform_machine == 'aarch64'" },
+    # Windows x86_64
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp311-cp311-win_amd64.whl", marker = "python_version == '3.11' and platform_system == 'Windows'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp312-cp312-win_amd64.whl", marker = "python_version == '3.12' and platform_system == 'Windows'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp313-cp313-win_amd64.whl", marker = "python_version == '3.13' and platform_system == 'Windows'" },
+    { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp314-cp314-win_amd64.whl", marker = "python_version == '3.14' and platform_system == 'Windows'" },
+]
+descript-audiotools = { git = "https://github.com/latentforge/audiotools" }
+speechbrain = { git = "https://github.com/speechbrain/speechbrain" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
+
+[tool.uv.extra-build-dependencies]
+flash-attn = [ "torch" ]
 
 [[tool.uv.index]]
 name = "pytorch-windows"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
-
-[tool.hatch.build.targets.wheel]
-packages = [ "voicestudio" ]
-
-[project.urls]
-Homepage = "https://latentforge.github.io/"
-Repository = "https://github.com/LatentForge/VoiceStudio"
