@@ -1,22 +1,9 @@
-# Copyright (c) 2025 SparkAudio
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 """SparkTTS model configuration"""
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from transformers.configuration_utils import PretrainedConfig
+from transformers.models.qwen2.configuration_qwen2 import Qwen2Config
 from transformers.utils import logging
 
 
@@ -56,6 +43,9 @@ class SparkTTSConfig(PretrainedConfig):
             Whether to normalize the volume of input audio.
         audio_tokenizer_config (`Dict`, *optional*):
             Configuration dictionary for the BiCodec audio tokenizer. If not provided, default configuration will be used.
+        llm_config (`Union[Dict, Qwen2Config]`, *optional*):
+            Configuration for the LLM backbone (a [`Qwen2Config`]). If not provided, the default `Qwen2Config`
+            values are used.
         max_new_tokens (`int`, *optional*, defaults to 3000):
             Maximum number of new tokens to generate during inference.
         temperature (`float`, *optional*, defaults to 0.8):
@@ -82,6 +72,7 @@ class SparkTTSConfig(PretrainedConfig):
     ```"""
 
     model_type = "spark_tts"
+    sub_configs = {"llm_config": Qwen2Config}
 
     def __init__(
         self,
@@ -96,6 +87,7 @@ class SparkTTSConfig(PretrainedConfig):
         ref_segment_duration: float = 6.0,
         volume_normalize: bool = True,
         audio_tokenizer_config: Optional[Dict] = None,
+        llm_config: Optional[Union[Dict, Qwen2Config]] = None,
         max_new_tokens: int = 3000,
         temperature: float = 0.8,
         top_k: int = 50,
@@ -122,6 +114,11 @@ class SparkTTSConfig(PretrainedConfig):
         if audio_tokenizer_config is None:
             audio_tokenizer_config = self._get_default_audio_tokenizer_config()
         self.audio_tokenizer_config = audio_tokenizer_config
+
+        if isinstance(llm_config, Qwen2Config):
+            self.llm_config = llm_config
+        else:
+            self.llm_config = Qwen2Config(**(llm_config or {}))
 
         # Generation parameters
         self.max_new_tokens = max_new_tokens
