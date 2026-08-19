@@ -215,6 +215,10 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# VoiceStudio migration workspace (vendored source + downloaded checkpoints)
+/dep
+/ckpts
+
 # PyTorch
 data/
 .data/
