@@ -143,12 +143,23 @@ class ChromaProcessor(Qwen2_5OmniProcessor):
         if len(prompt_text) != batch_size:
             raise ValueError(f"prompt_text length {len(prompt_text)} != conversations length {batch_size}")
 
+        output_kwargs = self._merge_kwargs(
+            ChromaProcessorKwargs,
+            tokenizer_init_kwargs=self.tokenizer.init_kwargs if self.tokenizer is not None else {},
+            **kwargs,
+        )
+        text_kwargs = output_kwargs["text_kwargs"]
+        audio_kwargs = output_kwargs["audio_kwargs"]
+        common_kwargs = output_kwargs["common_kwargs"]
+
         text, audios = self.apply_chat_template(conversations, **kwargs)
-        thinker_inputs = super().__call__(text=text, audio=audios, return_tensors="pt", padding=True, use_audio_in_video=False)
+        thinker_inputs = super().__call__(
+            text=text, audio=audios, use_audio_in_video=False, **text_kwargs, **common_kwargs
+        )
         thinker_inputs = {f"thinker_{k}": v for k, v in thinker_inputs.items()}
 
-        inputs = super().__call__(text=prompt_text, return_tensors="pt", padding=True)
-        target_sample_rate = kwargs.get("target_sample_rate", 24000)
+        inputs = super().__call__(text=prompt_text, **text_kwargs, **common_kwargs)
+        target_sample_rate = audio_kwargs.get("target_sample_rate", 24000)
         prompt_audio_wavs = [self.load_audio(audio, target_sample_rate) for audio in prompt_audio]
         prompt_audio_cutoffs = torch.tensor([len(audio) for audio in prompt_audio_wavs], dtype=torch.long)
         prompt_audio_tensor = torch.nn.utils.rnn.pad_sequence(prompt_audio_wavs, batch_first=True).unsqueeze(1)
@@ -160,7 +171,7 @@ class ChromaProcessor(Qwen2_5OmniProcessor):
                 "input_values": prompt_audio_tensor,
                 "input_values_cutoffs": prompt_audio_cutoffs,
             },
-            tensor_type=kwargs.get("return_tensors"),
+            tensor_type=common_kwargs.get("return_tensors"),
         )
 
     def load_audio(self, audio_path: str, target_sample_rate: int = 24000) -> torch.Tensor:

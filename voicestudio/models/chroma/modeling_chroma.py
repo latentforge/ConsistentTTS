@@ -498,7 +498,8 @@ class ChromaDecoderForCausalLM(ChromaPreTrainedModel, GenerationMixin):
 
         if inputs_embeds.dim() == 4:
             inputs_embeds = inputs_embeds.reshape(-1, inputs_embeds.shape[-2], inputs_embeds.shape[-1])
-            labels = labels.reshape(-1, labels.shape[-1])
+            if labels is not None:
+                labels = labels.reshape(-1, labels.shape[-1])
 
         has_eos = inputs_embeds.shape[1] == self.config.audio_num_codebooks + 1
         inputs_embeds = inputs_embeds[:, : self.config.audio_num_codebooks, :]
