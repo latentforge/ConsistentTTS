@@ -23,4 +23,4 @@ with no `transformers` equivalent; `CosyVoiceV2Processor` tokenizes text only.
 
 Checkpoint: `FunAudioLLM/CosyVoice2-0.5B`.
 
-Original model and code: https://github.com/QwenAudio/CosyVoice
+Original model and code: https://github.com/FunAudioLLM/CosyVoice

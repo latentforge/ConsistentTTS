@@ -174,7 +174,14 @@ class CosyVoiceV2LLM(CosyVoiceV1PreTrainedModel):
 
 class CosyVoiceV2PreLookaheadLayer(nn.Module):
     """Convolves each mel-encoder frame with a small window of future frames before the causal Conformer
-    encoder, giving the causal flow decoder limited lookahead without breaking streaming."""
+    encoder, giving the causal flow decoder limited lookahead without breaking streaming.
+
+    Args:
+        channels (`int`):
+            Number of channels in the input and output hidden states.
+        pre_lookahead_len (`int`):
+            Number of future frames convolved into each frame's representation.
+    """
 
     def __init__(self, channels: int, pre_lookahead_len: int):
         super().__init__()
@@ -193,9 +200,7 @@ class CosyVoiceV2PreLookaheadLayer(nn.Module):
 
 
 class CosyVoiceV2CausalConditionalDecoder(CosyVoiceV1ConditionalDecoder):
-    r"""Same U-Net estimator as [`CosyVoiceV1ConditionalDecoder`]; CosyVoice v2 additionally makes every
-    convolution causal for streaming, which this port does not distinguish, since generation here is always
-    run non-streaming over the full sequence."""
+    r"""Same U-Net estimator as [`CosyVoiceV1ConditionalDecoder`]."""
 
 
 class CosyVoiceV2FlowMatchingModel(CosyVoiceV1PreTrainedModel):
