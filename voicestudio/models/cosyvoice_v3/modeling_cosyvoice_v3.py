@@ -153,10 +153,10 @@ class CosyVoiceV3DiTBlock(nn.Module):
         )
         self.ada_ln = nn.Linear(hidden_size, hidden_size * 6)
 
-    def forward(self, hidden_states: torch.Tensor, time_emb: torch.Tensor, attn_mask: torch.Tensor | None) -> torch.Tensor:
+    def forward(self, hidden_states: torch.Tensor, time_emb: torch.Tensor, key_padding_mask: torch.Tensor | None) -> torch.Tensor:
         shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.ada_ln(time_emb).unsqueeze(1).chunk(6, dim=-1)
         normed = self.norm1(hidden_states) * (1 + scale_msa) + shift_msa
-        attn_out, _ = self.attn(normed, normed, normed, attn_mask=attn_mask, need_weights=False)
+        attn_out, _ = self.attn(normed, normed, normed, key_padding_mask=key_padding_mask, need_weights=False)
         hidden_states = hidden_states + gate_msa * attn_out
         normed = self.norm2(hidden_states) * (1 + scale_mlp) + shift_mlp
         return hidden_states + gate_mlp * self.ff(normed)
@@ -189,9 +189,9 @@ class CosyVoiceV3DiT(nn.Module):
         hidden_states = torch.cat([x, mu, spk_expanded], dim=1).transpose(1, 2)
         hidden_states = self.input_proj(hidden_states)
 
-        attn_mask = None if mask.all() else (~mask.squeeze(1).bool()).unsqueeze(1).expand(-1, mask.size(-1), -1)
+        key_padding_mask = None if mask.all() else ~mask.squeeze(1).bool()
         for layer in self.layers:
-            hidden_states = layer(hidden_states, time_emb, attn_mask)
+            hidden_states = layer(hidden_states, time_emb, key_padding_mask)
         hidden_states = self.norm_out(hidden_states)
         return self.proj_out(hidden_states).transpose(1, 2) * mask
 
