@@ -149,11 +149,12 @@ class HiggsAudioV3ForConditionalGeneration(HiggsAudioV3PreTrainedModel):
     base_model_prefix = "model"
     _tied_weights_keys = {"audio_head.weight": "model.embed_audio_tokens.embed_audio_tokens.weight"}
 
-    def __init__(self, config: HiggsAudioV3Config, use_text_head: bool = False):
+    def __init__(self, config: HiggsAudioV3Config, use_text_head: bool = True):
         r"""
-        use_text_head (`bool`, *optional*, defaults to False):
-            Whether to use a text language model head. Such head is not required for generation,
-            but can be used to compute the text loss when training.
+        use_text_head (`bool`, *optional*, defaults to True):
+            Whether to instantiate a text language model head. Such head is not required for generation,
+            but is used to compute the text loss when `labels` are passed to `forward`. Set to False only
+            to save the (tied-vocab-size) parameters when text-side training is not needed.
         """
         super().__init__(config)
         self.model = HiggsAudioV3Model(config)
@@ -233,9 +234,20 @@ class HiggsAudioV3ForConditionalGeneration(HiggsAudioV3PreTrainedModel):
         loss = None
         if audio_labels is not None:
             audio_logits = logits.reshape(*logits.shape[:2], self.config.num_codebooks, self.config.codebook_size)
-            audio_labels_expanded = input_ids.new_ones((*input_ids.shape[:2], self.config.num_codebooks)) * -100
-            audio_token_mask = self.model.get_placeholder_mask(input_ids, inputs_embeds, audio_input_ids_mask)
-            audio_labels_expanded[audio_token_mask] = audio_labels[audio_input_ids_mask]
+            if input_ids is not None:
+                label_batch, label_seq = input_ids.shape[:2]
+                audio_token_mask = self.model.get_placeholder_mask(input_ids, inputs_embeds, audio_input_ids_mask)
+            else:
+                # No `input_ids` (e.g. `inputs_embeds`-only training): the whole sequence is audio.
+                label_batch, label_seq = inputs_embeds.shape[:2]
+                audio_token_mask = torch.ones(
+                    (label_batch, label_seq), dtype=torch.bool, device=inputs_embeds.device
+                )
+            audio_labels_expanded = audio_labels.new_full((label_batch, label_seq, self.config.num_codebooks), -100)
+            valid_audio_labels = (
+                audio_labels[audio_input_ids_mask] if audio_input_ids_mask is not None else audio_labels
+            )
+            audio_labels_expanded[audio_token_mask] = valid_audio_labels.reshape(-1, self.config.num_codebooks)
 
             codebook_losses = []
             for codebook_idx in range(self.config.num_codebooks):
