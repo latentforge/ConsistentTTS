@@ -72,6 +72,9 @@ onnx = [  # for Qwen3-TTS, CosyVoice
 web = [  # Voice Studio Web
     "fastapi>=0.126.0",
 ]
+chroma = [
+    "av>=12.0.0",
+]
 
 [tool.uv.sources]
 torch = [
