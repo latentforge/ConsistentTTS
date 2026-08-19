@@ -178,7 +178,7 @@ Update this table as each model's migration lands.
 | Spark-TTS | Not started | Already vendored in `dep/Spark-TTS` |
 | Dia | Not started | Already marked "fully tested (by HF)" in old README |
 | CosyVoice (v1/v2/v3) | Not started | Already vendored in `dep/CosyVoice` |
-| F5-TTS | Not started | Already vendored in `dep/F5-TTS` |
+| F5-TTS | In progress | Full reimplementation (DiT flow-matching, no existing transformers-tts lineage). `RMSNorm` reuses `LlamaRMSNorm`. Model predicts mel spectrograms only; `F5TTSProcessor.decode` requires an external vocoder (e.g. `vocos`) to render audio. `dep/F5-TTS` deleted. |
 | promptttspp | Not started | |
 | audiotools dependency removal | Not started | |
 | vocos dependency removal | Not started | |
