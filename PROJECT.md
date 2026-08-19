@@ -174,7 +174,7 @@ Update this table as each model's migration lands.
 | Qwen3-TTS | In progress | Model/config are import relays to transformers-tts. Processor subclass adds `encode`/`encode_voice_design`/`encode_custom_voice` task dispatch with `RuntimeError` on task mismatch. `encode_voice_clone` raises `NotImplementedError`: transformers-tts's `Qwen3TTSProcessor` has no reference-audio input path yet. |
 | Parler-TTS | Not started | Second in migration order. Target: use HF-registered `dac`, closest transformers lineage TBD |
 | Higgs-Audio (v2/v3) | Not started | Reference processor pattern for other audio-tokenizer models |
-| Chroma | Not started | |
+| Chroma | In progress | Backbone/decoder/generation loop reimplemented against transformers-tts's Llama, Qwen2.5-Omni thinker, and Mimi codec classes (no full Chroma architecture exists upstream in transformers-tts to relay to). Processor subclasses `Qwen2_5OmniProcessor` to add the reference-audio voice-cloning prompt. |
 | Spark-TTS | Not started | Already vendored in `dep/Spark-TTS` |
 | Dia | Not started | Already marked "fully tested (by HF)" in old README |
 | CosyVoice (v1/v2/v3) | Not started | Already vendored in `dep/CosyVoice` |
