@@ -28,7 +28,7 @@ class PromptTTSppPromptEncoderConfig(PreTrainedConfig):
             Dimensionality of the produced style embedding. Must match the acoustic model's `speaker_embed_dim`.
     """
 
-    model_type = "promptttspp_prompt_encoder"
+    model_type = "prompt_tts_pp_prompt_encoder"
     sub_configs = {"text_config": BertConfig}
 
     def __init__(
@@ -67,14 +67,14 @@ class PromptTTSppConfig(PreTrainedConfig):
     Example:
 
     ```python
-    >>> from voicestudio.models.promptttspp import PromptTTSppConfig, PromptTTSppForConditionalGeneration
+    >>> from voicestudio.models.prompt_tts_pp import PromptTTSppConfig, PromptTTSppForConditionalGeneration
 
     >>> configuration = PromptTTSppConfig()
     >>> model = PromptTTSppForConditionalGeneration(configuration)
     >>> configuration = model.config
     ```"""
 
-    model_type = "promptttspp"
+    model_type = "prompt_tts_pp"
     sub_configs = {
         "model_config": FastSpeech2ConformerConfig,
         "vocoder_config": FastSpeech2ConformerHifiGanConfig,

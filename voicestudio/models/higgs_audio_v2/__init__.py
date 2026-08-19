@@ -1,11 +1,11 @@
-from .configuration_higgs_audio import HiggsAudioV2Config, HiggsAudioV2TokenizerConfig
-from .modeling_higgs_audio import (
+from .configuration_higgs_audio_v2 import HiggsAudioV2Config, HiggsAudioV2TokenizerConfig
+from .modeling_higgs_audio_v2 import (
     HiggsAudioV2ForConditionalGeneration,
     HiggsAudioV2Model,
     HiggsAudioV2PreTrainedModel,
 )
-from .processing_higgs_audio import HiggsAudioV2Processor
-from .tokenization_higgs_audio import HiggsAudioV2TokenizerModel
+from .processing_higgs_audio_v2 import HiggsAudioV2Processor
+from .tokenization_higgs_audio_v2 import HiggsAudioV2TokenizerModel
 
 
 __all__ = [

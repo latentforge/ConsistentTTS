@@ -28,7 +28,7 @@ from transformers.models.fastspeech2_conformer.modeling_fastspeech2_conformer im
 )
 from transformers.utils import auto_docstring
 
-from .configuration_promptttspp import PromptTTSppConfig, PromptTTSppPromptEncoderConfig
+from .configuration_prompt_tts_pp import PromptTTSppConfig, PromptTTSppPromptEncoderConfig
 
 
 @auto_docstring(
@@ -72,7 +72,7 @@ class PromptTTSppPromptEncoder(nn.Module):
 @auto_docstring
 class PromptTTSppPreTrainedModel(PreTrainedModel):
     config: PromptTTSppConfig
-    base_model_prefix = "promptttspp"
+    base_model_prefix = "prompt_tts_pp"
     main_input_name = "input_ids"
 
 
@@ -187,7 +187,7 @@ class PromptTTSppForConditionalGeneration(PromptTTSppPreTrainedModel):
         Example:
 
         ```python
-        >>> from voicestudio.models.promptttspp import PromptTTSppForConditionalGeneration, PromptTTSppProcessor
+        >>> from voicestudio.models.prompt_tts_pp import PromptTTSppForConditionalGeneration, PromptTTSppProcessor
 
         >>> processor = PromptTTSppProcessor.from_pretrained("line-corporation/promptttspp")
         >>> model = PromptTTSppForConditionalGeneration.from_pretrained("line-corporation/promptttspp")
