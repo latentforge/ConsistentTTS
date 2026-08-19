@@ -178,21 +178,37 @@ VoiceStudio to restore it — don't fork the whole processor.
 
 ## Status tracking
 
-Update this table as each model's migration lands.
+Update this table as each model's migration lands. "Code landed" means the folder exists,
+imports, and passed a static review pass (architecture, CE-training requirement, CLAUDE.md
+conventions) with known issues fixed. It does NOT mean the model has been run against a real
+pretrained checkpoint yet; see "Runtime-verified" for that.
 
-| Model | Status | Notes |
-|---|---|---|
-| Qwen3-TTS | In progress | Model/config are import relays to transformers-tts. Processor subclass adds `encode`/`encode_voice_design`/`encode_custom_voice` task dispatch with `RuntimeError` on task mismatch. `encode_voice_clone` raises `NotImplementedError`: transformers-tts's `Qwen3TTSProcessor` has no reference-audio input path yet. |
-| Parler-TTS | Not started | Second in migration order. Target: use HF-registered `dac`, closest transformers lineage TBD |
-| Higgs-Audio v2 | Done | Import relay to transformers-tts. Reference processor pattern for other audio-tokenizer models |
-| Higgs-Audio v3 | In progress | `bosonai/higgs-tts-3-4b`. Weights-only checkpoint (no upstream v3 code); backbone is a plain `Qwen3Model` (no dual-FFN). Reuses transformers-tts's `Qwen3Model`, `HiggsAudioV2Embeddings`, `HiggsAudioV2PreTrainedModel`, and `HiggsAudioV2TokenizerModel`; `HiggsAudioV3Model`/`ForConditionalGeneration` are new since v2's dual-FFN decoder layer does not fit. No checkpoint conversion or real-weights test run yet; the reference-audio prompt layout in `HiggsAudioV3Processor` is unverified against the real checkpoint. |
-| Chroma | In progress | Backbone/decoder/generation loop reimplemented against transformers-tts's Llama, Qwen2.5-Omni thinker, and Mimi codec classes (no full Chroma architecture exists upstream in transformers-tts to relay to). Processor subclasses `Qwen2_5OmniProcessor` to add the reference-audio voice-cloning prompt. |
-| Spark-TTS | Not started | Already vendored in `dep/Spark-TTS` |
-| Dia | Not started | Already marked "fully tested (by HF)" in old README |
-| CosyVoice (v1/v2/v3) | In progress | Three separate model folders (`cosyvoice_v1`, `cosyvoice_v2`, `cosyvoice_v3`), matching the upstream repo's own class inheritance: v2's Qwen2-backbone LLM and causal flow decoder subclass v1's flow-matching classes, v3's LLM and DiT flow decoder subclass v2's. `cosyvoice_v1` reuses `Wav2Vec2ConformerEncoder` for the text encoder/LLM backbone; `cosyvoice_v2`/`v3` reuse `Qwen2Model`. Flow-matching U-Net/DiT estimators and the HiFTNet vocoder are new code (no transformers-tts lineage). `dep/CosyVoice` deleted. See each folder's README for known gaps (JIT/TRT/vLLM/streaming/bistream not ported; speech tokenizer and speaker encoder are external ONNX artifacts). |
-| F5-TTS | In progress | Full reimplementation (DiT flow-matching, no existing transformers-tts lineage). `RMSNorm` reuses `LlamaRMSNorm`. Model predicts mel spectrograms only; `F5TTSProcessor.decode` requires an external vocoder (e.g. `vocos`) to render audio. `dep/F5-TTS` deleted. |
-| PromptTTS++ (`prompt_tts_pp`) | In progress | Acoustic model and vocoder are `FastSpeech2Conformer`/`FastSpeech2ConformerHifiGan` from transformers-tts, conditioned via `speaker_embedding`. The BERT-based prompt encoder is newly implemented since it has no equivalent in transformers-tts. No pretrained checkpoint conversion done yet (upstream ships no public checkpoint). |
-| audiotools dependency removal | Not started | |
-| vocos dependency removal | Not started | |
-| speechbrain fork removal | Not started | Check if upstream now supports the required torch version |
-| UTMOSv2 decoupling | Not started | Route through `evaluate`, may need `voicestudio/metrics/` |
+| Model | Code landed | Runtime-verified (real checkpoint) | Upstream git history preserved | Notes |
+|---|---|---|---|---|
+| Qwen3-TTS | Yes | No | No | Import relays to transformers-tts. Processor subclass adds `encode`/`encode_voice_design`/`encode_custom_voice` task dispatch with `RuntimeError` on task mismatch. `encode_voice_clone` raises `NotImplementedError`. |
+| Parler-TTS | Yes | No | No | Import bug (`isin_mps_friendly`) fixed. Still a ~3300-line near-verbatim port with scattered `# Copied from` comments rather than a `modular_parler_tts.py`; revisit for a proper modular conversion. |
+| Higgs-Audio v2 | Yes | No | No | Import relay to transformers-tts. Reviewed clean, no issues found. |
+| Higgs-Audio v3 | Yes | No | No | `bosonai/higgs-tts-3-4b`, weights-only checkpoint (no upstream v3 code). Reuses transformers-tts's `Qwen3Model`/`HiggsAudioV2*` classes; `HiggsAudioV3Model`/`ForConditionalGeneration` are new. `audio_labels`-only crash and default-off text CE loss fixed. |
+| Chroma | Yes | No | No | Backbone/decoder reimplemented against transformers-tts's Llama, Qwen2.5-Omni thinker, and Mimi codec classes. Processor kwargs-merging and a labels-dereference guard fixed. |
+| Spark-TTS | Yes | No | No | Config previously had no LLM sub-config, so plain construction silently produced an untrained model; fixed. License header consolidated onto `modeling_spark_tts.py` only; dead code and processor/model duplication cleaned up. |
+| Dia | Yes | No | No | Import relay to transformers-tts's native Dia. Reviewed clean. |
+| CosyVoice v1 | Yes | No | No | `Wav2Vec2ConformerEncoder`-based text encoder/LLM backbone; own flow-matching/vocoder code. |
+| CosyVoice v2 | Yes | No | No | Subclasses v1; `Qwen2Model` LLM backbone. |
+| CosyVoice v3 | Yes | No | No | Subclasses v2. DiT attention-mask shape bug (crashed on padded batches) fixed. |
+| F5-TTS | Yes | No | No | Full reimplementation, DiT flow-matching. Predicts mel spectrograms only; `F5TTSProcessor.decode` needs an external vocoder. `forward()` previously had no `labels`/loss path at all; added. |
+| PromptTTS++ (`prompt_tts_pp`) | Yes | No | No | `FastSpeech2Conformer`/`FastSpeech2ConformerHifiGan` from transformers-tts, conditioned via a newly-implemented BERT-based prompt encoder. `return_dict=False` tuple-indexing bug fixed. No public upstream checkpoint exists. |
+| OmniVoice | Yes | No | No | No transformers-tts lineage (closest in spirit to CSM/Moshi); modeling code is new, audio tokenizer reused from transformers-tts's `HiggsAudioV2TokenizerModel`. Training-time sample masking and reference-audio auto-transcription (ASR) not ported. |
+| audiotools dependency removal | Not started | | | |
+| vocos dependency removal | Not started | | | |
+| speechbrain fork removal | Not started | | | Check if upstream now supports the required torch version |
+| UTMOSv2 decoupling | Not started | | | Route through `evaluate`, may need `voicestudio/metrics/` |
+
+### Known gap: upstream git history
+
+The per-model migration procedure above calls for preserving each upstream repo's git
+history via `git subtree`/`filter-repo`. In practice none of the models above got this: every
+folder's earliest commit in this repo is a fresh "Add X" commit with no upstream authorship in
+its ancestry. Retrofitting this means, per model: clone upstream fresh, `git filter-repo
+--to-subdirectory-filter` to rewrite its history under that model's folder path, then graft it
+onto `develop`'s history (e.g. `git merge --allow-unrelated-histories -X ours`, since the
+grafted paths land in a non-colliding subfolder) and force-push. In progress.
