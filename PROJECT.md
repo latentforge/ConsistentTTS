@@ -103,9 +103,10 @@ and the vendored copy is removed from `dep/`.
 - **https://github.com/latentforge/vocos** — analyze what depends on it, remove the
   dependency, then delete the repo.
 - **https://github.com/latentforge/speechbrain** — this fork exists only to support a
-  newer torch version. If upstream speechbrain has since caught up, drop the fork and
-  depend on upstream (or drop the dependency entirely if unused after migration); then
-  delete the fork.
+  newer torch version. Upstream speechbrain has caught up (v1.1.0 supports
+  `torch>=2.1.0` with no upper bound), and the dependency turned out to be unused
+  anywhere in this repo, so it was dropped entirely rather than switched to upstream.
+  Delete the fork.
 - **https://github.com/sarulab-speech/UTMOSv2** — decouple via the `evaluate` library
   using https://huggingface.co/spaces/sarulab-speech/UTMOSv2/ as the reference
   implementation. A new `voicestudio/metrics/` folder may be created if needed for this.
@@ -200,7 +201,7 @@ pretrained checkpoint yet; see "Runtime-verified" for that.
 | OmniVoice | Yes | No | No | No transformers-tts lineage (closest in spirit to CSM/Moshi); modeling code is new, audio tokenizer reused from transformers-tts's `HiggsAudioV2TokenizerModel`. Training-time sample masking and reference-audio auto-transcription (ASR) not ported. |
 | audiotools dependency removal | Not started | | | |
 | vocos dependency removal | Not started | | | |
-| speechbrain fork removal | Not started | | | Check if upstream now supports the required torch version |
+| speechbrain fork removal | Done | | | Unused in repo; dependency dropped entirely (not switched to upstream). |
 | UTMOSv2 decoupling | Not started | | | Route through `evaluate`, may need `voicestudio/metrics/` |
 
 ### Known gap: upstream git history

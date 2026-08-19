@@ -61,7 +61,6 @@ eval = [
     "pyworld>=0.3.5",
     "pysptk>=1.0.1",
     "jiwer>=4.0.0",
-    "speechbrain",
     "utmosv2",
 ]
 f5_tts = [
@@ -94,7 +93,6 @@ torchaudio = [
 ]
 transformers = { git = "https://github.com/latentforge/transformers-tts", branch = "research" }
 vocos = { git = "https://github.com/latentforge/vocos" }
-speechbrain = { git = "https://github.com/latentforge/speechbrain", rev = "fix/support_torch2.9" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
 
 [[tool.uv.index]]
