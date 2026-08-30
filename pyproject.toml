@@ -114,6 +114,7 @@ flash-attn = [
 ]
 vocos = { git = "https://github.com/latentforge/vocos" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
+transformers = { git = "https://github.com/latentforge/transformers-tts", branch = "research" }
 
 [tool.uv.extra-build-dependencies]
 flash-attn = [ "torch" ]
