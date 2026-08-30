@@ -2,7 +2,7 @@
 
 This folder only re-exports `DiaConfig`, `DiaDecoderConfig`, `DiaEncoderConfig`, `DiaFeatureExtractor`, `DiaForConditionalGeneration`, `DiaModel`, `DiaPreTrainedModel`, `DiaProcessor`, and `DiaTokenizer`; it does not vendor or reimplement the model.
 
-Original model and code: https://github.com/nari-labs/dia
+Original model and code: [nari-labs/dia](https://github.com/nari-labs/dia)
 
 
 ## Usage

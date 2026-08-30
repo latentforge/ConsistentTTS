@@ -64,11 +64,16 @@ VoiceStudio works with various TTS architectures:
 | Parler-TTS  | ✅ Supported | Required further testing |
 | Higgs-Audio | ✅ Supported | Required further testing |
 | Qwen3-TTS   | ✅ Supported | Required further testing |
-| Chroma      | ✅ Supported | Required further testing |
-| Spark       | 🔄 Experimental | Coming soon           |
 | Dia         | ✅ Supported | Fully tested (by HF)  |
-| CozyVoice   | 🔄 Experimental | Coming soon           |
-| F5-TTS      | 🔄 Experimental | Coming soon           |
+| Chroma      | 🔄 Experimental | Upstream source imported, integration pending |
+| Spark-TTS   | 🔄 Experimental | Upstream source imported, integration pending |
+| CosyVoice   | 🔄 Experimental | Upstream source imported, integration pending |
+| F5-TTS      | 🔄 Experimental | Upstream source imported, integration pending |
+| Dia2        | 🔄 Experimental | Upstream source imported, integration pending |
+| PromptTTS++ | 🔄 Experimental | Upstream source imported, integration pending |
+| Breeze TTS 2 | 🔄 Experimental | Upstream source imported, integration pending |
+| OmniVoice   | 🔄 Experimental | Upstream source imported, integration pending |
+| VoxInstruct | 🔄 Experimental | Upstream source imported, integration pending |
 
 **Add your own model**: See our [Integration Guide](docs/integration.md)
 
