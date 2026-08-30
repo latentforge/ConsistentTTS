@@ -1,3 +1,4 @@
 from .dia import *
 from .higgs_tts2 import *
 from .higgs_tts3 import *
+from .qwen3_tts import *
