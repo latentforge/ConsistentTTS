@@ -113,7 +113,6 @@ flash-attn = [
     { url = "https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.7.12/flash_attn-2.8.3+cu126torch2.10-cp314-cp314-win_amd64.whl", marker = "python_version == '3.14' and platform_system == 'Windows'" },
 ]
 vocos = { git = "https://github.com/latentforge/vocos" }
-speechbrain = { git = "https://github.com/latentforge/speechbrain", rev = "fix/support_torch2.9" }
 utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
 
 [tool.uv.extra-build-dependencies]
