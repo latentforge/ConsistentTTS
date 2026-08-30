@@ -10,9 +10,27 @@ Original model and code: https://github.com/boson-ai/higgs-audio
 ## Usage
 
 ```python
+from transformers import AutoModelForTextToWaveform, AutoProcessor
 
+model_id = "bosonai/higgs-tts-3-4b"
+
+processor = AutoProcessor.from_pretrained(model_id)
+model = AutoModelForTextToWaveform.from_pretrained(model_id)
+model.to("cuda")
 ```
 
-```python
+Zero-shot voice cloning from a reference clip:
 
+```python
+import soundfile as sf
+
+reference_audio, _ = sf.read("reference.wav")
+inputs = processor(
+    text="The sun rises in the east.",
+    reference_audio=reference_audio,
+).to(model.device)
+
+audio_codes = model.generate(**inputs)
+waveform = processor.decode(audio_codes)
+sf.write("output.wav", waveform.numpy(), model.config.sample_rate)
 ```
