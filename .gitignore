@@ -232,3 +232,4 @@ wandb/
 # AI Agents
 .claude
 .agents
+ckpt/
