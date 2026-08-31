@@ -1,20 +1,31 @@
 {
-  // Cache locations. `${workspaceFolder}` rather than an absolute path so this
-  // file stays correct if the repo is checked out elsewhere -- it is committed,
-  // unlike .env.
-  //
-  // `python.envFile` covers notebooks and the debugger. The terminal block
-  // covers integrated terminals; UV_ENV_FILE is set there instead of repeating
-  // every variable, so `uv run` reads .env on its own and the two stay in sync.
-  "python.envFile": "${workspaceFolder}/.env",
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "terminal.integrated.env.linux": {
-    "HF_HOME": "${workspaceFolder}/.cache/huggingface",
-    "TORCH_HOME": "${workspaceFolder}/.cache/torch",
-    "UV_ENV_FILE": "${workspaceFolder}/.env"
-  },
-  "files.exclude": {
-    "**/.cache": true,
-    "**/torchinductor_*": true
-  }
+  // No absolute paths here. latexmkrc.py resolves the TeX toolchain at runtime
+  // (in-repo .venv/tinytex first, then a system installation), which also
+  // keeps this file identical on Windows and macOS.
+
+  "latex-workshop.latex.rootFile": "%WORKSPACE_FOLDER%/paper/main.tex",
+
+  // Where the extension looks for the built PDF. The build itself writes to
+  // build/ (see latexmkrc); only the finished PDF is copied to paper/main.pdf,
+  // which is what the viewer should open.
+  "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/paper",
+  "latex-workshop.latex.autoClean.run": "never",
+  "latex-workshop.latex.autoBuild.run": "onFileChange",
+  "latex-workshop.view.pdf.viewer": "tab",
+
+  "latex-workshop.latex.recipe.default": "latexmk",
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk", "tools": ["build"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "build",
+      "command": "uv",
+      "args": ["run", "latexmkrc.py"],
+      "cwd": "%WORKSPACE_FOLDER%"
+    }
+  ],
+
+  "[latex]": { "editor.wordWrap": "on" },
+  "[tex]": { "editor.wordWrap": "on" }
 }

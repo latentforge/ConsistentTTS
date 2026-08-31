@@ -1,0 +1,30 @@
+﻿이름,Extra URL,Files & media,URL,구분,기타,발행일,인용 1,인용 2,인용 3
+PromptTTS 2: Describing and Generating Voices with Text Prompt,,PromptTTS_2_-_Describing_and_Generating_Voices_with_Text_Prompt.pdf,https://arxiv.org/abs/2309.02285,,,2023,No,No,No
+PromptTTS++: Controlling Speaker Identity in Prompt-Based Text-to-Speech Using Natural Language Descriptions,https://github.com/line/promptttspp,PromptTTS_Controlling_Speaker_Identity_in_Prompt-Based_Text-to-Speech_Using_Natural_Language_Descriptions.pdf,https://arxiv.org/abs/2309.08140,"Instruct, TTS",,2023,Yes,Yes,Yes
+SoundStorm: Efficient Parallel Audio Generation,,SoundStorm_Efficient_Parallel_Audio_Generation.pdf,https://arxiv.org/abs/2305.09636,Audio,,2023,Yes,No,No
+Spark-TTS: An Efficient LLM-Based Text-to-Speech Model with Single-Stream Decoupled Speech Tokens,https://github.com/SparkAudio/Spark-TTS,Spark-TTS_-_An_Efficient_LLM-Based_Text-to-Speech_Model_with_Single-Stream_Decoupled_Speech_Tokens.pdf,https://arxiv.org/abs/2503.01710,TTS,,2025,Yes,No,No
+Tacotron: Towards End-to-End Speech Synthesis,,TACOTRON_TOWARDS_END-TO-END_SPEECH_SYNTHESIS.pdf,https://arxiv.org/abs/1703.10135,TTS,,2017,No,No,No
+"Tacotron2: NATURAL TTS SYNTHESIS BY CONDITIONING WAVENET ON MEL SPECTROGRAM
+PREDICTIONS",,NATURAL_TTS_SYNTHESIS_BY_CONDITIONING_WAVENET_ON_MEL_SPECTROGRAM_(Tacotron2).pdf,https://arxiv.org/abs/1712.05884,TTS,,2018,No,No,No
+Text-to-LoRA: Instant Transformer Adaption,,Text-to-LoRA_Instant_Transformer_Adaption.pdf,https://arxiv.org/abs/2506.06105,"HyperNet, Instruct, LoRA",,2025,No,Yes,Yes
+WaveNet: A Generative Model for Raw Audio,,WaveNet_A_Generative_Model_for_Raw_Audio.pdf,https://arxiv.org/abs/1609.03499,Audio,,2016,No,No,No
+Higgs Audio v2,,,https://www.boson.ai/blog/higgs-audio-v2,TTS,,2025,Yes,Yes,Yes
+Hypernetworks,,HYPERNETWORKS.pdf,https://arxiv.org/abs/1609.09106,HyperNet,,2016,No,Yes,Yes
+HyperTTS: Parameter Efficient Adaptation in Text to Speech using Hypernetworks,https://github.com/declare-lab/HyperTTS,HYPERTTS_-_Parameter_Efficient_Adaptation_in_Text_to_Speech_using_Hypernetworks.pdf,https://arxiv.org/abs/2404.04645,"HyperNet, LoRA",,2024,No,Yes,Yes
+Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech,,Conditional_Variational_Autoencoder_with_Adversarial_Learning_for_End-to-End_Text-to-Speech.pdf,https://arxiv.org/abs/2106.06103,TTS,,2021,No,No,No
+CosyVoice 2: Scalable Streaming Speech Synthesis with Large Language Models,https://github.com/FunAudioLLM/CosyVoice,CosyVoice_2_-_Scalable_Streaming_Speech_Synthesis_with_Large_Language_Models.pdf,https://arxiv.org/abs/2412.10117,TTS,,2024,Yes,No,No
+CosyVoice: A Scalable Multilingual Zero-shot Text-to-speech Synthesizer based on Supervised Semantic Tokens,https://github.com/FunAudioLLM/CosyVoice,CosyVoice_-_A_Scalable_Multilingual_Zero-shot_Text-to-speech_Synthesizer_based_on_Supervised_Semantic_Tokens.pdf,https://arxiv.org/abs/2407.05407,TTS,,2024,Yes,No,No
+Dia,https://github.com/nari-labs/dia,,,TTS,,2025,Yes,No,No
+F5-TTS: A Fairytaler that Fakes Fluent and Faithful Speech with Flow Matching,https://github.com/SWivid/F5-TTS,F5-TTS_-_A_Fairytaler_that_Fakes_Fluent_and_Faithful_Speech_with_Flow_Matching.pdf,https://arxiv.org/abs/2410.06885,TTS,,2025,Yes,No,No
+FASTSPEECH 2: FAST AND HIGH QUALITY END-TOEND TEXT TO SPEECH,,FASTSPEECH_2_FAST_AND_HIGH-QUALITY_END-TO.pdf,https://arxiv.org/abs/2006.04558,TTS,,2020,No,No,No
+IndexTTS: An Industrial-Level Controllable and Efficient Zero-Shot Text-To-Speech System,https://github.com/index-tts/index-tts,IndexTTS_-_An_Industrial-Level_Controllable_and_Efficient_Zero-Shot_Text-To-Speech_System.pdf,https://arxiv.org/abs/2502.05512,TTS,,2025,Yes,No,No
+"FastSpeech: Fast, Robust and Controllable Text to Speech",,FastSpeech_Fast_Robust_and_Controllable_Text_to_Speech.pdf,https://arxiv.org/abs/1905.09263,TTS,,2019,No,No,No
+Generating Data with Text-to-Speech and Large-Language Models for Conversational Speech Recognition,,Generating_Data_with_Text-to-Speech_and_Large-Language_Models_for_Conversational_Speech_Recognition.pdf,https://arxiv.org/abs/2408.09215,"Audio, Dataset",Parakeet의 테크니컬 리포트,2024,Yes,No,No
+Glow-TTS: A Generative Flow for Text-to-Speech via Monotonic Alignment Search,,Glow-TTS_A_Generative_Flow_for_Text-to-Speech_via_Monotonic_Alignment_Search.pdf,https://arxiv.org/abs/2005.11129,TTS,,2020,No,No,No
+HiFi-GAN: Generative Adversarial Networks for Efficient and High Fidelity Speech Synthesis,,HiFi-GAN_Generative_Adversarial_Networks_for_Efficient_and_High_Fidelity_Speech_Synthesis.pdf,https://arxiv.org/abs/2010.05646,TTS,,2020,No,No,No
+LibriTTS-P: A Corpus with Speaking Style and Speaker Identity Prompts for Text-to-Speech and Style Captioning,https://github.com/line/LibriTTS-P,LibriTTS-P_A_Corpus_with_Speaking_Style_and_Speaker_Identity_Prompts_for_Text-to-Speech_and_Style_Captioning.pdf,https://arxiv.org/abs/2406.07969,Dataset,,2024,Yes,Yes,Yes
+LibriTTS-R: A Restored Multi-Speaker Text-to-Speech Corpus,https://google.github.io/df-conformer/librittsr/,LibriTTS-R_A_Restored_Multi-Speaker_Text-to-Speech_Corpus.pdf,https://arxiv.org/abs/2305.18802,Dataset,,2023,Yes,Yes,Yes
+LibriTTS: A Corpus Derived from LibriSpeech for Text-to-Speech,,LibriTTS_A_Corpus_Derived_from_LibriSpeech_for_Text-to-Speech.pdf,https://arxiv.org/abs/1904.02882,Dataset,,2019,Yes,Yes,Yes
+Natural language guidance of high-fidelity text-to-speech with synthetic annotations,https://github.com/huggingface/parler-tts,Natural_language_guidance_of_high-fidelity_text-to-speech_with_synthetic_annotations.pdf,https://arxiv.org/abs/2402.01912,"Instruct, TTS",Parler-TTS,2024,Yes,Yes,Yes
+Neural Speech Synthesis with Transformer Network,,Neural_Speech_Synthesis_with_Transformer_Network.pdf,https://arxiv.org/abs/1809.08895,TTS,,2019,No,No,No
+Parakeet,,,https://jordandarefsky.com/blog/2024/parakeet/,TTS,기술 블로그 포스트,2024,Yes,No,No

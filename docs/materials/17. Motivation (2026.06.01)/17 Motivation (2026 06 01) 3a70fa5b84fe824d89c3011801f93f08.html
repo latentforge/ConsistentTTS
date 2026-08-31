@@ -1,0 +1,855 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>17. Motivation (2026.06.01)</title><meta name="data-notion-page-icon" content="/icons/emoji-sad_red.svg"/><link rel="icon" href="https://app.notion.com/icons/emoji-sad_red.svg"/><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="3a70fa5b-84fe-824d-89c3-011801f93f08" class="page sans" data-notion-page-icon="/icons/emoji-sad_red.svg"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://app.notion.com/icons/emoji-sad_red.svg"/></div><h1 class="page-title" dir="auto">17. Motivation (2026.06.01)</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>태그</th><td><span class="selected-value select-value-color-green">Meeting</span><span class="selected-value select-value-color-red">Paper 1</span></td></tr></tbody></table></header><div class="page-body"><h1 id="3720fa5b-84fe-8076-a77b-d4aa2e3b6b2c" class="" dir="auto">Z. Last Meeting Summary</h1><ul id="3720fa5b-84fe-8081-9654-f705bd4494bd" class="bulleted-list" dir="auto"><li style="list-style-type:disc">prompting TTS를 voice cloning TTS와 유사한 형태로 동작시키는 continuation 방식 소개</li></ul><hr id="3720fa5b-84fe-80c5-b300-f5120e60b744" dir="auto"/><h1 id="3720fa5b-84fe-80ec-9f3a-e4dfe8eae58a" class="" dir="auto">A. Evaluation Gap</h1><h2 id="3720fa5b-84fe-80f5-b1f7-dc7b800cb7e0" class="" dir="auto">1. Ref vs Gen</h2><p id="3720fa5b-84fe-8083-b1a5-c620c99b43a6" class="" dir="auto">기존 TTS 평가는 주로 다음 형태</p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3720fa5b-84fe-80f2-9d69-d8b69fa4f9c5" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">reference audio / instruction
+        ↓
+      TTS model
+        ↓
+generated audio
+        ↓
+reference와 비교</code></pre><p id="3720fa5b-84fe-808c-ba33-d014fc05981d" class="" dir="auto">주로 보는 것:</p><ul id="3720fa5b-84fe-8001-97bb-c34cd8eb8f21" class="bulleted-list" dir="auto"><li style="list-style-type:disc">음질 (UTMOS)</li></ul><ul id="3720fa5b-84fe-80ec-bfaf-eb1c8143ec37" class="bulleted-list" dir="auto"><li style="list-style-type:disc">발음 정확도 (WER)</li></ul><ul id="3720fa5b-84fe-802c-941f-d742ddc300e1" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaker similarity (COS SIM)</li></ul><ul id="3720fa5b-84fe-8062-af85-cb02767aa94c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">reference와의 유사도 (COS SIM)</li></ul><p id="3720fa5b-84fe-8001-9679-f87d1ddb3c01" class="" dir="auto">이 방식은 <strong>voice cloning / zero-shot TTS</strong> 평가에는 자연스러움.</p><p id="3720fa5b-84fe-80d6-9658-dfe8104768b0" class="" dir="auto">하지만 다음과 같은 한계 존재</p><blockquote id="3720fa5b-84fe-80eb-a0f3-fbb8900769b1" class="" dir="auto">reference 하나와 generation 하나를 비교하면, <strong>같은 조건에서 여러 content를 생성</strong>했을 때 <strong>voice condition이 안정적으로 유지</strong>되는지는 보기 어려움.</blockquote><hr id="3720fa5b-84fe-804a-8ba7-d610b088020a" dir="auto"/><h2 id="3720fa5b-84fe-8065-a6b2-f09a74ae9a6d" class="" dir="auto">2. Prompting TTS</h2><p id="3720fa5b-84fe-804b-812a-d1ae2a9d4359" class="" dir="auto">최근 prompting TTS에서는 condition이 audio reference가 아닌 경우가 발생.</p><pre id="3720fa5b-84fe-80d4-a166-e4baf644b637" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">&quot;angry middle-aged male voice&quot;
+&quot;calm young female narrator&quot;
+&quot;low-pitched energetic speaker&quot;</code></pre><p id="3720fa5b-84fe-8045-b156-e503272f76f2" class="" dir="auto">즉, 모델은 reference audio가 아니라 <strong>자연어 voice/style condition</strong>을 보고 음성을 생성.</p><p id="3720fa5b-84fe-80b1-9198-e6323b07b8cd" class="" dir="auto">문제는 이때 평가 기준이 바뀜.</p><blockquote id="3720fa5b-84fe-8002-b68a-def0dea261bd" class="" dir="auto">“reference와 비슷한가?” → ”<strong>같은 condition이 주어졌을 때 일관되게 생성되는가?”</strong></blockquote><hr id="3720fa5b-84fe-80f3-8f72-f6c04e4d1dc9" dir="auto"/><h2 id="3720fa5b-84fe-80cf-809e-c1f38f0dd132" class="" dir="auto">3. Gen vs Gen</h2><p id="3720fa5b-84fe-80ef-87b6-e59f9d8273ad" class="" dir="auto">따라서 기존 평가 방식처럼 reference와 generation을 비교하기보다, 같은 condition에서 나온 generation끼리 비교하는 방식을 제시함.</p><pre id="3720fa5b-84fe-80cb-b93d-cae1f7025421" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">same voice/style condition
+        ↓
+content 1 → generated audio 1
+content 2 → generated audio 2
+content 3 → generated audio 3
+        ↓
+generated audio들끼리 비교</code></pre><p id="3720fa5b-84fe-80cc-961b-e9a6e327f56b" class="" dir="auto">핵심 질문:</p><blockquote id="3720fa5b-84fe-8084-b121-c915b0299b51" class="" dir="auto">같은 condition을 줬을 때, content가 바뀌어도 생성 음성이 같은 voice로 유지되는가?</blockquote><p id="3720fa5b-84fe-8061-9b72-c89ca0a244a2" class="" dir="auto">여기서 voice는 단순 speaker만이 아니라, speaker + style condition을 포함.</p><p id="3720fa5b-84fe-8042-a928-dd60e6808d7f" class="" dir="auto">다음 논의는 “같은 voice라는 것을 어떻게 측정하는가?”로 넘어감.</p><h1 id="3720fa5b-84fe-8050-87ae-e2a8f0073af5" class="" dir="auto">B. Speaker Metric Gap</h1><h2 id="3720fa5b-84fe-80d4-9c58-d1af8783e91a" class="" dir="auto">1. Speaker Similarity</h2><p id="3720fa5b-84fe-8094-8be2-f8f19345dbe7" class="" dir="auto">현재 가장 자연스러운 평가는 speaker encoder 기반 cosine similarity.</p><pre id="3720fa5b-84fe-80ea-ac18-e382175e56ef" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">audio A → speaker encoder → speaker embedding A
+audio B → speaker encoder → speaker embedding B
+
+cosine similarity(A, B)</code></pre><p id="3720fa5b-84fe-8058-bcff-e6d191c8636b" class="" dir="auto">이 방식은 speaker verification에서 쓰이는 표준적인 방향.</p><p id="3720fa5b-84fe-80c8-ad27-cb8c17959239" class="" dir="auto">하지만 이 metric이 답하는 질문 다음과 같음.</p><blockquote id="3720fa5b-84fe-8094-a2c7-dd1435ce8197" class="" dir="auto">두 음성이 같은 speaker처럼 들리는가?</blockquote><hr id="3720fa5b-84fe-8024-ae6c-de1fa7345a94" dir="auto"/><h2 id="3720fa5b-84fe-80cd-a0aa-eb6f46ae9183" class="" dir="auto">2. Style Blind Spot</h2><p id="3720fa5b-84fe-8031-b10d-f3fba20e37c3" class="" dir="auto">Prompting TTS에서는 speaker만 유지되면 충분하지 않음.</p><p id="3720fa5b-84fe-801d-919b-dcf0a9d18842" class="" dir="auto">예를 들어 condition이 다음과 같다면:</p><pre id="3720fa5b-84fe-8076-acc2-fb20abad9a8e" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">speaker: middle-aged male
+style: angry / energetic / fast / high energy</code></pre><p id="3720fa5b-84fe-8068-9068-c9e123458bf1" class="" dir="auto">평가해야 할 것은 두 가지.</p><ol type="1" id="3720fa5b-84fe-8075-9b39-cca0de9af6df" class="numbered-list" start="1" dir="auto"><li>같은 사람처럼 들리는가?</li></ol><ol type="1" id="3720fa5b-84fe-8008-88d1-f32a7cd8fd18" class="numbered-list" start="2" dir="auto"><li>같은 style condition이 유지되는가?</li></ol><p id="3720fa5b-84fe-8055-ad21-d6ea67932938" class="" dir="auto">문제는 speaker encoder가 2번을 위해 학습된 모델이 아니라는 점.</p><p id="3720fa5b-84fe-801b-af00-da2e0f3a1777" class="" dir="auto">다시 말해,</p><blockquote id="3720fa5b-84fe-809c-a099-e02f1877000f" class="" dir="auto">speaker encoder가 speaker verification을 위해 학습되었기 때문에, style을 분리되고 해석 가능한 metric으로 제공하지 못함.</blockquote><p id="3720fa5b-84fe-8090-815a-ec74ac31d4c8" class="" dir="auto">따라서 speaker similarity만으로는 다음 상황을 구분하기 어렵다.</p><pre id="3720fa5b-84fe-8041-bf79-cff8dba9bc04" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">same speaker / same style
+same speaker / different style</code></pre><hr id="3720fa5b-84fe-8015-a37f-f1619560f9a8" dir="auto"/><h2 id="3720fa5b-84fe-80d8-8ae1-eafa8352d269" class="" dir="auto">3. Metric Pair</h2><p id="3720fa5b-84fe-80a3-aed5-ee74d4a2c111" class="" dir="auto">그래서 benchmark에는 speaker metric만으로는 부족.</p><p id="3720fa5b-84fe-8013-b9b0-c0d0b45e80ea" class="" dir="auto">다음과 같은 구조가 필요.</p><pre id="3720fa5b-84fe-8027-b362-cfa9b2268f5d" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Generated audio pair
+        ↓
+ ┌────────────────────┐
+ │ speaker encoder    │ → speaker consistency
+ └────────────────────┘
+ ┌────────────────────┐
+ │ style encoder      │ → style consistency
+ └────────────────────┘</code></pre><p id="3720fa5b-84fe-80fe-b6ea-d7dc04a2baa6" class="" dir="auto">정리하면:</p><ul id="3720fa5b-84fe-80e1-a066-ca07829e1abc" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaker encoder: speaker identity 유지 여부 측정</li></ul><ul id="3720fa5b-84fe-8040-ac18-c56274e93673" class="bulleted-list" dir="auto"><li style="list-style-type:disc">style encoder: speaker identity 외 voice/style condition 유지 여부 측정</li></ul><p id="3720fa5b-84fe-8077-bce1-c96b69e0265b" class="" dir="auto">핵심 주장:</p><blockquote id="3720fa5b-84fe-80ea-874a-ddf908346edf" class="" dir="auto">TTS consistency benchmark에서는 speaker consistency와 style consistency를 분리해서 봐야 함.</blockquote><figure id="3720fa5b-84fe-80d9-a43d-df2862a39b68" class="image" data-notion-image="image.png" dir="ltr"><a href="image.png"><img style="width:703.9935302734375px" src="image.png"/></a></figure><hr id="3720fa5b-84fe-806c-acd7-c120e12ebd15" dir="auto"/><h1 id="3720fa5b-84fe-808b-b843-f3adcc1cbbe8" class="" dir="auto">C. Style Framing</h1><h2 id="3720fa5b-84fe-8057-bada-d94a3a69c918" class="" dir="auto">1. Style Condition</h2><p id="3720fa5b-84fe-80aa-a361-d270b6d1f1b9" class="" dir="auto">작업 정의:</p><blockquote id="3720fa5b-84fe-80ff-98fc-f47b66c704ca" class="" dir="auto">speaker identity 이외에, prompt나 reference condition으로 제어되기를 기대하는 voice / speaking characteristics</blockquote><p id="3720fa5b-84fe-80be-b309-ee7b4d471815" class="" dir="auto">포함될 수 있는 것:</p><ul id="3720fa5b-84fe-80e7-9955-fbf373eca4d0" class="bulleted-list" dir="auto"><li style="list-style-type:disc">pitch tendency</li></ul><ul id="3720fa5b-84fe-8030-beb4-fde35daf7456" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaking rate</li></ul><ul id="3720fa5b-84fe-806d-ac61-d79c97691071" class="bulleted-list" dir="auto"><li style="list-style-type:disc">energy / loudness</li></ul><ul id="3720fa5b-84fe-8048-a9c8-d8cdb727cee6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">rhythm / pause</li></ul><ul id="3720fa5b-84fe-8028-9684-f67430aabfad" class="bulleted-list" dir="auto"><li style="list-style-type:disc">prosody</li></ul><ul id="3720fa5b-84fe-80a5-8a57-eb903e3e4f0d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">emotion-like expression</li></ul><ul id="3720fa5b-84fe-809f-843d-f6e98dd2e6bd" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaking manner</li></ul><p id="3720fa5b-84fe-80d4-8241-c99e218e4cfa" class="" dir="auto">LibriTTS-P는 이 출발점을 제공.</p><ul id="3720fa5b-84fe-80d8-9dc9-ea6abde65e43" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaker prompt</li></ul><ul id="3720fa5b-84fe-806f-8b00-ce9bb4e2619a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">style prompt</li></ul><p id="3720fa5b-84fe-8099-898c-ef9759c7f1fc" class="" dir="auto">하지만 LibriTTS-P의 style은 pitch / speed / energy 중심이므로, 최종 benchmark의 style 정의를 여기에만 제한하면 안 됨.</p><hr id="3720fa5b-84fe-8054-bb3e-f88d1aa7b908" dir="auto"/><h2 id="3720fa5b-84fe-80fb-816d-defb9a324c16" class="" dir="auto">2. Relative Consistency</h2><p id="3720fa5b-84fe-805f-8bb5-fcde877f797a" class="" dir="auto">style이 content와 완전히 독립이어야 한다고 주장하면 방어가 어려움.</p><p id="3720fa5b-84fe-8046-a504-e4a93c3d40eb" class="" dir="auto">사람도 문장 내용에 따라 자연스럽게 억양과 리듬이 바뀌기 때문</p><p id="3720fa5b-84fe-80dd-a0ee-ed2e00a7e243" class="" dir="auto">따라서 목표는 absolute consistency가 아님.</p><pre id="3720fa5b-84fe-80a1-9f27-dba0a9e8c18c" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">content가 달라도 acoustic feature가 완전히 같아야 한다. X
+
+같은 style condition 안의 변화는, 다른 style condition 간 변화보다 작아야 한다. O</code></pre><p id="3720fa5b-84fe-80c1-aa93-fd0a8a27da5c" class="" dir="auto">즉, 상대적 기준이 필요.</p><pre id="3720fa5b-84fe-80b6-bc16-f93c38e4c95e" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">same condition pair      → 가까워야 함
+different condition pair → 멀어야 함</code></pre><blockquote id="3720fa5b-84fe-80c1-9506-da097289e186" class="" dir="auto">content-dependent prosody는 허용하되, condition 자체가 drift되는 것은 측정해야 함.</blockquote><hr id="3720fa5b-84fe-80b9-817c-f2bec9d9a580" dir="auto"/><h2 id="3720fa5b-84fe-8009-9e6b-c3f326a1845a" class="" dir="auto">3. Evaluation Cases</h2><p id="3720fa5b-84fe-803f-a5c1-d511aa239f78" class="" dir="auto">기본 평가 케이스는 다음과 같이 잡을 수 있음.</p><pre id="3720fa5b-84fe-8033-85cf-fa258b15d37a" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Case 1. speaker o / style o
+
+Case 2. speaker o / style x
+
+Case 3. speaker x / style x</code></pre><p id="3720fa5b-84fe-8045-a409-e97436514994" class="" dir="auto">추가로 어려운 케이스:</p><pre id="3720fa5b-84fe-80d3-9e6f-d7470e7264f4" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Case 4. speaker x / style o</code></pre><p id="3720fa5b-84fe-80bd-961c-d26a2ece676b" class="" dir="auto">이 케이스는 이상적으로는 중요함.</p><p id="3720fa5b-84fe-8064-9634-ccaafc8f1b4b" class="" dir="auto">하지만 style이 speaker-independent하다는 것을 강하게 보이려면:</p><ul id="3720fa5b-84fe-8094-8155-c6757e930f3f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">human validation</li></ul><ul id="3720fa5b-84fe-8060-a003-c6bda21b6634" class="bulleted-list" dir="auto"><li style="list-style-type:disc">condition design</li></ul><ul id="3720fa5b-84fe-8054-bfd9-e606e9243d0c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">generated data 신뢰도 검증</li></ul><p id="3720fa5b-84fe-8089-834e-f62aa5dfa877" class="" dir="auto">이 필요</p><blockquote id="3720fa5b-84fe-8003-aa0d-ccc20726d343" class="" dir="auto">style은 speaker에 dependent하나 특정 상황에선 따로 측정 가능하다고 가정</blockquote><hr id="3720fa5b-84fe-805d-b932-cb640aa244d9" dir="auto"/><h2 id="3720fa5b-84fe-80b5-bfc4-e2bd81b68359" class="" dir="auto">4. Data Preparation</h2><p id="3720fa5b-84fe-801b-9366-d2a37915cee4" class="" dir="auto">style 평가를 위한 데이터는 기계적/style tagging 모델로 생성해야 함.</p><blockquote id="3720fa5b-84fe-8096-9270-d17b06eb8921" class="" dir="auto">content는 고정한 상태로 speaker, style 변화에 따른 차이를 측정해야 하기 때문</blockquote><p id="3720fa5b-84fe-80ca-aabb-c99919f23ace" class="" dir="auto">style tagging 모델로 생성한 데이터의 경우, 생성 모델의 artifact가 평가에 영향을 줌.</p><p id="3720fa5b-84fe-8063-85c4-e7b1fe0f1789" class="" dir="auto">따라서 하나의 모델 출력을 사용하는 것이 아닌, 여러 모델의 생성을 조합하는 등의 artifact의 영향을 줄이는 방향의 고민이 필요.</p><p id="3720fa5b-84fe-8004-950c-c438b4b21852" class="" dir="auto">→ Benchmark의 경우 generalization 능력을 평가해야 하기 때문임.</p><hr id="3720fa5b-84fe-80bf-b37a-c924959563ca" dir="auto"/><h1 id="3720fa5b-84fe-80de-b19e-f7986d02dfc5" class="" dir="auto">D. Measurement Direction</h1><h2 id="3720fa5b-84fe-8029-b527-ccb48faca240" class="" dir="auto">1. Encoder Pair</h2><p id="3720fa5b-84fe-80ab-98ce-c967ed522d1a" class="" dir="auto">현재 방향은 benchmark를 위해 다음 pair를 도입하는 것.</p><pre id="3720fa5b-84fe-80b8-860b-e52c22fff8e3" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">speaker encoder + style encoder</code></pre><p id="3720fa5b-84fe-80bc-ab1b-fa66319dac08" class="" dir="auto">역할을 다음과 같이 나눔.</p><pre id="3720fa5b-84fe-807b-a080-d33fc6d7a0bb" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">speaker encoder
+→ 같은 사람처럼 들리는가?
+
+style encoder
+→ speaker identity 외 condition이 유지되는가?</code></pre><blockquote id="3720fa5b-84fe-80a1-83d4-f4e0d1fa5437" class="" dir="auto">목적은 speaker 외 음성 특성 차이를 embedding space에서 비교 가능하게 만드는 것.</blockquote><hr id="3720fa5b-84fe-806e-aadf-fe8f956a109a" dir="auto"/><h2 id="3720fa5b-84fe-80e1-9d9b-e068813427ab" class="" dir="auto">2. Candidate Design</h2><h3 id="3720fa5b-84fe-80b4-a53e-e778fd2718c5" class="" dir="auto">Candidate A. Shared Backbone + Two Heads</h3><pre id="3720fa5b-84fe-80b2-830a-fb59dbab7959" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">audio
+  ↓
+shared speech backbone
+  ↓
+ ┌──────────────┬──────────────┐
+ speaker head   style head
+  ↓              ↓
+z_speaker       z_style</code></pre><p id="3720fa5b-84fe-80ea-93bd-e9167562f185" class="" dir="auto">장점:</p><ul id="3720fa5b-84fe-80e6-aaa8-e92c9f837c88" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaker / style을 같은 입력에서 분리하는 구조를 논의하기 쉬움.</li></ul><ul id="3720fa5b-84fe-8052-bc43-cb71be6cd006" class="bulleted-list" dir="auto"><li style="list-style-type:disc">GRL이나 leakage control을 붙이기 쉬움.</li></ul><p id="3720fa5b-84fe-807f-a248-e52637bd4db5" class="" dir="auto">위험:</p><ul id="3720fa5b-84fe-80ff-acb9-ff04cfb2623a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">backbone이 실제로 style까지 충분히 담는지 검증 필요.</li></ul><ul id="3720fa5b-84fe-809a-8c4e-e5733b06a7f3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">두 embedding이 어떻게 분리되는지 명확한 학습 signal이 필요.</li></ul><hr id="3720fa5b-84fe-807b-b5da-ca1a1e8c54a7" dir="auto"/><h3 id="3720fa5b-84fe-80a8-b5bd-cd203f238739" class="" dir="auto">Candidate B. Channelized Style Encoder</h3><pre id="3720fa5b-84fe-8086-89f3-d501b3457fca" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">audio
+  ↓
+known style channels
+  - pitch
+  - energy
+  - temporal / rhythm
+  ...
+  + 
+	- unknown style channel
+  ↓
+fusion network
+  ↓
+ ┌──────────────┬──────────────┐
+ speaker head   style head
+  ↓              ↓
+z_speaker       z_style</code></pre><p id="3720fa5b-84fe-80c8-88ce-c50baa74b03a" class="" dir="auto">장점:</p><ul id="3720fa5b-84fe-805e-b912-d0d632ccd2e9" class="bulleted-list" dir="auto"><li style="list-style-type:disc">중간 channel이 있어 설명 가능성이 높음.</li></ul><p id="3720fa5b-84fe-80ce-9129-cc28feed6461" class="" dir="auto">위험:</p><ul id="3720fa5b-84fe-804e-a9e5-de4a54c598ee" class="bulleted-list" dir="auto"><li style="list-style-type:disc">known feature만으로 style을 정의했다는 bias가 생길 수 있음.</li></ul><ul id="3720fa5b-84fe-8064-a4a8-cec712117333" class="bulleted-list" dir="auto"><li style="list-style-type:disc">unknown channel을 어떻게 학습/검증할지가 핵심.</li></ul><hr id="3720fa5b-84fe-808c-86fb-ce4d2793a7fd" dir="auto"/><h2 id="3720fa5b-84fe-80b2-b3b0-ee8e1c212bab" class="" dir="auto">3. Issues</h2><ol type="1" id="3720fa5b-84fe-8087-abd4-e1f72177c0f9" class="numbered-list" start="1" dir="auto"><li>style encoder를 만들 때 어떤 구조가 가장 타당한가?</li></ol><ol type="1" id="3720fa5b-84fe-80b1-a22d-fde640abfe01" class="numbered-list" start="2" dir="auto"><li>generated data로 style variation을 만들 경우 model artifact를 어떻게 통제할 것인가?</li></ol><hr id="3720fa5b-84fe-802e-a679-d2198d686835" dir="auto"/><h1 id="3720fa5b-84fe-8083-bff2-cba436069eaa" class="" dir="auto">E. Feedback</h1><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js" integrity="sha512-m3JYEI6gx5fh9jF10FjGoMzVKcV2N6nchcDcqPCdI1L3R2WQV7br2XVNR8iTLb2daOMRl3zldbcfT40xU2ntVw==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="3720fa5b-84fe-8000-b473-d2fe160503ea" class="code code-wrap" data-notion-code-syntax="jsx"><code class="language-jsx" style="white-space:pre-wrap;word-break:break-all">1. 이미지 생성 분야에서 Instruction following 성능 측정 어떻게 하는지 조사하기
+2. VA Prediction 분야 찾아보기
+3. 화자와 스타일이 독리빌 수 있는지 분석해오기</code></pre></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

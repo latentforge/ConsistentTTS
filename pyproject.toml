@@ -1,48 +1,14 @@
 [project]
-name = "spk_incon"
+name = "paper"
 version = "0.1.0"
-description = "InterSpeech 2026 Paper Codebase"
-readme = "README.md"
-requires-python = ">=3.11"
-license = { text = "MIT" }
+description = "LaTeX writing environment built from conference templates"
+requires-python = ">=3.9"
 dependencies = [
-    "numpy>=2.3.5",
-    "torch ; platform_system == 'Windows'",
-    "torch>=2.8.0",
-    "torchaudio ; platform_system == 'Windows'",
-    "torchaudio>=2.8.0",
-    "torchcodec>=0.9.1",
-    "librosa>=0.11.0",
-    "datasets",
-    "voicestudio[all]>=1.0.1",
-    "hf-xet>=1.1.8",
-    "tqdm>=4.67.1",
-    "speechbrain",
-    "utmosv2",
+    # Only used by `uv run build.py --install-tex`, which downloads TinyTeX
+    # into .venv/tinytex. If a TeX distribution is already installed on the
+    # machine, build.py uses that instead and this is never called.
+    "pytinytex>=0.5.1",
 ]
 
 [tool.uv]
-override-dependencies = [
-    "onnx>=1.20.0",
-    "protobuf>=4.25.1",
-    "encodec>=0.1.1"
-]
-
-[tool.uv.sources]
-torch = [
-    { index = "pytorch-windows", marker = "platform_system == 'Windows'" },
-]
-torchaudio = [
-    { index = "pytorch-windows", marker = "platform_system == 'Windows'" },
-]
-speechbrain = { git = "https://github.com/speechbrain/speechbrain" }
-utmosv2 = { git = "https://github.com/sarulab-speech/UTMOSv2" }
-voicestudio = { git = "https://github.com/latentforge/VoiceStudio", branch = "develop" }
-
-[tool.uv.extra-build-dependencies]
-flash-attn = [ "torch" ]
-
-[[tool.uv.index]]
-name = "pytorch-windows"
-url = "https://download.pytorch.org/whl/cu128"
-explicit = true
+package = false

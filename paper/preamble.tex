@@ -1,0 +1,79 @@
+%
+% Your own packages and macros go here. This file is loaded from main.tex,
+% at the point the venue's style expects additions to the preamble.
+%
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{pgfplots}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\pgfplotsset{compat=1.18}
+
+%
+% --- contribution list. IEEE and ICASSP papers set these flush with the text
+% block rather than with LaTeX's default itemize indent, which leaves a ragged
+% gutter in a narrow column. leftmargin=* removes the extra indent; the label is
+% pulled back so the bullets align with the paragraph edge.
+%
+\newlist{contributions}{itemize}{1}
+\setlist[contributions]{label=\textbullet, leftmargin=*, labelsep=0.4em,
+                        topsep=2pt, itemsep=1.5pt, parsep=0pt, partopsep=0pt}
+\usetikzlibrary{patterns, arrows.meta, positioning, fit, calc}
+\usepgfplotslibrary{statistics}
+
+%
+% --- figure and table sizing for the two-column IEEE layout
+%
+\pgfplotsset{
+  colcompact/.style={
+    width=\columnwidth, height=0.62\columnwidth,
+    scale only axis=false,
+    tick label style={font=\scriptsize},
+    label style={font=\footnotesize},
+    legend style={font=\scriptsize, draw=none, fill=none},
+    every axis plot/.append style={line width=0.7pt},
+    grid=major, grid style={gray!25, line width=0.3pt},
+  },
+}
+
+%
+% --- palette. Colour-blind safe; every series is also distinguished by marker.
+%
+\definecolor{cbBlue}{HTML}{0072B2}
+\definecolor{cbGreen}{HTML}{009E73}
+\definecolor{cbOrange}{HTML}{E69F00}
+\definecolor{cbGrey}{HTML}{666666}
+
+%
+% --- notation macros. Defined once so the symbols cannot drift between sections.
+%
+\newcommand{\rep}{z}                        % frozen representation
+\newcommand{\spk}{s}                        % speaker index
+\newcommand{\ctr}{\mu_{\spk}}               % speaker centre
+\newcommand{\gate}{g_{\spk}}                % speaker-dependent gate
+\newcommand{\gateglobal}{g}                 % globally fixed gate
+\newcommand{\grp}{\mathcal{G}}              % repeated-generation set
+\newcommand{\estyle}{e^{\mathrm{style}}}
+\newcommand{\eid}{e^{\mathrm{id}}}
+\newcommand{\gaterule}{h}                   % rule producing the gate
+
+%
+% --- named concepts. Introduced once, then reused verbatim.
+%
+\newcommand{\partition}{identity--style partition}
+\newcommand{\Partition}{Identity--style partition}
+
+%
+% --- inline annotations
+%
+% Declared with providecommand because some venue styles ship their own \todo
+% (ICML loads todonotes, for instance). Where they do, the venue's version wins.
+%
+\providecommand{\red}[1]{{\color{red}#1}}
+\providecommand{\todo}[1]{{\color{red}#1}}
+\providecommand{\TODO}[1]{\textbf{\color{red}[TODO: #1]}}
+% --- disable by uncommenting
+% \renewcommand{\TODO}[1]{}
+% \renewcommand{\todo}[1]{#1}

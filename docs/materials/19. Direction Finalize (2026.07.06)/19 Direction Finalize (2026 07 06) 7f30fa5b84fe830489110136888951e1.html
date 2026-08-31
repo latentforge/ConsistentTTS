@@ -1,0 +1,826 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>19. Direction Finalize (2026.07.06)</title><meta name="data-notion-page-icon" content="/icons/ambulance_red.svg"/><link rel="icon" href="https://app.notion.com/icons/ambulance_red.svg"/><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="7f30fa5b-84fe-8304-8911-0136888951e1" class="page sans" data-notion-page-icon="/icons/ambulance_red.svg"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://app.notion.com/icons/ambulance_red.svg"/></div><h1 class="page-title" dir="auto">19. Direction Finalize (2026.07.06)</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>날짜</th><td><time datetime="2026-07-06">2026년 7월 6일</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>태그</th><td><span class="selected-value select-value-color-green">Meeting</span><span class="selected-value select-value-color-red">Paper 1</span><span class="selected-value select-value-color-yellow">Paper 2</span></td></tr></tbody></table></header><div class="page-body"><h2 id="3950fa5b-84fe-802b-b517-d2113cda8ab5" class="" dir="auto"><strong>Z. Last Meeting Summary</strong></h2><ul id="3950fa5b-84fe-80bb-8bef-ed58b7dd1c99" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이미지 생성 분야의 Instruction Following 평가 방법 조사 결과 보고<ul id="3950fa5b-84fe-80c9-a238-c9555e1a7478" class="bulleted-list" dir="auto"><li style="list-style-type:circle">이미지 생성 분야에서는 프롬프트를 하나의 문장으로만 보지 않고, 작은 조건들로 분해해서 평가함</li></ul></li></ul><ul id="3950fa5b-84fe-804e-b33f-c4598f6d911c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Emotional TTS에서 감정 조건을 다루는 방식 조사 결과 보고<ul id="3950fa5b-84fe-80b1-b7e9-fe8f507b9449" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Emotion label 기반 제어 / VAD / EASV 기반 제어 / Emotion reference 기반 제어</li></ul></li></ul><ul id="3950fa5b-84fe-80e2-97cc-e9395c749149" class="bulleted-list" dir="auto"><li style="list-style-type:disc">TODOs:<ul id="3950fa5b-84fe-80da-b007-f4d935aaacbc" class="bulleted-list" dir="auto"><li style="list-style-type:circle"><strong>벤치마크 논문</strong>:<blockquote id="3950fa5b-84fe-80dc-a2cf-c859cd08d08c" class="" dir="auto">벤치마크 논문의 경우, 현재 제작할 메트릭 모델의 감정/스타일 임베딩에서 감정을 상대적으로 정의할 것인지 절대적으로 정의할 것인지에 대한 결정이 필요 (가능하면 오늘 중으로 결정되는 것 연구 기간상 안전)</blockquote><ul id="3950fa5b-84fe-80cb-b0e9-e43c4ab1b7a2" class="bulleted-list" dir="auto"><li style="list-style-type:square">기 결정사항: 벤치마크 자동 메트릭 모델 제작에 있어 화자와 스타일(혹은 감정)을 분리 모델링하는 방향</li></ul><ul id="3950fa5b-84fe-80a0-a4b5-f9225fb0ed4c" class="bulleted-list" dir="auto"><li style="list-style-type:square">화자와 스타일(혹은 감정)에 대한 관계 설정을, 스타일은 화자에 종속적인 것으로 보고 상대적 모델링을 하고자 함</li></ul><ul id="3950fa5b-84fe-80d3-b549-f1b57acaa26e" class="bulleted-list" dir="auto"><li style="list-style-type:square">그러나 벤치마크라는 특성 상 절대적 기준을 설립하는 것이 더 공평할 수 있기에 다른 선행 연구들의 전제를 확인하여 추가 논의하기로 함</li></ul></li></ul><ul id="3950fa5b-84fe-803f-b1f6-f457098071fc" class="bulleted-list" dir="auto"><li style="list-style-type:circle"><strong>화자 일관적 TTS 논문</strong>:<blockquote id="3950fa5b-84fe-8038-b6d2-f31ebeea9dfd" class="" dir="auto">Continual Mechanism을 Voice Design 태스크에도 활용함으로써 Speacker Consistent한 TTS 모델을 설계하는 논문의 경우, 현재 Two-stage 모델과의 외적 매커니즘 유사성에 대한 문제 해결이 필요</blockquote><ul id="3950fa5b-84fe-808d-a180-c07871846612" class="bulleted-list" dir="auto"><li style="list-style-type:square">기 결정사항: Fixed Reference Content Prompt를 사용하여 어쿠스틱 공간에서의 쿼리를 Voice Prompt에 대해 고정함으로써 조건부 확률 모델링을 수정하는 방식을 제시하기로 함</li></ul><ul id="3950fa5b-84fe-805e-8de4-e2eb88a5a757" class="bulleted-list" dir="auto"><li style="list-style-type:square">문제 상황: Fixed prompt로 generation을 한번 한다는 것이 겉으로 보기에 Two-stage와 동일해 보임</li></ul><ul id="3950fa5b-84fe-8043-9945-d333df17781b" class="bulleted-list" dir="auto"><li style="list-style-type:square">해결 방안: Instruction Following에 대한 지적</li></ul></li></ul></li></ul><hr id="3950fa5b-84fe-80be-bd7b-c3e52f5f3ffe" dir="auto"/><p id="3950fa5b-84fe-80a5-aec1-f58b260908ef" class="" dir="auto">
+</p><h2 id="3950fa5b-84fe-804c-b7a8-d35952164345" class="" dir="auto">A. 감정/스타일 임베딩의 절대성과 상대성</h2><h3 id="3950fa5b-84fe-8056-bbf6-edbcd2915c0b" class="" dir="auto">A.1. 논문별 요약</h3><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-8071-add6-c71abff4a564" style="display:inline-block"><strong>EmoCtrl-TTS (Microsoft, ICASSP 2025)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-8044-b757-f6ff2867e352" class="bulleted-list" dir="auto"><li style="list-style-type:disc">감정 제어 가능한 Zero-shot TTS</li></ul><ul id="3950fa5b-84fe-805f-9185-c2c3682831d1" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker prompt, NV prompt, Emotion prompt를 별도로 분리하여 conditioning</li></ul><ul id="3950fa5b-84fe-80f9-a031-f072b032e8b0" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker encoder/Emotion encoder 독립 존재 &amp; 화자 특성과 감정을 서로 다른 임베딩으로 처리</li></ul><ul id="3950fa5b-84fe-8078-ab79-f344283780ce" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Valence/Arousal 값으로 감정을 연속적으로 표현하며, <strong>화자와 감정이 독립적으로 제어 가능</strong>하다는 것을 전제로 설계</li></ul></div></details><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-8045-9fd4-d6a51f7121e3" style="display:inline-block"><strong>EmoSphere++ (Korea University, IEEE)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-809d-b4dc-efa34b28265e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Valence-Arousal-Dominance(VAD) 3차원 공간에서 감정을 구 좌표로 변환하는 Emotion-Adaptive Spherical Vector(EASV)를 제안</li></ul><ul id="3950fa5b-84fe-8093-baa5-c852b7183f49" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker encoder와 Emotion encoder가 완전히 분리된 구조</li></ul><ul id="3950fa5b-84fe-80d6-98fb-cae205d3a792" class="bulleted-list" dir="auto"><li style="list-style-type:disc">멀티 스피커 환경에서도 감정과 화자를 독립적으로 모델링하는 것이 가능하다고 주장</li></ul><ul id="3950fa5b-84fe-800c-a265-d53069fc252c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">단, 동일 데이터셋 내에서의 평가이므로 speaker-specific 감정 분포의 문제는 직접적으로 다루지 않음</li></ul></div></details><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-8071-85f0-d7f5fcb0cc7f" style="display:inline-block"><strong>UDDETTS (USTC, Preprint 2025)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-8063-9e51-fa031cc489bc" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LLM 기반 TTS로 이산적(discrete) 감정 레이블과 연속적(ADV) 감정 공간을 통합</li></ul><ul id="3950fa5b-84fe-80f8-889b-c9d1ad2258a9" class="bulleted-list" dir="auto"><li style="list-style-type:disc">핵심 주장은 감정이 이산 카테고리가 아닌 <strong>연속 공간에 분포</strong>한다는 것</li></ul><ul id="3950fa5b-84fe-804d-a0da-ca0fcf69fd01" class="bulleted-list" dir="auto"><li style="list-style-type:disc">ADV 공간을 통해 감정을 해석 가능하게 disentangle</li></ul><ul id="3950fa5b-84fe-8003-824c-c2d1f7ca2dc2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">화자 조건과 감정 조건을 따로 다루되, 감정 공간 자체는 speaker-agnostic하게 설계</li></ul></div></details><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-80a9-862b-c2609b4d0a77" style="display:inline-block"><strong>LESR (Hithink RoyalFlush, ICASSP 2025)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-809c-9599-d0dc437a8b3f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>해당 논의에 핵심 관련 논문</strong></li></ul><ul id="3950fa5b-84fe-807d-979e-c26c591c02e0" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker Verification에서 감정 변화가 화자 인식 성능을 저하시킨다는 문제를 직접적으로 다룸.</li></ul><ul id="3950fa5b-84fe-80cb-a690-dd7d9ff634f2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">동일 화자의 다른 감정 발화 쌍을 CopyPaste로 augment하여 감정 변화에 무관한 speaker representation을 학습하는 방법을 제안</li></ul><ul id="3950fa5b-84fe-80d3-920c-e5fddec8a14e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이 논문 자체가 <strong>“감정이 달라지면 speaker embedding이 흔들린다”는 사실을 인정하고 그걸 해결</strong>하는 것을 목표로 함 </li></ul><ul id="3950fa5b-84fe-8046-bf8f-e185cc3fa4fa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">동일 화자에 대해 감정별(Angry/Positive/Neutral/Sad) cross-emotion test trial을 구성하여 평가</li></ul></div></details><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-8047-b8a4-d84411b02ed1" style="display:inline-block"><strong>ECE-TTS (BUCEA, Applied Sciences 2025)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-80f7-b6ca-dd637a627977" class="bulleted-list" dir="auto"><li style="list-style-type:disc">F5-TTS 기반의 감정 제어 TTS. LESR의 EASV를 활용하여 VAD 값을 감정 표현에 사용</li></ul><ul id="3950fa5b-84fe-8043-806d-c3825a7ae4b2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker similarity와 감정 제어를 동시에 측정하는 평가 지표를 사용</li></ul><ul id="3950fa5b-84fe-80a2-bc57-d3a6650af61f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">speaker와 emotion을 분리하여 제어하는 것이 목표</li></ul><ul id="3950fa5b-84fe-8066-9adb-de262b4b9425" class="bulleted-list" dir="auto"><li style="list-style-type:disc">다만 “speaker-dependent emotion range” 문제는 명시적으로 다루지 않음.</li></ul></div></details><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.125em;line-height:1.3;margin:0"><h4 id="3950fa5b-84fe-80fd-a3ba-dc2b6e6da7eb" style="display:inline-block"><strong>EmoSpeechAuth (Wroclaw, Interspeech 2025)</strong></h4></summary><div class="indented"><ul id="3950fa5b-84fe-8039-b57a-e8dcef5c07e0" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>가장 직접적으로 관련된 논문</strong></li></ul><ul id="3950fa5b-84fe-80e4-85af-fa2997929e43" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker Verification에 감정 임베딩을 추가하면 EER이 개선된다는 것을 보임</li></ul><ul id="3950fa5b-84fe-804d-9d1f-f136380c0483" class="bulleted-list" dir="auto"><li style="list-style-type:disc">ECAPA-TDNN + emotion2vec를 cross-attention으로 fusion하여 emotional speaker embedding을 만듦</li></ul><ul id="3950fa5b-84fe-8038-bcaf-c97c8616f759" class="bulleted-list" dir="auto"><li style="list-style-type:disc">감정 정보가 speaker identity 판단에 도움이 된다는 방향으로 설계<p id="3950fa5b-84fe-80e7-a4d9-ef9b30d20302" class="" dir="auto">⇒ <strong>화자와 감정이 완전히 독립적이지 않다는 것을 구조적으로 전제</strong></p></li></ul></div></details><h3 id="3950fa5b-84fe-80e9-8235-e3764640cb2d" class="" dir="auto">A.2. 절대적 감정 임베딩 vs. 상대적 감정 임베딩</h3><blockquote id="3950fa5b-84fe-8041-9c53-e8b5780ed186" class="" dir="auto">절대적 감정 임베딩의 핵심<br/><strong>⇒ “VAD/VA 연구에서는 화자 없이 감정만 비교하는 연구가 이미 있는데, 왜 분리 불가능하다고 보는가?” </strong></blockquote><table id="3950fa5b-84fe-808a-9970-ed29f4a2331e" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="3950fa5b-84fe-80d7-b698-d1a8c711e877" dir="ltr"><th id="I`sP" class="simple-table-header-color simple-table-header" style="width:72.00000762939453px"></th><th id="?eFy" class="simple-table-header-color simple-table-header" style="width:306px">절대적 감정 임베딩</th><th id="_e_n" class="simple-table-header-color simple-table-header" style="width:349.0000305175781px">상대적 감정 임베딩</th></tr></thead><tbody><tr id="3950fa5b-84fe-8010-ac01-c8dc65caf6a1" dir="ltr"><td id="I`sP" class="" style="width:72.00000762939453px">핵심</td><td id="?eFy" class="" style="width:306px">Speaker와 Style은 독립적으로 존재 가능<br/>절대적 감정 임베딩 <strong>인식 기준이 필요</strong></td><td id="_e_n" class="" style="width:349.0000305175781px">Speaker와 Style은 독립적으로 정의될 수 없음<br/><strong>Style은 Speaker 조건 하에서만 성립</strong></td></tr><tr id="3950fa5b-84fe-80ad-8496-d7c8f9a1c79e" dir="ltr"><td id="I`sP" class="" style="width:72.00000762939453px">근거</td><td id="?eFy" class="" style="width:306px">VAD 연구들이 <strong>화자 무관 감정 측정을 수행</strong></td><td id="_e_n" class="" style="width:349.0000305175781px"><strong>화자마다 감정의 표현 범위가 달라</strong> 절대적 감정 임베딩 비교가 불가능</td></tr></tbody></table><p id="3950fa5b-84fe-80b7-97d4-df9ebebb2dfd" class="" dir="auto"><strong>절대적 감정 임베딩 지지 논문 → </strong>EmoCtrl-TTS, EmoSphere++, UDDETTS, ECE-TTS</p><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="3950fa5b-84fe-80cd-bc43-ccebfb977005" dir="ltr"><div style="width:100%"><p id="3950fa5b-84fe-80d8-b65a-d96cb43074cf" class="" dir="auto">VAD 공간을 <strong>speaker-agnostic한 감정 표현 공간</strong>으로 사용</p><p id="3950fa5b-84fe-800b-bc46-c2fa7e3d413a" class="" dir="auto">이 논문들의 전제가 “VAD 값 자체는<strong> 화자에 무관하게 감정 유형을 표현</strong>할 수 있다”</p></div></aside><p id="3950fa5b-84fe-80ed-ac79-dcf8f0c864c8" class="" dir="auto"><strong>상대적 감정 임베딩 지지 논문 → </strong>LESR, EmoSpeechAuth</p><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="3950fa5b-84fe-80f2-9612-d917727d6653" dir="ltr"><div style="width:100%"><p id="3950fa5b-84fe-8047-a8fe-f89d7220e794" class="" dir="auto"><strong>동일 화자가 다른 감정을 표현할 때 speaker embedding이 흔들린다</strong>는 현상을 실증적으로 보임</p><p id="3950fa5b-84fe-802e-a06f-d7ad48e0d997" class="" dir="auto">EmoSpeechAuth는 <strong>감정 변화에 의한 “intense intra-speaker vocal variability”를 명시적으로 지적 </strong><br/>→ 분노(anger)가 가장 심각한 성능 저하를 유발한다는 것을 보임</p><p id="3950fa5b-84fe-8093-8f24-c72ac49e05ec" class="" dir="auto">LESR은 이 문제를 해결하기 위해 <strong>emotion-invariant speaker representation</strong>을 학습하는 방법을 제안</p></div></aside><h3 id="3950fa5b-84fe-80de-8253-d61e1ffdbaf8" class="" dir="auto">A.3. 핵심 쟁점 정리</h3><blockquote id="3950fa5b-84fe-8008-89dd-e314e23ce953" class="" dir="auto">두 주장이 사실 다른 레이어의 문제를 얘기하고 있을 지도 모름</blockquote><h4 id="3950fa5b-84fe-8008-a1f9-f1ee6d594861" class="" dir="auto">절대적 감정 임베딩</h4><ul id="3950fa5b-84fe-80ca-bae0-fd14c7522888" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>감정 인식 모델</strong>의 시각에서 문제를 바라봄</li></ul><ul id="3950fa5b-84fe-80fc-9212-e86a1dd55c9c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">VAD 공간은 <mark class="highlight-yellow_background" data-notion-highlight="yellow_background"><strong>화자와 무관</strong></mark>하게 감정 유형을 정의</li></ul><ul id="3950fa5b-84fe-802c-a27c-db7e5b42f3ee" class="bulleted-list" dir="auto"><li style="list-style-type:disc">실제로 EmoCtrl-TTS 같은 연구들이 이걸 사용</li></ul><p id="3950fa5b-84fe-8045-bf06-f8dc603fe2fe" class="" dir="auto">⇒ 절대적 감정 임베딩 좌표가 존재하며, 그걸 측정할 수 있음</p><h4 id="3950fa5b-84fe-8041-aeee-dd458ee398db" class="" dir="auto">상대적 감정 임베딩</h4><ul id="3950fa5b-84fe-8047-bb07-d69d976a6efb" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>gen-gen 측정의 유효성</strong>의 시각에서 문제를 바라봄</li></ul><ul id="3950fa5b-84fe-80d6-8a89-cd07b64c906f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>IF </strong>“Angry” VAD 가 화자 A에게는 <span style="border-bottom:0.05em solid">극도로 흥분된 상태</span>를 의미 / 화자 B에게는 <span style="border-bottom:0.05em solid">약간 날선 상태</span>를 의미 <strong>THEN </strong>생성 음성의 VAD 유사도가 높다고 해서 “스타일이 일관적”이라고 말할 수 있는가?</li></ul><p id="3950fa5b-84fe-80e1-b0a7-e6a8e5ba6d8c" class="" dir="auto">⇒ <strong>측정값의 해석 가능성</strong>은 <mark class="highlight-yellow_background" data-notion-highlight="yellow_background"><strong>화자 동일성을 전제</strong></mark>하지 않으면 모호해짐</p><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-icon="💡" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="3950fa5b-84fe-80f3-889c-ced71c225704" dir="ltr"><div style="font-size:1.5em"><span class="icon" data-emoji="💡"></span></div><div style="width:100%"><p id="3950fa5b-84fe-80df-a963-d75d83b2d306" class="" dir="auto">이 지점에서 두 주장이 실제로는 충돌하지 않을 수도 있음!</p></div></aside><p id="3950fa5b-84fe-8085-8c59-fd0e93338400" class="" dir="auto">절대적 VAD 좌표로 감정을 자체를 정의하고 측정하는 것 자체는 가능</p><p id="3950fa5b-84fe-80c3-8330-ff44fde2c4ed" class="" dir="auto"><strong>BUT, <br/></strong>“스타일 일관성을 측정할 때 <strong>화자가 다른 음성의 VAD 유사도가 높다는 것이 의미 있는 지표</strong>인가?”<br/>는 별개의 질문</p><blockquote id="3950fa5b-84fe-8084-a5bd-de4f169bc1ff" class="" dir="auto"><strong>WHY?<br/></strong>화자 A가 “슬픔 VAD = 0.2”로 발화한 것과 화자 B가 동일한 VAD 값으로 발화한 것이 같은 스타일이라고 할 수 있는지는 그<strong> VAD 값이 각 화자에서 어떤 위치인지</strong>에 따라 달라지기 때문</blockquote><div id="3950fa5b-84fe-8008-84bd-c50bf7f4da7c" class="column-list" data-notion-column-list="" dir="auto"><div id="3950fa5b-84fe-8039-af28-f8f60b10f2c7" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><figure id="3950fa5b-84fe-8042-869c-f66635fa7406" class="image" data-notion-image="image.png" dir="ltr"><a href="image.png"><img style="width:709.9910888671875px" src="image.png"/></a></figure></div><div id="3950fa5b-84fe-80e6-9a63-d6d6df532b9b" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><figure id="3950fa5b-84fe-809d-994d-fae19b2d2f2d" class="image" data-notion-image="image%201.png" dir="ltr"><a href="image%201.png"><img style="width:480px" src="image%201.png"/></a></figure></div></div><p id="3950fa5b-84fe-805c-9924-f0a24783eba0" class="" dir="auto"><strong>⇒ 동일한 VAD 값이 화자마다 다른 결과를 낳는다면, VAD 유사도로 스타일 일치성을 측정하는 것은 화자 간 비교에서 의미를 잃음</strong></p><blockquote id="3950fa5b-84fe-803a-a443-fc1e3ef3471b" class="" dir="auto"><strong>WARNING!<br/></strong>다 좋은데 상대적 감정을 어떻게 그럼 모델링할거냐…</blockquote><p id="3950fa5b-84fe-802a-848a-c138e6d24410" class="" dir="auto"><strong>⇒ 화자별로 특징 공간을 분리 모델링하고, 화자별 스타일 특징 공간에 대한 이해가 있도록 해야 하며, unseen speaker에 대해서도 zero-shot 전이가 가능함을 보일 수 있는 설계로 진행해야 함!</strong></p><h3 id="3950fa5b-84fe-802a-89e6-fbb4dae23026" class="" dir="auto">A.4. 구현하고자 하는 형태</h3><h4 id="3950fa5b-84fe-80c8-bc08-e5206b171717" class="" dir="auto"><strong>Evaluation Cases</strong></h4><blockquote id="3950fa5b-84fe-8083-bec3-de1360d0b8aa" class="" dir="auto"><strong>메트릭 모델에서 스타일은 화자에 대한 종속 모델링으로 진행</strong></blockquote><div id="3950fa5b-84fe-80cf-ac20-de65e741f1e7" class="column-list" data-notion-column-list="" dir="auto"><div id="3950fa5b-84fe-8015-91d1-cb9b758c207a" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><figure id="3950fa5b-84fe-8063-ba50-fd751741eac7" class="image" data-notion-image="Gemini_Generated_Image_ir2auair2auair2a.png" dir="ltr"><a href="Gemini_Generated_Image_ir2auair2auair2a.png"><img style="width:384px" src="Gemini_Generated_Image_ir2auair2auair2a.png"/></a></figure><p id="3950fa5b-84fe-80ed-b257-e06059ac501f" class="" dir="auto">
+</p></div><div id="3950fa5b-84fe-803f-ae34-fae92ef5425a" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><ul id="3950fa5b-84fe-80f5-a306-de54d3b8456a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">메트릭 모델이 보증하는 케이스:<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="3950fa5b-84fe-80c0-bac7-c9ea2f82dec0" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all">Case 1. speaker o / style o
+Case 2. speaker o / style x
+Case 3. speaker x / style x</code></pre></li></ul><ul id="3950fa5b-84fe-809b-a6e6-fb7e26aa0e54" class="bulleted-list" dir="auto"><li style="list-style-type:disc">메트릭 모델이 보증하지 않는 케이스:<pre id="3950fa5b-84fe-80b6-90f4-cfed05bb6dc0" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all">Case 4. speaker x / style o</code></pre></li></ul></div></div><h4 id="3950fa5b-84fe-8093-ac01-f1d1809d8516" class="" dir="auto">Candidate Design</h4><ul id="3950fa5b-84fe-8087-bcf9-c03dadc59de4" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Candidate A. Shared Backbone + Two Heads</strong><ul id="3950fa5b-84fe-80f4-aee3-fda2048fe1a5" class="bulleted-list" dir="auto"><li style="list-style-type:circle">예시 그림:<figure id="3950fa5b-84fe-8018-b642-cb7bd6330f6b" class="image" data-notion-image="image%202.png" dir="ltr"><a href="image%202.png"><img style="width:697.9921875px" src="image%202.png"/></a></figure></li></ul><ul id="3950fa5b-84fe-80b6-ae45-e102241faf69" class="bulleted-list" dir="auto"><li style="list-style-type:circle">구조:<pre id="3950fa5b-84fe-8037-b984-dac91f337413" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">audio
+  ↓
+shared speech backbone
+  ↓
+ ┌────────────────────┐
+ speaker head   style head
+  ↓              ↓
+z_speaker       z_style</code></pre></li></ul><ul id="3950fa5b-84fe-80a4-99e4-c9735f298825" class="bulleted-list" dir="auto"><li style="list-style-type:circle">장점:<ul id="3950fa5b-84fe-8000-bff0-fe4526a4aadd" class="bulleted-list" dir="auto"><li style="list-style-type:square">speaker / style을 같은 입력에서 분리하는 구조를 논의하기 쉬움</li></ul><ul id="3950fa5b-84fe-80de-9433-eaca5d949b75" class="bulleted-list" dir="auto"><li style="list-style-type:square">GRL이나 leakage control을 붙이기 쉬우므로 학습을 통한 두 특성 분리에 이론적 주장이 쉬움</li></ul></li></ul><ul id="3950fa5b-84fe-806e-b6d5-dee8c3e1f240" class="bulleted-list" dir="auto"><li style="list-style-type:circle">위험:<ul id="3950fa5b-84fe-807c-a7cf-c1eb31325029" class="bulleted-list" dir="auto"><li style="list-style-type:square">backbone이 실제로 style까지 충분히 담는지 검증 필요</li></ul><ul id="3950fa5b-84fe-80f9-9414-f83139eebb10" class="bulleted-list" dir="auto"><li style="list-style-type:square">두 embedding이 어떻게 분리되는지 명확한 학습 signal이 필요</li></ul></li></ul></li></ul><p id="3950fa5b-84fe-805e-8eaf-d7ab6d0b611d" class="" dir="auto">
+</p><ul id="3950fa5b-84fe-802a-be1f-d97131d06850" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Candidate B. Channelized Style Encoder</strong><ul id="3950fa5b-84fe-8007-ab0c-cce74243edf2" class="bulleted-list" dir="auto"><li style="list-style-type:circle">그림:<figure id="3950fa5b-84fe-80ec-a5d4-f65a3ee18278" class="image" data-notion-image="Gemini_Generated_Image_xa7cmwxa7cmwxa7c.png" dir="ltr"><a href="Gemini_Generated_Image_xa7cmwxa7cmwxa7c.png"><img style="width:2482px" src="Gemini_Generated_Image_xa7cmwxa7cmwxa7c.png"/></a></figure></li></ul><ul id="3950fa5b-84fe-807d-9e5a-f9d30b527d85" class="bulleted-list" dir="auto"><li style="list-style-type:circle">구조:<pre id="3950fa5b-84fe-80ac-8271-f8ac3e514519" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">audio
+  ↓
+shared speech backbone
+  ↓
+┌────────────────────┐
+speaker head   style head
+↓              ↓
+...            known style channels
+               - pitch
+               - energy
+               - temporal / rhythm
+               ...
+               + 
+	             - unknown style channel
+               ↓
+               channel fusion
+↓              ↓
+z_speaker      z_style</code></pre></li></ul><ul id="3950fa5b-84fe-80d6-9c88-d412c95d61ba" class="bulleted-list" dir="auto"><li style="list-style-type:circle">장점:<ul id="3950fa5b-84fe-8044-962d-ece5f5513469" class="bulleted-list" dir="auto"><li style="list-style-type:square">중간 channel이 있어 설명 가능성이 높음<ul id="3950fa5b-84fe-80e5-b43d-f163b02660c8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Disentangled Representation Learning</li></ul><ul id="3950fa5b-84fe-8064-aa4e-f9d0f0a46a36" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Multi-branch Ensemble Metric Learning</li></ul><ul id="3950fa5b-84fe-8065-b3e1-cffdbd12bf43" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Deep Supervision</li></ul></li></ul><ul id="3950fa5b-84fe-80ea-9d38-f5eac0bcb3a7" class="bulleted-list" dir="auto"><li style="list-style-type:square"><span style="border-bottom:0.05em solid">감정과 스타일의 애매한 정의 상태에서의 나름 괜찮은 합의</span></li></ul><ul id="3950fa5b-84fe-80d6-8938-d27a84be493b" class="bulleted-list" dir="auto"><li style="list-style-type:square"><span style="border-bottom:0.05em solid">감정의 개수를 정의하지 않을 수 있음</span></li></ul></li></ul><ul id="3950fa5b-84fe-805a-9e83-d18ea35613e3" class="bulleted-list" dir="auto"><li style="list-style-type:circle">위험:<ul id="3950fa5b-84fe-80ea-b34c-fc24fd13bad1" class="bulleted-list" dir="auto"><li style="list-style-type:square">known feature만으로 style을 정의했다는 bias가 생길 수 있음</li></ul><ul id="3950fa5b-84fe-80e6-a13a-c67a51cef511" class="bulleted-list" dir="auto"><li style="list-style-type:square">명시적 감정 레이블을 사용하지 않으므로 학습 난이도가 상당함</li></ul><ul id="3950fa5b-84fe-801d-a067-ca9f27563f04" class="bulleted-list" dir="auto"><li style="list-style-type:square">unknown channel을 어떻게 학습/검증할지가 핵심<ul id="3950fa5b-84fe-8027-b3ef-cfbaaf007567" class="bulleted-list" dir="auto"><li style="list-style-type:disc">방안: unk channel의 dominance가 다른 채널에 비해 높지 않음을 학습 완료 후 수치로 조사하면 됨</li></ul></li></ul></li></ul></li></ul><hr id="3950fa5b-84fe-80ec-9032-d15f05ea63a2" dir="auto"/><p id="3950fa5b-84fe-8083-9d45-eb2b5d92257c" class="" dir="auto">
+</p><h2 id="3950fa5b-84fe-80b3-9fa7-fff07fb127a1" class="" dir="auto">B. 단일 스타일 쿼리 TTS 방식의 Instruction Following 성능 한계 문제</h2><figure id="3950fa5b-84fe-80b0-97c6-e85ec48bb503" class="image" data-notion-image="image%203.png" dir="ltr"><a href="image%203.png"><img style="width:703.984375px" src="image%203.png"/></a></figure><h3 id="3950fa5b-84fe-8006-b182-e4bd1df4cd5e" class="" dir="auto">B.1. 단일 쿼리 방식의 문제점</h3><blockquote id="3950fa5b-84fe-8056-a255-db827b97f26d" class="" dir="auto">이 내용은 실제로 InstructTTSEval을 통해 평가를 진행해본 결과가 아닌 이론적으로 진행한 사고 실험<br/>* InstructTTSEval은 Gemini API를 사용해야 해서 비용이 발생하므로 확실한 방향성 결정 이후 진행 예정</blockquote><h4 id="3950fa5b-84fe-80e8-8ca4-d26bab65311b" class="" dir="auto">현 시점 달성 성능</h4><ul id="3950fa5b-84fe-802a-aa8e-f49f57abdecd" class="bulleted-list" dir="auto"><li style="list-style-type:disc">지난 미팅:<table id="3950fa5b-84fe-8092-82de-c61c05281488" class="simple-table" dir="ltr"><tbody><tr id="3950fa5b-84fe-80d8-8982-d6ee0b590c8b" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"></td><td id="`?Df" class="" style="width:120.328125px"><strong>COS</strong></td><td id="ozA;" class="" style="width:113.328125px"><strong>WER</strong></td><td id="rfLM" class=""><strong>UTMOS</strong></td></tr><tr id="3950fa5b-84fe-80f9-85ea-c24a4d2bae30" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"><strong>Baseline</strong></td><td id="`?Df" class="" style="width:120.328125px">0.224</td><td id="ozA;" class="" style="width:113.328125px">0.120</td><td id="rfLM" class="">3.406</td></tr><tr id="3950fa5b-84fe-8071-b429-c32920921fa7" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"><strong>KV 캐시 재사용</strong></td><td id="`?Df" class="" style="width:120.328125px">0.402</td><td id="ozA;" class="" style="width:113.328125px">0.123</td><td id="rfLM" class="">3.489</td></tr><tr id="3950fa5b-84fe-8081-b49f-c825b975e06c" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"><strong>KV 캐시 항상 재생성</strong></td><td id="`?Df" class="" style="width:120.328125px">0.269</td><td id="ozA;" class="" style="width:113.328125px">0.122</td><td id="rfLM" class="">3.461</td></tr></tbody></table></li></ul><ul id="3950fa5b-84fe-8094-9533-d9ebf2512cea" class="bulleted-list" dir="auto"><li style="list-style-type:disc">현재:<table id="3950fa5b-84fe-8050-a462-fa83cb472e80" class="simple-table" dir="ltr"><tbody><tr id="3950fa5b-84fe-8026-8d99-f6b94d0de7af" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"></td><td id="`?Df" class="" style="width:120.328125px"><strong>COS</strong></td><td id="ozA;" class="" style="width:113.328125px"><strong>WER</strong></td><td id="rfLM" class=""><strong>UTMOS</strong></td></tr><tr id="3950fa5b-84fe-805e-84d0-e07ccfbb1cb4" dir="ltr"><td id="Xt?q" class="" style="width:156.328125px"><strong>화자 쿼리 시 시드 고정</strong></td><td id="`?Df" class="" style="width:120.328125px"><strong>0.369**</strong></td><td id="ozA;" class="" style="width:113.328125px">0.121</td><td id="rfLM" class="">3.512</td></tr></tbody></table><p id="3950fa5b-84fe-80c2-a964-fd3c9a978695" class="" dir="auto">* 이미지 생성처럼 시드 바꾸면 같은 Voice Prompt로 다른 음성 생성 가능</p><p id="3950fa5b-84fe-803f-a3ae-ca4d3626e199" class="" dir="auto">** Flash Attention 영향</p></li></ul><h4 id="3950fa5b-84fe-80e4-b21a-f97fba3ec20d" class="" dir="auto">Two-stage Pipeline과의 명시적 기여 분리 방안</h4><ul id="3950fa5b-84fe-80b9-a3b3-da9a2e289847" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Two-stage 모델의 경우 Voice Design 후 Voice Cloning인데 이 경우, 화자 특성에 대한 쿼리가 단일 시점에 결정되므로 Voice Design 시 입력한 Content Prompt가 충분히 화자의 특성을 다 담지 못할 경우 Voice Cloning으로 넘어갈 때 병목으로 작동함</li></ul><ul id="3950fa5b-84fe-8035-a6f7-fb820902e66e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Voice Cloning으로 넘어가면 모델이 분리된 것이므로 처음에 입력된 Voice Prompt에 완전히 접근이 막히게 되는데, 중간 reference 오디오가 Voice Prompt의 내용과 디렉션을 충분히 담고 있을 것이라는 보장이 없음<ul id="3950fa5b-84fe-8002-bbc6-cc29efbdf150" class="bulleted-list" dir="auto"><li style="list-style-type:circle">예: [엄청나게 디테일하고 복잡한 화자 서술] + [안녕하세요] ⇒ 안녕하세요 만으로는 화자 모델링 불가능</li></ul></li></ul><p id="3950fa5b-84fe-8035-86f5-c18fe9a77eec" class="" dir="auto"><strong>⇒</strong> 그렇다면, Two-stage 방식과 대비하여 하나의 모델을 사용했을 때 가장 큰 차이점은 Instruction Following 가능성이라고 볼 수 있음<div class="indented"><p id="3950fa5b-84fe-8048-acca-da71b3c90774" class="" dir="auto">* 그 외에도 Two-stage의 경우 모델이 별도로 2개 존재하므로 출력이 모델의 VD RVQ 디코더→VC RVQ 인코더를 통과하면서 손상이 발생하므로 구조적으로 차이가 있긴 함</p></div></p><p id="3950fa5b-84fe-807e-8b3b-fd458d9e1002" class="" dir="auto"><strong>⇒⇒</strong> 그런데 문제는 지금 우리 방식인 Fixed Reference Content Prompt 방식의 경우 모든 경우에 대해 고정된 전역 쿼리를 사용하는 것이므로 역시나 Instruction Following 문제가 발생한다고 볼 수 있음</p><h3 id="3950fa5b-84fe-80a8-898f-e3cec8f856e8" class="" dir="auto">B.2. Leanable Global Query</h3><h4 id="3950fa5b-84fe-80b3-bbca-d4b1764c8d02" class="" dir="auto">Initial Approach</h4><ul id="3950fa5b-84fe-80c8-99a9-dc32b5c6ab7b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">고정된 쿼리용 프롬프트를 사용하는 것이 Instruction Following 병목을 일으킬 것이라는 생각의 근거는 해당 쿼리가 Voice Prompt에 대해서 최적이 아닐 수 있음과 동시에 사람이 임의로 그 값을 결정했기 때문<ul id="3950fa5b-84fe-8033-b4bf-e5fb14629d86" class="bulleted-list" dir="auto"><li style="list-style-type:circle">그렇다면 학습을 통해 Dataset optimal한 Global Query를 구하는 방식으로 하면 Two-stage와 달리 학습되는 부분도 있으니 차별점을 가질 수 있을 것이라 판단</li></ul><ul id="3950fa5b-84fe-809a-b1f4-dab0089929ea" class="bulleted-list" dir="auto"><li style="list-style-type:circle">그래서 다시 꺼내온 Prefix-tuning<figure id="3950fa5b-84fe-80f1-bc96-c5df3ca67d06" class="image" data-notion-image="image%204.png" dir="ltr"><a href="image%204.png"><img style="width:644px" src="image%204.png"/></a></figure></li></ul></li></ul><ul id="3950fa5b-84fe-8018-b447-e375ec9d6081" class="bulleted-list" dir="auto"><li style="list-style-type:disc">그러나 학습 결과 WER 하락 문제가 다시 발생<ul id="3950fa5b-84fe-80e8-a1e3-df03d4c2977e" class="bulleted-list" dir="auto"><li style="list-style-type:circle">⇒ 애초에 Un-seen 도메인의 임베딩(latent)을 삽입하는 것이 모델에게 문제를 일으키는 것으로 추정</li></ul><ul id="3950fa5b-84fe-80c6-aaef-fd1f761282d6" class="bulleted-list" dir="auto"><li style="list-style-type:circle">1월달에 시도하던 기존 메서드도 그럼 그런 문제일 수도</li></ul></li></ul><h4 id="3950fa5b-84fe-80ba-bd76-ef898f082cae" class="" dir="auto">Fine-grained Approaches</h4><ul id="3950fa5b-84fe-8049-a7ef-c3d46493a695" class="bulleted-list" dir="auto"><li style="list-style-type:disc">다이렉트로 토큰 입력이 아닌 인코더를 한번 통과 시키는 형태로 구현<ul id="3950fa5b-84fe-8025-ac35-c33eb048b992" class="bulleted-list" dir="auto"><li style="list-style-type:circle">해보려 했으나 애초에 CELoss로 로스가 전파가 안되는 상황<ul id="3950fa5b-84fe-8017-b296-de542e68f54f" class="bulleted-list" dir="auto"><li style="list-style-type:square">여기서 신재는 강화학습을 사용해서 해결하려 하였는데, 강화학습이 논문에 나오는 것이 좋은 상황인지 판단이 필요</li></ul></li></ul></li></ul><ul id="3950fa5b-84fe-80cc-b650-c88722629b4a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">흥미로운 소식으로<ul id="3950fa5b-84fe-80f6-94f0-fba5973c5f22" class="bulleted-list" dir="auto"><li style="list-style-type:circle">클로드의 분석으로는 읽을 수 있는 토큰인 경우 COS 지표를 올리면서 WER 수치 손상을 막을 수 있다고 실험을 리포트</li></ul><ul id="3950fa5b-84fe-80d9-82fb-db12d32fa553" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Read-aloud 방식: Voice Prompt를 다시 한번 읽도록 하는 Ref Content Prompt를 입력하여 자신의 스타일을 읽는 오디오 레퍼런스를 삽입하면 COS 지표가 0.4대로 상승</li></ul></li></ul><h3 id="3950fa5b-84fe-80bc-9e23-e8ac3de147cd" class="" dir="auto">B.3. Leanable Per-speaker Query</h3><h4 id="3950fa5b-84fe-8019-852e-eb2f08152661" class="" dir="auto">Token-level Discrete Diffusion (그냥 아이디어, 비현실적)</h4><ul id="3950fa5b-84fe-80fd-a42f-f1916cd3bdd9" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Voice Prompt를 Fixed Reference Content Prompt로 전이하는 상태 전이 수행</li></ul><h4 id="3950fa5b-84fe-8030-ab5f-c9cad5e1ee2b" class="" dir="auto">Reference Content Prompt Generation Model</h4><figure id="3950fa5b-84fe-80fa-8b72-dab8eccbba33" class="image" data-notion-image="image%205.png" dir="ltr"><a href="image%205.png"><img style="width:710.0000610351562px" src="image%205.png"/></a></figure><ul id="3950fa5b-84fe-806f-9867-f48ab1ef35bf" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LSTM 등 별도의 모델을 사용하여 프롬프트를 Generation</li></ul><h4 id="3950fa5b-84fe-80f2-84e9-f99fce456340" class="" dir="auto">Self-Generation</h4><ul id="3950fa5b-84fe-801c-9f2e-dab921970039" class="bulleted-list" dir="auto"><li style="list-style-type:disc">별도 모델 없이 Fixed Reference Content Prompt 자체도 AR로 모델이 자체 생성<ul id="3950fa5b-84fe-80c4-9f1a-cc9dc2a6759e" class="bulleted-list" dir="auto"><li style="list-style-type:circle">하려고 보았으나, Qwen3TTS에는 영어 토큰 임베딩이 없었따…..</li></ul></li></ul><hr id="3950fa5b-84fe-807f-9592-f5169e5fd572" dir="auto"/><p id="3950fa5b-84fe-8075-8923-f4333ae01786" class="" dir="auto">
+</p><h2 id="3950fa5b-84fe-80d1-89ae-e4c3ab995d52" class="" dir="auto">F. Feedbacks</h2><pre id="3950fa5b-84fe-80a4-a778-fcd2af267239" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"></code></pre><p id="3950fa5b-84fe-80f5-8851-c4f6b964130a" class="" dir="auto">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

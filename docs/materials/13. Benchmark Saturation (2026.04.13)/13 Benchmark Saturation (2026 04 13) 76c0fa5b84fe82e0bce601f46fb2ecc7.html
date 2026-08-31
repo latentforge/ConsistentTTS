@@ -1,0 +1,813 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>13. Benchmark Saturation (2026.04.13)</title><meta name="data-notion-page-icon" content="/icons/book_red.svg"/><link rel="icon" href="https://app.notion.com/icons/book_red.svg"/><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="76c0fa5b-84fe-82e0-bce6-01f46fb2ecc7" class="page sans" data-notion-page-icon="/icons/book_red.svg"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://app.notion.com/icons/book_red.svg"/></div><h1 class="page-title" dir="auto">13. Benchmark Saturation (2026.04.13)</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>날짜</th><td><time datetime="2026-03-05">2026년 3월 5일 → 2026년 3월 9일</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>태그</th><td><span class="selected-value select-value-color-green">Meeting</span><span class="selected-value select-value-color-red">Paper 1</span></td></tr></tbody></table></header><div class="page-body"><h1 id="7020fa5b-84fe-83f3-9349-81478e535667" class="" dir="auto">Z. Last Meeting Summary</h1><ul id="0a70fa5b-84fe-8244-ab50-811ec939a725" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Gen vs Gen Similarity Benchmark가 이전에 제시된 적이 있는 지 확인할 것</li></ul><ul id="1e30fa5b-84fe-8230-bd6f-811fb126c8f6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">연구의 의미와 계속 진행할 지에 대한 여부 결정할 것</li></ul><ul id="7f40fa5b-84fe-8266-a7df-818bc4e125b3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">AI 챔피언 제안서 제출</li></ul><ul id="dc90fa5b-84fe-83dd-b045-81077ade471c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">KCC 논문 제출</li></ul><p id="fa60fa5b-84fe-831f-b142-812f00448aa4" class="" dir="auto">
+</p><blockquote id="0ee0fa5b-84fe-82fd-bf90-019518e8dc95" class="" dir="auto"><strong>P.S.  감정 태그 모델</strong></blockquote><details id="5fd0fa5b-84fe-8322-a59b-01d038d6cfbc" open="" class="toggle" dir="auto"><summary>SOTA 모델 (Fish Audio)</summary><div class="indented"><figure id="2f80fa5b-84fe-8296-8006-814eeca95b2a" dir="ltr"><a href="https://fish.audio/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Fish Audio</div><div class="bookmark-description">TTS and voice cloning with unmatched emotion control.</div></div><div class="bookmark-href"><img src="https://fish.audio/favicon-96x96.png" class="icon bookmark-icon"/>https://fish.audio/</div></div><img src="https://img.ogis.dev/?template=fish&amp;logo=https%3A%2F%2Fdocs.fish.audio%2Flogo%2Fdark.png&amp;title=Fish+Audio&amp;description=TTS+and+voice+cloning+with+unmatched+emotion+control.&amp;subtitle=The+Most+Expressive+AI+Speech" class="bookmark-image"/></a></figure></div></details><details id="ba70fa5b-84fe-83f5-b102-0121e9067142" open="" class="toggle" dir="auto"><summary>BenchMark (EmergentTTS-Eval)</summary><div class="indented"><figure id="0200fa5b-84fe-8346-ab3d-819a537876b4" dir="ltr"><a href="https://github.com/boson-ai/emergenttts-eval-public" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">GitHub - boson-ai/EmergentTTS-Eval-public: [NeurIPS&#x27; 25] Benchmark for evaluating TTS models on complex prosodic, expressiveness, and linguistic challenges.</div><div class="bookmark-description">[NeurIPS&#x27; 25] Benchmark for evaluating TTS models on complex prosodic, expressiveness, and linguistic challenges. - boson-ai/EmergentTTS-Eval-public</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/boson-ai/emergenttts-eval-public</div></div><img src="https://opengraph.githubassets.com/28c13e01420a35234c1cf5098b60ce1c573cd6c6203c141d0fc96261db5edb9f/boson-ai/EmergentTTS-Eval-public" class="bookmark-image"/></a></figure></div></details><p id="2820fa5b-84fe-8312-8c82-014ae7e3e4c9" class="" dir="auto">
+</p><blockquote id="bf30fa5b-84fe-82f5-a9ca-011bf33479c0" class="" dir="auto"><strong>P.S. Full-duplex 모델</strong></blockquote><details id="f320fa5b-84fe-8344-b9e1-0192a8289a8d" open="" class="toggle" dir="auto"><summary>KRAFTON Raon</summary><div class="indented"><ul id="5210fa5b-84fe-8262-b538-019b7633b77d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Raon SpeechChat 모델은 Qwen-Ommi 모델 아키텍처를 베이스로 제작됨 (Thinker-Talker 구조)<ul id="55d0fa5b-84fe-8373-9f2a-01a01bdb128f" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Nvidia PersonaPlex와는 다른 구조</li></ul></li></ul><ul id="2c50fa5b-84fe-8350-a56a-81d2e7d8a44c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Thinker-Talker 구조의 경우 ASR을 사용하던 이전 기술과는 달리 모델이 생성 과정에 계속 인풋을 받을 수 있는 것은 맞으나, 구조적으로 <code>사용자의 입력 중 무시해도 될 것은 무시한다</code>의 컨셉에 더 가까움<ul id="26b0fa5b-84fe-82b3-89e0-812197f28a33" class="bulleted-list" dir="auto"><li style="list-style-type:circle">사용자의 입력 중 무시하면 안되는 지점에 하던 생성을 중단하고 다시 시작하는 것</li></ul><ul id="adf0fa5b-84fe-838c-aaa4-8119789391d2" class="bulleted-list" dir="auto"><li style="list-style-type:circle">PersonaPlex는 1차원으로 전사하여 어텐션되는 구조이기 때문에, 생성하면서 실제로 듣고 있는 형태</li></ul><ul id="cea0fa5b-84fe-824c-8cd4-01992ad3d8b2" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Thinker-Talker 구조는 사용자가 말하는 것을 Talker가 듣고 있는 느낌은 아니지만, 대신 Tool Calling을 LLM들처럼 지원 가능</li></ul></li></ul><ul id="f9e0fa5b-84fe-8310-b60d-0176e87b223c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">공통 한계로 현재 Full-duplex 모델들은 매우 짧은 생성 길이 제한을 가지고 있음</li></ul><figure id="eeb0fa5b-84fe-8283-b801-01b031b1173c" dir="ltr"><div class="source"><a href="https://raon.krafton.ai/">https://raon.krafton.ai/</a></div></figure></div></details><p id="dac0fa5b-84fe-8275-96f0-817df28dfe5a" class="" dir="auto">
+</p><hr id="4830fa5b-84fe-8220-bc11-81a3c45c92fe" dir="auto"/><p id="fcd0fa5b-84fe-82a8-87ef-014ad68b2d86" class="" dir="auto">
+</p><h1 id="f800fa5b-84fe-833d-a203-0181c0d1034f" class="" dir="auto">A. 기존 연구 확인</h1><h2 id="6ff0fa5b-84fe-837f-9dd2-0141b7984b7a" class="" dir="auto">A.1. 벤치마크 측면</h2><blockquote id="07b0fa5b-84fe-821f-9f45-8186f0129d8c" class="" dir="auto">기존 논문들의 SIM 수치는 <strong>Ref vs Gen</strong>인가 아니면 <strong>Gen vs Gen</strong>인가?<ul id="2180fa5b-84fe-83de-8ebf-0184ca7177b8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">일단 교수님께서 공유해주신 논문은 전부 <strong>Ref vs Gen</strong>인 것으로 확인</li></ul></blockquote><ol type="1" id="d8e0fa5b-84fe-8388-99d5-8154cfbac76e" class="numbered-list" start="1" dir="auto"><li><strong>가장 처음 보고</strong>: (2018) Transfer Learning from Speaker Verification to Multispeaker Text-To-Speech Synthesis (NeurIPS)<p id="4d90fa5b-84fe-8327-98a7-81803a728fb8" class="" dir="auto"><strong>방법</strong>:</p><ul id="4140fa5b-84fe-82cd-ae43-0103b53b7dc5" class="bulleted-list" dir="auto"><li style="list-style-type:disc">같은 화자 임베딩으로 여러 발화 생성</li></ul><ul id="2050fa5b-84fe-83c4-9ddd-01c761723253" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Demo 페이지에서 시각적으로 비교 제시</li></ul><ul id="3910fa5b-84fe-8273-9214-81eff1a3b162" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Table 4에서 self-similarity 측정 - 서로 다른 화자에 대해 합성된 오디오의 자연성 MOS 분산 비교 <a href="https://arxiv.org/pdf/1806.04558">arXiv</a></li></ul><ul id="2890fa5b-84fe-8341-b3b0-810df9b5972d" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>&quot;self-similarity&quot;라는 용어 사용</strong></li></ul><p id="9440fa5b-84fe-8226-8e24-812935c68cff" class="" dir="auto"><strong>핵심</strong>:</p><ul id="d680fa5b-84fe-8211-b437-012402b7e037" class="bulleted-list" dir="auto"><li style="list-style-type:disc">데모에서 같은 화자로 여러 문장 생성하여 일관성 시연</li></ul><ul id="f9b0fa5b-84fe-82cf-b531-013a494491ef" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Table 4에서 VCTK가 naturalness와 <strong>self-similarity</strong> 측면에서 일관성 있음을 보고</li></ul></li></ol><ol type="1" id="9200fa5b-84fe-8393-9111-81ec74120e24" class="numbered-list" start="2" dir="auto"><li><strong>Bark 평가 연구</strong>: (2024) Evaluating Text-to-Speech Synthesis from a Large Discrete Token-based Speech Language Model<ul id="49c0fa5b-84fe-83fa-84fa-81ef54d9f17e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">가장 명시적인 사례</li></ul><ul id="7e90fa5b-84fe-82ba-8d96-0117ed8409d3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Bark의 화자 일관성을 조사하기 위해, 동일 화자로부터 샘플링된 여러 출력 간 화자 유사도 점수를 ECAPA-TDNN 모델로 측정</li></ul><ul id="95c0fa5b-84fe-82fa-85df-817a26859f0e" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>Confusion matrix 분석</strong>: 같은 화자로 생성된 샘플들 간 유사도를 행렬로 표현<figure id="8860fa5b-84fe-8391-856a-01d3122bf92a" class="image" data-notion-image="image.png" dir="ltr"><a href="image.png"><img style="width:240px" src="image.png"/></a></figure></li></ul><ul id="1db0fa5b-84fe-82aa-bdaf-819695457225" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>발견</strong>: Bark는 &quot;<strong>speaker drift</strong>&quot; 문제가 있음 - 동일 화자 ID로 생성했음에도 서로 다른 화자처럼 들림</li></ul></li></ol><ol type="1" id="9120fa5b-84fe-832a-8938-81d5533531d1" class="numbered-list" start="3" dir="auto"><li><strong>E2 TTS 논문</strong>: (2025) Harnessing text-to-speech voice cloning models for improved audiological speech assessment (Shahidi et al., Interspeech 2025)<ul id="cc70fa5b-84fe-82c6-981b-8121e107dc2e" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>방법</strong>: Model Consistency - 같은 모델로 생성된 샘플들 간 &quot;same speaker&quot; 판단</li></ul><ul id="0190fa5b-84fe-82c4-b9ed-8131cf5a2c88" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>발견</strong>: E2 &gt; XTTSv2 &gt; VALL-E X 순으로 일관성 높음</li></ul><ul id="7850fa5b-84fe-8243-8e3a-811ed17823a8" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>핵심</strong>: 명시적으로 &quot;consistency in the speaker characteristics generated by each model&quot; 측정</li></ul></li></ol><blockquote id="4600fa5b-84fe-82eb-93a2-811a0c4026f1" class="" dir="auto">정리하면, 계속 측정은 되고 있으나 논문에서는 크게 관심이 없음</blockquote><blockquote id="a530fa5b-84fe-8249-9ab6-81679661e8ad" class="" dir="auto">다만, 실무적인 측면에서는 Qwen3 TTS나 Parler TTS 모델의 깃허브 레포에 이슈가 올라오는 등 필요성 존재<br/>• <strong>Parler-TTS Issue #11</strong>: &quot;similar but still not the same voices each generation&quot;</blockquote><h2 id="d8a0fa5b-84fe-8230-872c-01edf23a346e" class="" dir="auto">A.2. 학습 모델 측면</h2><blockquote id="a940fa5b-84fe-835a-b412-8173fd16ed09" class="" dir="auto">명시적으로 같은 화자에 대해 Content를 달리하여 Consistency Loss를 도입하는 학습 방법론 조사</blockquote><h3 id="eff0fa5b-84fe-82fb-a841-819d7eb93a5d" class="" dir="auto"><strong>Speaker Consistency Loss (SCL) 계열</strong></h3><ol type="1" id="cfe0fa5b-84fe-83d0-bf44-013f9adacc16" class="numbered-list" start="1" dir="auto"><li><strong>YourTTS (2022) - ICML</strong><ul id="9ca0fa5b-84fe-83d2-b7e7-81269d8bf95c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">사전 학습된 화자 인코더를 사용하여 생성된 오디오와 ground truth에서 화자 임베딩을 추출하여 Speaker Consistency Loss를 최종 손실에 사용</li></ul><ul id="0010fa5b-84fe-8376-bed5-81570365c160" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>한계:</strong><ul id="9d90fa5b-84fe-8288-acae-8128b9e42224" class="bulleted-list" dir="auto"><li style="list-style-type:circle"><strong>Ref vs Gen 방식</strong> - 여전히 reference와 비교</li></ul><ul id="47e0fa5b-84fe-83fa-910c-01b38c688ea6" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Cross-content consistency는 측정 안 함</li></ul><ul id="df70fa5b-84fe-82f4-9ea2-01d8630c311f" class="bulleted-list" dir="auto"><li style="list-style-type:circle">학습 시에만 사용, 평가 프로토콜 아님</li></ul></li></ul></li></ol><ol type="1" id="0550fa5b-84fe-82c7-b1ec-015b2ace2631" class="numbered-list" start="2" dir="auto"><li><strong>CosyVoice2 (2024)</strong><ul id="f970fa5b-84fe-83a5-af0e-81447522de61" class="bulleted-list" dir="auto"><li style="list-style-type:disc">FSQ 양자화와 ASR 손실 정규화를 결합하여 zero-shot 및 code-switching 시나리오에서 content-speaker 일관성 보존</li></ul><ul id="7b40fa5b-84fe-8216-baaf-014d0d1f3355" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>방법:</strong><ul id="a1f0fa5b-84fe-82fc-bd3e-01edd1a64969" class="bulleted-list" dir="auto"><li style="list-style-type:circle">ASR loss로 content 보존</li></ul><ul id="9950fa5b-84fe-836b-aa5f-81256710a52c" class="bulleted-list" dir="auto"><li style="list-style-type:circle">FSQ로 speaker 보존</li></ul><ul id="5520fa5b-84fe-82cf-a489-011de314ce1e" class="bulleted-list" dir="auto"><li style="list-style-type:circle">하지만 여전히 <strong>single reference 기반</strong></li></ul></li></ul></li></ol><h2 id="e4a0fa5b-84fe-83ba-a198-01479ebe8d63" class="" dir="auto">A.3. Benchmark Saturation 주장</h2><ul id="8ae0fa5b-84fe-82c3-a688-018d09bac66b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Ref vs Gen Sim 벤치가 90을 넘기 시작한 것은 그래도 비교적 최근</li></ul><ul id="57c0fa5b-84fe-826e-bb8b-81305913e03d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Ref vs Gen Sim으로는 90을 넘지만, Gen vs Gen Sim 수치는 낮게 나온다는 것을 보임으로써 Benchmark Saturation을 주장한다면 인공지능의 발전 과정으로 봤을 때 말이 되는 흐름</li></ul><ul id="b110fa5b-84fe-83e0-adc0-81d3609cf3a6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">우리가 발견한 것이라고 주장하기는 조금 힘들게 된거긴 하지만,</li></ul><ul id="7bf0fa5b-84fe-83ff-99fe-815000bc6ee5" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이미 리포트가 된 사례들이 있으므로 오히려 Saturation을 주장하면 더 make sense할 것</li></ul><p id="dd70fa5b-84fe-82f9-8817-81770e286321" class="" dir="auto">
+</p><hr id="f8b0fa5b-84fe-83ad-b23d-81dc9df3597f" dir="auto"/><p id="f120fa5b-84fe-8235-b12f-0155fe21a498" class="" dir="auto">
+</p><h1 id="98f0fa5b-84fe-83c1-9720-017580d09965" class="" dir="auto">B. 이 연구로 가져가려고 하는 가치</h1><h2 id="d390fa5b-84fe-83a5-81e7-01f82d916369" class="" dir="auto">B.1. 그 동안 자세하게 말씀드리지 못한 부분</h2><blockquote id="e980fa5b-84fe-8214-b29b-81c79a09dbf5" class="" dir="auto">시간상, 그리고 교수님이 어떻게 생각하실지 모른다는 불안감<br/>계속해서 논문 주체를 하나로 잡고 있지 않고 있었음</blockquote><h3 id="2210fa5b-84fe-83f9-a028-81e67cadf766" class="" dir="auto">B.1.1. 2025.12.29일 미팅 기록</h3><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-icon="💡" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="1750fa5b-84fe-828d-b270-012c754de064" dir="ltr"><div style="font-size:1.5em"><span class="icon" data-emoji="💡"></span></div><div style="width:100%"><p id="61c0fa5b-84fe-8271-8d24-0193e04403ca" class="" dir="auto"><strong>문제 발견 → 간단한 시도 → 한계 분석 → 본격 해결 → 확장</strong> 의 흐름</p></div></aside><ul id="6f90fa5b-84fe-838c-9356-81066035645c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">논문 1: 화자 일관성 <strong>문제 발견 보고</strong> + 간단한 <strong>Selective Tuning</strong>(토큰 튜닝)을 통한 성능 향상 시도<ul id="cf60fa5b-84fe-8220-bb82-81eb0d563a9c" class="bulleted-list" dir="auto"><li style="list-style-type:circle">성능 향상 기준은 Style Prompt 모델의 일관성이 Voice Cloning 모델에 도달하도록</li></ul></li></ul><ul id="cc00fa5b-84fe-8376-bae4-81e1bf63e14e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">논문 2: <strong>Convertive Tuning</strong> 등을 이용하여 <span style="border-bottom:0.05em solid">Voice Cloning의 방법론으로 스타일 프롬프팅을 통합</span>하여 일관성 확보</li></ul><ul id="5a80fa5b-84fe-8201-881a-01e0a885a848" class="bulleted-list" dir="auto"><li style="list-style-type:disc">논문 3: Hypernetwork LoRA Generation을 이용하여 <strong>Voice Editing</strong> 지원</li></ul><blockquote id="0120fa5b-84fe-8232-ab34-8163330b426a" class="" dir="auto">이는 서로 다른 주제에 대해 다루는 내용이기 때문에 분리하는 것이 필요하다고 생각하고 있었음</blockquote><h2 id="8800fa5b-84fe-83de-b7ba-013f41827a37" class="" dir="auto">B.2. 최근 생각 변화</h2><blockquote id="3480fa5b-84fe-822e-a3da-81a60914d8cf" class="" dir="auto">생각보다 발견한 문제에 대한 원인 분석이 쉽지 않음</blockquote><blockquote id="5650fa5b-84fe-83f3-a6ab-811968735eba" class="" dir="auto">확실한 지표 확인을 위해 데이터셋까지 수정해야 하다보니 기여가 꼬이고, 일이 너무 많아지고 시간이 지체됨</blockquote><blockquote id="60e0fa5b-84fe-8250-a922-015e31b114a6" class="" dir="auto">재구성 필요</blockquote><ul id="3350fa5b-84fe-8387-85ad-01af4d8d1571" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>논문 1: Benchmark Saturation and Initial Solution (Contrastive + TTA)</strong><ul id="e9d0fa5b-84fe-834c-a306-01a41b756a2a" class="bulleted-list" dir="auto"><li style="list-style-type:circle">요약: 벤치마크 포화 보고 및 간단한 성능 향상 방식 제안</li></ul><ul id="a6b0fa5b-84fe-82f9-b9bf-014fd0c7eb18" class="bulleted-list" dir="auto"><li style="list-style-type:circle">설명:<ul id="8f80fa5b-84fe-8317-a760-0182e52efbcc" class="bulleted-list" dir="auto"><li style="list-style-type:square">벤치마크 포화를 주장하면서 새 벤치에 대한 기존 모델별 성능 변화(하락) 보고</li></ul><ul id="6620fa5b-84fe-8207-b1ad-810400843b3c" class="bulleted-list" dir="auto"><li style="list-style-type:square">간단한 해결책(Consistency loss)으로 약간의 성능을 올릴 수 있는 방향을 제시한 채로 마무리<ul id="af20fa5b-84fe-8356-a85d-816632841fd3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">파인 튜닝으로 특정 화자에 대해 Consistency를 올리게 되면 결국 새로운 화자 프롬프트가 들어오는 경우 다시 성능 하락이 발생할 수 있을 것으로 생각됨</li></ul><ul id="93e0fa5b-84fe-833a-9391-01ed9bf1041f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">TTA로 파인 튜닝 단계를 런타임에도 수행해서 보고</li></ul></li></ul></li></ul><ul id="a980fa5b-84fe-83a3-95ba-0172b3eedc7e" class="bulleted-list" dir="auto"><li style="list-style-type:circle">이슈 사항:<ul id="d800fa5b-84fe-8345-b438-01ea1494d6c1" class="bulleted-list" dir="auto"><li style="list-style-type:square">Persona Prompt라는 새로운 이름을 도입하는 것이 리뷰어에게 부정적으로 보일 수 있음<ul id="d8b0fa5b-84fe-83d5-9805-81da451a2c4b" class="bulleted-list" dir="auto"><li style="list-style-type:disc">먼저, 태스크에 대한 명칭부터 확실하게 잡을 필요가 있음<ul id="f3b0fa5b-84fe-82be-82a3-81282c207eca" class="bulleted-list" dir="auto"><li style="list-style-type:circle">기존에 Style Prompting 모델이라고 부르던 명칭을 수정해야 함</li></ul><ul id="2300fa5b-84fe-8299-8c0c-819a9f8affa0" class="bulleted-list" dir="auto"><li style="list-style-type:circle">최근 Qwen-TTS가 태스크를 일관성 있게 정리함</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1270fa5b-84fe-832f-8360-810d997acd00" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># 태스트 정립 (현대적 해석)
+1. Voice Customizing: 학습 데이터셋에서 학습한 Voice에 대한 스타일 제어
+2. Voice Cloning: 레퍼런스 오디오를 통한 Voice 복제
+3. Voice Designing: 프롬프트를 통해 Voice를 생성
+--- 여기까지가 Qwen ---
+4. Voice Editing: 비전 분야에서처럼 모든 태스크를 통합하고, 참조에 대한 수정까지 지원</code></pre></li></ul><ul id="4020fa5b-84fe-829a-a949-811f80336433" class="bulleted-list" dir="auto"><li style="list-style-type:disc">논란을 만들 필요는 없으므로 Voice Prompt 라는 표현으로 변경<pre id="2460fa5b-84fe-83ca-a61a-019b7a02ff41" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># 프롬프트 종류
+1. Voice Prompt/Description
+   (Voice Profile, Persona)
+2. Speaker Prompt/Description
+3. Style Prompt/Description
+4. Content Prompt/Description</code></pre></li></ul><ul id="b6f0fa5b-84fe-8232-a95c-01e61dbdc1e6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">근데 사실 이미 KRAFTON도 Persona라고 부르고 있었음<figure id="1890fa5b-84fe-8314-a6b5-01c8e5ec14e7" dir="ltr"><a href="https://huggingface.co/KRAFTON/Raon-SpeechChat-9B" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">KRAFTON/Raon-SpeechChat-9B · Hugging Face</div><div class="bookmark-description">We’re on a journey to advance and democratize artificial intelligence through open source and open science.</div></div><div class="bookmark-href"><img src="https://huggingface.co/favicon.ico" class="icon bookmark-icon"/>https://huggingface.co/KRAFTON/Raon-SpeechChat-9B</div></div><img src="https://cdn-thumbnails.huggingface.co/social-thumbnails/models/KRAFTON/Raon-SpeechChat-9B.png" class="bookmark-image"/></a></figure><figure id="50d0fa5b-84fe-8354-9091-01dab69e5c36" class="image" data-notion-image="image%201.png" dir="ltr"><a href="image%201.png"><img style="width:704px" src="image%201.png"/></a></figure></li></ul></li></ul><ul id="8ba0fa5b-84fe-8327-a03e-0182a429938f" class="bulleted-list" dir="auto"><li style="list-style-type:square">Instruct Following을 측정할 방법이 없었음<ul id="a540fa5b-84fe-83c2-b832-01eb2d5181df" class="bulleted-list" dir="auto"><li style="list-style-type:disc">SOANL-D, SONAL-E는 보조 벤치마크에 불과하며, 실제로 의미가 있는지도 확실하게 검토해봐야 함</li></ul><ul id="2630fa5b-84fe-8304-b541-01b2ab3dce39" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Emergent TTS와 비슷한 <strong>InstructTTSEval 벤치 존재</strong><ul id="ceb0fa5b-84fe-8386-87eb-01e47989be78" class="bulleted-list" dir="auto"><li style="list-style-type:circle">InstructTTSEval: Benchmarking Complex Natural-Language Instruction Following in Text-to-Speech Systems<figure id="c190fa5b-84fe-82af-a08b-01119b6afbbe" dir="ltr"><a href="https://github.com/KexinHUANG19/InstructTTSEval" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">GitHub - KexinHUANG19/InstructTTSEval</div><div class="bookmark-description">Contribute to KexinHUANG19/InstructTTSEval development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/KexinHUANG19/InstructTTSEval</div></div><img src="https://opengraph.githubassets.com/68b9bcf60607c4964f794c3ba2bcf3facb58e64628ffa784939637d5932ff6be/KexinHUANG19/InstructTTSEval" class="bookmark-image"/></a></figure></li></ul></li></ul></li></ul></li></ul></li></ul><ul id="91e0fa5b-84fe-82d6-80e1-01240983103a" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>논문 2: Voice Design Consistency</strong><ul id="3f90fa5b-84fe-82b1-9251-8157d6d2e3f4" class="bulleted-list" dir="auto"><li style="list-style-type:circle">요약: 보이스 디자인 태스크의 일관성 지표 향상을 위한 노력</li></ul><ul id="f390fa5b-84fe-82b3-8db3-0177024bccdc" class="bulleted-list" dir="auto"><li style="list-style-type:circle">전개 과정:<ol type="1" id="a220fa5b-84fe-8211-9385-81fa45a5ec68" class="numbered-list" start="1" dir="auto"><li>Selective Tuning (토큰 튜닝)을 통해 보이스 디자인 모델의 일관성 문제를 해결하려 시도<ol type="a" id="8300fa5b-84fe-8270-8b3a-81fd80aabd1a" class="numbered-list" start="1" dir="auto"><li>Attention Map 활성화를 관찰해보니 Sink가 여러개 생성되는 것을 확인</li></ol><ol type="a" id="9a90fa5b-84fe-83d4-917c-81118123cc27" class="numbered-list" start="2" dir="auto"><li>Sink 패턴의 문제로 인해 Content 혼합 문제가 발생한다고 가설 설정</li></ol><ol type="a" id="8380fa5b-84fe-8380-9992-016afa3364a9" class="numbered-list" start="3" dir="auto"><li>Sink를 하나로 통합하여 혼합 문제를 일부 해결하였으나 WER도 함께 상승하는 문제 발생</li></ol></li></ol><ol type="1" id="9820fa5b-84fe-8291-aa8a-019bcd730345" class="numbered-list" start="2" dir="auto"><li>Convertive Tuning을 통해 보이스 프롬프트를 화자 임베딩으로 전환하여 보이스 클로닝 모델의 생성 일관성에 편승</li></ol></li></ul></li></ul><ul id="8b70fa5b-84fe-83e8-8d60-01406f60bd82" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>논문 3: Voice Clone and Voice Design All in One</strong><ul id="4860fa5b-84fe-828e-a603-8150dadf83ce" class="bulleted-list" dir="auto"><li style="list-style-type:circle">요약: 하이퍼네트워크를 통한 모든 Voice 특성 제어 태스크 통합</li></ul><ul id="55a0fa5b-84fe-826a-8f5c-01568e22e172" class="bulleted-list" dir="auto"><li style="list-style-type:circle">기존 문제:<ul id="d050fa5b-84fe-83e8-80e3-012088e08802" class="bulleted-list" dir="auto"><li style="list-style-type:square">기존에도 계속 문제가 되던 부분은 하이퍼네트워크의 일반화 가능성에 대한 걱정 때문이었음</li></ul><ul id="7a10fa5b-84fe-8282-b090-815f5e3ae993" class="bulleted-list" dir="auto"><li style="list-style-type:square">다른 분야의 하이퍼네트워크 논문들은 LoRA 쌍을 수집한 후 SFT로 해결<ul id="8f90fa5b-84fe-82f5-834d-815bf6ef88e2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LoRA 쌍을 수집하는데 비용이 너무 큼</li></ul><ul id="15c0fa5b-84fe-8264-9c92-813e7ac13575" class="bulleted-list" dir="auto"><li style="list-style-type:disc">SFT로 튜닝하는 것도 생성 과정을 모두 수행해야 하므로 비용이 너무 큼</li></ul></li></ul><ul id="b780fa5b-84fe-8301-b7cf-0171750058a8" class="bulleted-list" dir="auto"><li style="list-style-type:square">그래서 시도하는 과정으로 들어가기 무서웠던 것</li></ul></li></ul><ul id="44e0fa5b-84fe-836e-8ba0-01707de8d1fa" class="bulleted-list" dir="auto"><li style="list-style-type:circle">해결 방안 제시 (이론적 기여 사항):<ul id="0c40fa5b-84fe-83d8-8203-817fd7ead210" class="bulleted-list" dir="auto"><li style="list-style-type:square">원래는 이 문제를 해결하기 위해 이상하고 깔끔하지 못한 방식을 고안했음 (그때는 부족했기 때문)<ul id="d740fa5b-84fe-8249-a972-014b8dab98e2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">사실상 LoRA 쌍 수집만 없앤거지 무거운 SFT는 그대로 하고 있는거</li></ul><details id="8530fa5b-84fe-8367-941f-01ce66d3978a" open="" class="toggle" dir="auto"><summary>과정</summary><div class="indented"><figure id="f4b0fa5b-84fe-82b5-b82c-01360907f2b4" class="image" data-notion-image="image%202.png" dir="ltr"><a href="image%202.png"><img style="width:704.1000366210938px" src="image%202.png"/></a></figure><figure id="a340fa5b-84fe-8200-9018-8131d7b1b8c9" class="image" data-notion-image="image%203.png" dir="ltr"><a href="image%203.png"><img style="width:288px" src="image%203.png"/></a></figure><figure id="a3e0fa5b-84fe-82c2-ab10-01ad78f52e2e" class="image" data-notion-image="image%204.png" dir="ltr"><a href="image%204.png"><img style="width:288px" src="image%204.png"/></a></figure><figure id="4080fa5b-84fe-8323-b00b-81db01b78ff0" class="image" data-notion-image="image%205.png" dir="ltr"><a href="image%205.png"><img style="width:288px" src="image%205.png"/></a></figure><figure id="f310fa5b-84fe-83fb-adc2-01b8462d286a" class="image" data-notion-image="image%206.png" dir="ltr"><a href="image%206.png"><img style="width:288px" src="image%206.png"/></a></figure></div></details></li></ul><ul id="f090fa5b-84fe-820d-910b-013d1d180571" class="bulleted-list" dir="auto"><li style="list-style-type:square">이런 경우 우리가 해야 할 것은 뭐가 되었든 Teacher Forcing으로 모두 해결이 가능하도록 하는 것!</li></ul><ul id="1d50fa5b-84fe-8219-9c37-0162eee2ac81" class="bulleted-list" dir="auto"><li style="list-style-type:square">고민을 해보다 보니까 TTA쪽 연구에서 로스를 생성했던 방식인 <strong>Deep Supervision</strong>을 도입하면 될거라 생각</li></ul><ul id="aea0fa5b-84fe-8284-9a62-8182af527022" class="bulleted-list" dir="auto"><li style="list-style-type:square">어차피 Zero-shot TTS Voice Clone 모델에서 화자 정보는 모델에 내재되어 있으니, Latent 공간에서의 Align을 이용하면 LoRA쌍 수집도, SFT도 필요 없이 일반화가 가능 ⇒ 하이퍼네트워크 학습에 대한 이론적 기여 가능</li></ul></li></ul></li></ul><p id="d310fa5b-84fe-8399-b39e-01f7703089cb" class="" dir="auto">
+</p><hr id="2be0fa5b-84fe-8247-bef4-01d8ffb34d0d" dir="auto"/><p id="82e0fa5b-84fe-8323-aeb6-018a53221462" class="" dir="auto">
+</p><h1 id="d770fa5b-84fe-83bd-af20-0141888d5d06" class="" dir="auto">F. Feedback</h1><pre id="38a0fa5b-84fe-8288-b2a7-01b57aa2043f" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># 교수님 피드백 기록</code></pre><p id="c500fa5b-84fe-823c-a5ae-014c6c066242" class="" dir="auto">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

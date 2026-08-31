@@ -1,0 +1,825 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>12. Redirection (2026.04.06)</title><meta name="data-notion-page-icon" content="/icons/camping-tent_red.svg"/><link rel="icon" href="https://app.notion.com/icons/camping-tent_red.svg"/><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+/* For default-background callouts, render the border outline. */
+.callout.block-color-default_background {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+/*
+ * Toggles and callouts hold arbitrary content, so they can easily be taller
+ * than a page. They must stay breakable: avoiding breaks inside them makes
+ * Chromium push the whole block onto the next page, which leaves the previous
+ * page mostly empty before every long toggle.
+ */
+details,
+aside {
+	margin: 1.25em 0;
+}
+
+/* Keep a toggle's title on the same page as the start of its content. */
+summary {
+	page-break-after: avoid;
+	break-after: avoid;
+}
+
+/*
+ * Toggle headings render as <h1/h2/h3 style="display:inline-block"> inside
+ * <summary>. Without this reset, the heading's margin-top pushes it below the
+ * ::marker (▼), so the triangle and the title appear on separate lines.
+ */
+summary h1,
+summary h2,
+summary h3,
+summary h4 {
+	margin-top: 0;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding-inline: 0.125rem;
+	padding-block: 0.375rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+/*
+ * Render emoji icons using a ::before pseudo-element to keep the glyph
+ * out of the DOM textContent traversal. This avoids double-rendering icons
+ * in callouts and page titles.
+ * NOTE(slim/html-export-pseudo-icons): I can't tagref this because it will
+ * flag as a duplicate tag after codegen.
+ */
+.icon[data-emoji]::before {
+	content: attr(data-emoji);
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.tab {
+	margin: 1.25em 0;
+	padding-inline: 1rem;
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style><style>@import url('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex-swap.min.css')</style></head><body><article id="6b40fa5b-84fe-839b-a347-818f325847a6" class="page sans" data-notion-page-icon="/icons/camping-tent_red.svg"><header><div class="page-header-icon undefined"><img class="icon notion-static-icon" src="https://app.notion.com/icons/camping-tent_red.svg"/></div><h1 class="page-title" dir="auto">12. Redirection (2026.04.06)</h1><p class="page-description" dir="auto"></p><table class="properties"><tbody><tr class="property-row property-row-date"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/calendar_gray.svg" style="width:14px;height:14px;display:block"/></span>날짜</th><td><time datetime="2026-04-06">2026년 4월 6일</time></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><img src="https://app.notion.com/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>태그</th><td><span class="selected-value select-value-color-green">Meeting</span></td></tr></tbody></table></header><div class="page-body"><h1 id="fb60fa5b-84fe-82b3-a166-81a4427f8910" class="" dir="auto">Z. Last Meeting Summary</h1><ul id="28e0fa5b-84fe-8347-a094-81af21cf0e81" class="bulleted-list" dir="auto"><li style="list-style-type:disc">평가 파이프라인 정리<ul id="3280fa5b-84fe-83b3-8cf1-016e0c02da7e" class="bulleted-list" dir="auto"><li style="list-style-type:circle">데이터셋, 평가 방식</li></ul></li></ul><hr id="b480fa5b-84fe-82db-9beb-016eed952e29" dir="auto"/><h1 id="c9b0fa5b-84fe-82c9-a479-012e3fd88d3d" class="" dir="auto">A. LIBRISONA Dataset</h1><h2 id="8b80fa5b-84fe-82c5-8d5a-81aa990e426a" class="" dir="auto">1. Background</h2><h3 id="ee10fa5b-84fe-8239-b5ff-8169ab6e7504" class="" dir="auto">1.1 <strong>LibriTTS-P</strong></h3><figure id="63c0fa5b-84fe-82c0-ac16-81a622bcde81" class="image" data-notion-image="image.png" dir="ltr"><a href="image.png"><img style="width:616.125px" src="image.png"/></a></figure><ul id="1e60fa5b-84fe-824b-9d8f-017c50f89545" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LibriTTS-P는 text-conditioned TTS 연구를 위해 설계된 다화자 영어 음성 데이터셋</li></ul><ul id="b200fa5b-84fe-8288-b44c-0169216d6855" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LibriVox 오디오북을 기반으로 한 LibriTTS-R에서 파생</li></ul><p id="bf90fa5b-84fe-8284-9aa7-8120a16a4996" class="" dir="auto">구성</p><ul id="d830fa5b-84fe-83bb-bc3b-01f3bc48cc47" class="bulleted-list" dir="auto"><li style="list-style-type:disc">585시간, 2,456명 화자의 영어 음성</li></ul><ul id="2980fa5b-84fe-8301-aa1a-81168c3aa399" class="bulleted-list" dir="auto"><li style="list-style-type:disc">각 발화에 대한 두 가지 프롬프트 제공<ul id="47c0fa5b-84fe-8344-9a93-0179af946aad" class="bulleted-list" dir="auto"><li style="list-style-type:circle"><strong>style prompt</strong>: 발화 단위로 자동 생성. pitch, speaking speed, loudness 통계를 기반으로 5단계 레이블링 후 LLM으로 자연어 변환</li></ul><ul id="e4c0fa5b-84fe-835c-9a2f-8178580c3bd9" class="bulleted-list" dir="auto"><li style="list-style-type:circle"><strong>speaker prompt</strong>: 화자 단위로 수동 작성. 3명의 annotator가 각 화자의 음성을 듣고 perceptual/impression 단어로 기술</li></ul></li></ul><hr id="41e0fa5b-84fe-8256-bdd7-81042b1db874" dir="auto"/><h3 id="ac00fa5b-84fe-8391-b10d-81d2a941c6f2" class="" dir="auto">1.2 Limitation 1: <strong>Speaker Identity의 모호함</strong></h3><ul id="6090fa5b-84fe-8295-8eaf-01485bb804ff" class="bulleted-list" dir="auto"><li style="list-style-type:disc">오디오북 narrator는 narration과 dialogue를 하나의 발화 안에서 다르게 읽음</li></ul><ul id="f8f0fa5b-84fe-8318-97dd-01a0b510f8ca" class="bulleted-list" dir="auto"><li style="list-style-type:disc">예를 들어 <code>&quot;Has she any brains?&quot; asked Ojo.</code> 같은 문장에서 narrator는 따옴표 안의 character 발화와 따옴표 밖의 narrator 발화를 다른 억양으로 읽음<details id="1ba0fa5b-84fe-82d1-868e-012c8f7c06df" open="" class="toggle" dir="auto"><summary>speaker 1284 reference audio</summary><div class="indented"><figure id="16d0fa5b-84fe-8245-b9e2-014c2d69696c" dir="ltr"><div class="source"><a href="1284_0.wav">attachment:3d8321c2-fd70-4cb1-a3dd-953bf004992a:1284_0.wav</a></div></figure><figure id="e2e0fa5b-84fe-83f1-ac82-81d36aace8e1" dir="ltr"><div class="source"><a href="1284_1.wav">attachment:b535db62-c528-4f2e-82a0-86fa5a598f7a:1284_1.wav</a></div></figure></div></details></li></ul><p id="15d0fa5b-84fe-82d0-8b4b-018cd5af815e" class="" dir="auto">문제</p><ol type="1" id="1590fa5b-84fe-8274-84bc-81579ca4318f" class="numbered-list" start="1" dir="auto"><li><strong>reference audio 신뢰성 문제</strong><ul id="c660fa5b-84fe-83dc-a7fa-01a7b3d100aa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">따옴표가 포함된 발화는 화자의 고유한 목소리가 아닌 character 연기가 섞여 있어 speaker identity의 기준으로 사용하기 어려움</li></ul></li></ol><ol type="1" id="2770fa5b-84fe-83ca-b393-81194e8f0445" class="numbered-list" start="2" dir="auto"><li><strong>TTS 모델 생성 문제</strong><ul id="7770fa5b-84fe-8325-a801-019865aa8094" class="bulleted-list" dir="auto"><li style="list-style-type:disc">따옴표가 포함된 텍스트를 입력으로 줄 경우 모델이 다른 억양으로 생성할 수 있어 일관성 평가를 오염시킴</li></ul></li></ol><hr id="61c0fa5b-84fe-820e-8a52-81691db4272b" dir="auto"/><h3 id="26c0fa5b-84fe-82b8-9b42-81d446bb4e8c" class="" dir="auto">1.3 Speaker Distribution 불균형</h3><p id="9d90fa5b-84fe-8306-a6c1-8175ee7feb66" class="" dir="auto">LibriTTS-P test-clean의 화자별 발화 수 분포가 불균등함</p><figure id="41b0fa5b-84fe-8310-b118-01e8a2d3e262" class="image" data-notion-image="image%201.png" dir="ltr"><a href="image%201.png"><img style="width:616.125px" src="image%201.png"/></a></figure><ul id="0f30fa5b-84fe-832c-a1b6-817d30be7309" class="bulleted-list" dir="auto"><li style="list-style-type:disc">화자당 발화 수: min 1개 ~ max 355개, mean 123.8개, std 82.9개</li></ul><ul id="cf60fa5b-84fe-83c2-b74a-015e443095b7" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Gini coefficient: 0.366 (0=완전균등, 1=완전불균등)</li></ul><ul id="cbc0fa5b-84fe-824d-b4ac-811b6655c7aa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">chi-square test: χ²=2165.5, p&lt;0.001 (균등 분포 귀무가설 기각)</li></ul><ul id="b0c0fa5b-84fe-83c2-84f4-011afcab9cf2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">상위 3명 화자가 전체 발화의 20.2% 차지</li></ul><p id="26d0fa5b-84fe-8288-8850-81e8eaeb788d" class="" dir="auto">이 상태로 benchmark를 구성하면 특정 화자를 잘 생성하는 모델이 과도하게 높은 점수를 받아 모델 간 공정한 비교가 불가능</p><hr id="e230fa5b-84fe-82d8-9b6c-01a55b073095" dir="auto"/><h2 id="0130fa5b-84fe-83e0-82d7-011ab553282b" class="" dir="auto">2. Data Curation</h2><h3 id="f3a0fa5b-84fe-8335-9f8d-0159899614aa" class="" dir="auto">2.1 Persona 정의</h3><ul id="74d0fa5b-84fe-831a-9756-817807ba6879" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LibriTTS-P는 화자(speaker)를 평가 단위로 사용</li></ul><ul id="1180fa5b-84fe-8370-b2dd-81d227d44910" class="bulleted-list" dir="auto"><li style="list-style-type:disc">그런데 같은 화자라도 pitch, speed, loudness가 다른 발화들이 섞여 있어 동일한 조건에서의 일관성을 측정하기 어려움</li></ul><ul id="8080fa5b-84fe-8331-9dd5-01052004b574" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이를 해결하기 위해 <strong>(speaker_id, style_prompt_key) 조합을 하나의 persona</strong>로 정의</li></ul><ul id="8300fa5b-84fe-83f9-baf7-81d6c01c0d54" class="bulleted-list" dir="auto"><li style="list-style-type:disc">같은 화자라도 style 조건이 다르면 다른 persona로 취급</li></ul><hr id="7340fa5b-84fe-82e4-b413-813382e385a2" dir="auto"/><h3 id="3ed0fa5b-84fe-8379-9d2e-019800f0baae" class="" dir="auto">2.2 <strong>따옴표 필터링</strong></h3><ul id="ba00fa5b-84fe-82e7-97dd-815dbf593837" class="bulleted-list" dir="auto"><li style="list-style-type:disc">오디오북 narrator는 dialogue와 narration이 혼재한 발화에서 목소리를 바꿈</li></ul><ul id="e740fa5b-84fe-82f3-901b-815e157ee479" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이런 발화는 reference audio와 TTS 생성 음성 모두에서 일관성을 저해</li></ul><p id="1400fa5b-84fe-8320-b720-81fcc5c0af7d" class="" dir="auto"><strong>제거 기준</strong>: 따옴표 쌍의 외부에 narrator 텍스트가 존재하는 경우</p><table id="e150fa5b-84fe-831f-8497-01f9b1e0f05d" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="9690fa5b-84fe-832e-a224-016b645b297e" dir="ltr"><th id="AZ:K" class="simple-table-header-color simple-table-header">케이스</th><th id="sDZV" class="simple-table-header-color simple-table-header">예시</th><th id="R;^m" class="simple-table-header-color simple-table-header">처리</th></tr></thead><tbody><tr id="07a0fa5b-84fe-8317-bedd-81765c5f9f48" dir="ltr"><td id="AZ:K" class="">전체 dialogue</td><td id="sDZV" class=""><code>&quot;It is, good Dame Margolotte.&quot;</code></td><td id="R;^m" class="">유지</td></tr><tr id="57e0fa5b-84fe-8290-b773-01ba5f46eb93" dir="ltr"><td id="AZ:K" class="">dialogue 잔여</td><td id="sDZV" class=""><code>...something.&quot;</code> / <code>&quot;...something</code></td><td id="R;^m" class="">유지</td></tr><tr id="ff50fa5b-84fe-830b-8ae2-01135b90648a" dir="ltr"><td id="AZ:K" class="">dialogue + narrator</td><td id="sDZV" class=""><code>&quot;Has she any brains?&quot; asked Ojo.</code></td><td id="R;^m" class="">제거</td></tr><tr id="0b40fa5b-84fe-83e9-91c8-014ebf4636bd" dir="ltr"><td id="AZ:K" class="">narrator + dialogue</td><td id="sDZV" class=""><code>What is that?&quot; Ojo asked.</code></td><td id="R;^m" class="">제거</td></tr><tr id="db30fa5b-84fe-8382-915e-81fb90d6332d" dir="ltr"><td id="AZ:K" class="">narrator + dialogue + narrator</td><td id="sDZV" class=""><code>&quot;I know,&quot; she said, &quot;it is true.&quot;</code></td><td id="R;^m" class="">제거</td></tr><tr id="7920fa5b-84fe-8375-a3f9-0161d25d209f" dir="ltr"><td id="AZ:K" class="">narrator + embedded quote</td><td id="sDZV" class=""><code>The &quot;Jewel&quot; song was playing.</code></td><td id="R;^m" class="">제거</td></tr></tbody></table><figure id="4f80fa5b-84fe-8283-93f9-818521944323" class="image" data-notion-image="image%202.png" dir="ltr"><a href="image%202.png"><img style="width:616.125px" src="image%202.png"/></a></figure><hr id="cb30fa5b-84fe-8238-a57b-0138ae590bb0" dir="auto"/><h3 id="ee80fa5b-84fe-8260-9880-81c51c2cb4f4" class="" dir="auto">2.3 Cap + 고정 샘플 수</h3><p id="18e0fa5b-84fe-8200-b957-0108ed79f16a" class="" dir="auto"><strong>Cap 적용 (speaker당 최대 persona 수)</strong></p><figure id="c640fa5b-84fe-8323-8183-819355082cfe" class="image" data-notion-image="image%203.png" dir="ltr"><a href="image%203.png"><img style="width:690.328125px" src="image%203.png"/></a></figure><ul id="3c00fa5b-84fe-8381-8a80-814beb12a98c" class="bulleted-list" dir="auto"><li style="list-style-type:disc">필터링 후에도 speaker별 persona 수가 불균등</li></ul><ul id="00e0fa5b-84fe-8392-8d27-81d5d6c7aef8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">특정 speaker가 많은 persona를 가지면 benchmark 결과가 해당 speaker에 편향</li></ul><p id="0bb0fa5b-84fe-82d2-b74d-01f8e827e031" class="" dir="auto"><strong>Cap=5</strong> 적용:</p><ul id="6910fa5b-84fe-820a-abf9-01017861f492" class="bulleted-list" dir="auto"><li style="list-style-type:disc">최대 speaker 점유율: <strong>3.2%</strong></li></ul><ul id="1c90fa5b-84fe-82ab-9285-0185b1a64b35" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이상적 균등 분포: <strong>2.8%</strong></li></ul><ul id="3d60fa5b-84fe-8281-9e5a-0148d38d3605" class="bulleted-list" dir="auto"><li style="list-style-type:disc">편차: <strong>0.4%p</strong> (원본 4.8%p 대비 57.8% 감소)</li></ul><figure id="1300fa5b-84fe-82fe-8ab3-8139887056c5" class="image" data-notion-image="image%204.png" dir="ltr"><a href="image%204.png"><img style="width:690.328125px" src="image%204.png"/></a></figure><h3 id="f790fa5b-84fe-83f6-baca-818363cebafe" class="" dir="auto">고정 샘플 수 (persona당 N=5)</h3><p id="d830fa5b-84fe-82f1-a151-81926764cd99" class="" dir="auto">Persona당 샘플 수를 5개로 고정</p><blockquote id="63b0fa5b-84fe-8344-8d97-8188f9b54fad" class="" dir="auto"><p id="3b50fa5b-84fe-83c2-9dfe-81db77109541" class="" dir="auto">ICC 추정 안정성 기준 (Shrout &amp; Fleiss, 1979): k≥5 권장</p></blockquote><h3 id="4340fa5b-84fe-83fb-b7c3-81ff4cb580b0" class="" dir="auto">N ＊ Cap 선정 과정</h3><table id="be80fa5b-84fe-837c-9912-01e5a7328387" class="simple-table" dir="ltr"><thead class="simple-table-header"><tr id="6e20fa5b-84fe-837f-bcf6-81bfbf27fcd0" dir="ltr"><th id=":`}I" class="simple-table-header-color simple-table-header">N</th><th id="}D=N" class="simple-table-header-color simple-table-header">Cap</th><th id="DzJp" class="simple-table-header-color simple-table-header">Personas</th><th id="^jdz" class="simple-table-header-color simple-table-header">Samples</th><th id="|LiE" class="simple-table-header-color simple-table-header">Speakers</th></tr></thead><tbody><tr id="1ec0fa5b-84fe-830f-9576-81927ec85952" dir="ltr"><td id=":`}I" class="">3</td><td id="}D=N" class="">5</td><td id="DzJp" class="">170</td><td id="^jdz" class="">510</td><td id="|LiE" class="">36</td></tr><tr id="b6b0fa5b-84fe-82d6-b835-016e5168eb0a" dir="ltr"><td id=":`}I" class=""><strong>5</strong></td><td id="}D=N" class=""><strong>5</strong></td><td id="DzJp" class=""><strong>156</strong></td><td id="^jdz" class=""><strong>780</strong></td><td id="|LiE" class=""><strong>36</strong></td></tr><tr id="b8c0fa5b-84fe-8338-9ff0-01f27d665657" dir="ltr"><td id=":`}I" class="">5</td><td id="}D=N" class="">7</td><td id="DzJp" class="">198</td><td id="^jdz" class="">990</td><td id="|LiE" class="">36</td></tr><tr id="a8f0fa5b-84fe-8398-9af0-8181ec40d952" dir="ltr"><td id=":`}I" class="">7</td><td id="}D=N" class="">5</td><td id="DzJp" class="">139</td><td id="^jdz" class="">973</td><td id="|LiE" class="">35</td></tr></tbody></table><p id="7e20fa5b-84fe-82fc-ae21-815a1dbbf4d2" class="" dir="auto">N=5, cap=5 선택 이유:</p><ul id="63f0fa5b-84fe-8246-a61f-81a560e04211" class="bulleted-list" dir="auto"><li style="list-style-type:disc">N=7은 speaker 1명 손실</li></ul><ul id="d0b0fa5b-84fe-8244-936b-81fd85061961" class="bulleted-list" dir="auto"><li style="list-style-type:disc">cap=7 대비 speaker 점유율 편차 절반 (0.4%p vs 0.8%p)</li></ul><ul id="ed70fa5b-84fe-82a2-9635-814f0f449d7f" class="bulleted-list" dir="auto"><li style="list-style-type:disc">780개 샘플은 기존 TTS benchmark 대비 충분한 규모</li></ul><p id="4430fa5b-84fe-8336-aeb2-01bba0bfd20f" class="" dir="auto"><strong>최종 구성: 156개 persona * 5개 샘플 = 780개, 36명 speaker</strong></p><hr id="e5e0fa5b-84fe-82fe-a506-8178c8fddf7e" dir="auto"/><h2 id="8c10fa5b-84fe-8294-9e6c-01a0dc3c9507" class="" dir="auto">3. Column 변경 및 추가</h2><h3 id="2cc0fa5b-84fe-8262-a1e6-81413b08891e" class="" dir="auto"><strong>3.1. Speaker Prompt 통합</strong></h3><p id="ae90fa5b-84fe-820b-9553-81b9683e570b" class="" dir="auto"><strong>문제</strong></p><ul id="9e00fa5b-84fe-83eb-a53f-8199aa4e20c8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LibriTTS-P의 speaker prompt는 3명의 annotator(df1, df2, df3)가 각각 독립적으로 작성</li></ul><ul id="9cb0fa5b-84fe-828c-ba88-81530b3294db" class="bulleted-list" dir="auto"><li style="list-style-type:disc">이를 그대로 사용하면 어떤 annotator의 prompt를 쓸지 선택해야 하는 문제 有</li></ul><ul id="a980fa5b-84fe-825f-979b-016b4ef0ac63" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LibriTTS-P 논문 Table 3에서 annotator 간 Jaccard index가 최대 0.370으로 낮음<br/>→ <strong>세 annotator의 인식이 서로 다름</strong></li></ul><ul id="afd0fa5b-84fe-820b-b4bd-0135e4fecef2" class="bulleted-list" dir="auto"><li style="list-style-type:disc">하나만 선택하면 정보 손실이 발생하고, 셋을 그대로 concatenation하면 중복되거나 모순된 표현이 섞일 수 있음</li></ul><figure id="fa60fa5b-84fe-8346-ba01-81c3a9c27bfa" class="image" data-notion-image="image%205.png" dir="ltr"><a href="image%205.png"><img style="width:690.328125px" src="image%205.png"/></a></figure><p id="9710fa5b-84fe-831a-b199-0124320bac70" class="" dir="auto"><strong>해결</strong></p><p id="05e0fa5b-84fe-8296-8a7e-018ce756f00e" class="" dir="auto">LLM을 이용해 3개의 prompt를 하나의 prompt 로 통합</p><p id="a050fa5b-84fe-8388-af84-819ce673c93a" class="" dir="auto">컬럼 구성:</p><ul id="8000fa5b-84fe-8211-bf0e-01b43ec2d333" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>speaker_prompt_0</code>: LLM으로 통합한 prompt</li></ul><ul id="aeb0fa5b-84fe-82b7-9c7b-0119211aa43b" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><code>speaker_prompt_1</code>, <code>speaker_prompt_2</code>, <code>speaker_prompt_3</code>: 원본 3개 보존</li></ul><hr id="4780fa5b-84fe-8324-9a1a-81e393940b5a" dir="auto"/><h3 id="1b30fa5b-84fe-82cb-add0-81864b54774b" class="" dir="auto"><strong>3.2. Persona ID</strong></h3><p id="dbd0fa5b-84fe-82a4-9d90-014ef09ef22f" class="" dir="auto">(speaker_id, style_prompt_key) 조합을 고유하게 식별하는 column</p><blockquote id="3610fa5b-84fe-8333-a56e-81b56e179d50" class="" dir="auto"><p id="5ce0fa5b-84fe-82c7-a4b7-0177b8650284" class="" dir="auto">Persona ID 형식: <code>speaker_id|style_prompt_key</code></p><p id="faf0fa5b-84fe-83fa-bf4a-81adc173f352" class="" dir="auto">예: <code>1580|F_p-high_s-normal_e-normal</code></p></blockquote><hr id="add0fa5b-84fe-820c-a3e8-81508d22c1a7" dir="auto"/><h3 id="7520fa5b-84fe-8290-bfdf-012bae74065c" class="" dir="auto">3.3 Persona Prompt</h3><p id="56d0fa5b-84fe-83b8-a06d-0105f5482d15" class="" dir="auto">Style prompt와 speaker prompt를 모두 입력으로 사용해 LLM으로 생성한 자연어 prompt</p><hr id="b360fa5b-84fe-83cd-8922-01caabcb1acd" dir="auto"/><h3 id="ba70fa5b-84fe-8286-8dc3-011315d4eec7" class="" dir="auto">3.4 Distance</h3><p id="0db0fa5b-84fe-823b-b284-815b10d0549f" class="" dir="auto">Persona 내 각 sample의 speaker embedding과 persona 중심 간의 거리를 사전 계산하여 제공<br/><strong>중심 정의: Mean Embedding</strong><br/>Persona 내 모든 sample의 speaker embedding을 평균내어 중심으로 정의</p><blockquote id="2fe0fa5b-84fe-8253-9e75-8136e8fbaded" class="" dir="auto"><ul id="2460fa5b-84fe-830a-a58f-812e9da5820a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker verification에서 다발화 평균 embedding이 표준적으로 사용됨</li></ul><ul id="ad70fa5b-84fe-837c-8418-010e9fdbeab3" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Snyder et al. (2018) x-vector, Desplanques et al. (2020) ECAPA-TDNN 등에서 enrollment embedding을 여러 발화의 평균으로 정의</li></ul></blockquote><p id="6610fa5b-84fe-8247-ac0e-01f468a8e302" class="" dir="auto"><strong>Distance Metric: Cosine Distance</strong></p><blockquote id="5d70fa5b-84fe-836d-8ab4-0121896ae713" class="" dir="auto"><ul id="9eb0fa5b-84fe-8333-8348-01601d424f59" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker embedding space에서는<strong> 벡터의 방향</strong>이 화자 정체성을 나타내고 크기는 상대적으로 덜 중요</li></ul><ul id="f0a0fa5b-84fe-8268-a99a-815a37771afa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">L2 distance는 크기에 영향을 받지만 cosine distance는 방향만 비교</li></ul><ul id="ba40fa5b-84fe-829d-84ea-019384ce30e5" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Speaker verification 분야에서 cosine similarity가 표준 metric으로 사용(Kinnunen &amp; Li, 2010)</li></ul></blockquote><h2 id="d890fa5b-84fe-82c6-86b0-8155dd506da7" class="" dir="auto">4. 데이터셋 구성 및 통계</h2><p id="3bf0fa5b-84fe-82bd-9abc-014de78b5a27" class="" dir="auto">split: train, valid(dev), test&lt;curated&gt;</p><figure id="b010fa5b-84fe-82ff-892c-016bc43d7856" class="image" data-notion-image="image%206.png" dir="ltr"><a href="image%206.png"><img style="width:536.9921875px" src="image%206.png"/></a></figure><h1 id="2b20fa5b-84fe-83d3-b91b-01e1d3686bce" class="" dir="auto">B. SONA BenchMark</h1><ul id="7a00fa5b-84fe-83d1-a646-012272dd7a66" class="bulleted-list" dir="auto"><li style="list-style-type:disc">SONAL (LIBRISONA), SONAV (VCTK)</li></ul><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="0cd0fa5b-84fe-82c0-acd3-816a444883f8" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># SONAL Benchmark Suite
+
+## Persona Length Variations:
+- SONAL-B (Base Consistency)
+    Full-specification prompts
+    같은 페르소나, 다른 콘텐츠 프롬프트
+- SONAL-S (Shortened Consistency)
+    Shortened/Under-specified prompts
+    같은 페르소나(짧은 프롬프트), 다른 콘텐츠 프롬프트
+
+## Persona Semantic Variations:
+- SONAL-E (Equivalent Consistency)
+    Paraphrased prompts
+    의미적으로 동등한 페르소나 간 일관성
+- SONAL-D (Distinctive Discriminability)
+    다른 페르소나 간 구별성
+
+## Content Variations:
+- SONAL-P (Perturbation Consistency)
+    Perturbed content prompts
+    같은 콘텐츠 의미, 교란된 표현에도 일관성</code></pre><details open="" class="" dir="auto"><summary style="font-weight:600;font-size:1.5em;line-height:1.3;margin:0"><h2 id="1f60fa5b-84fe-82c2-a806-013888fa432d" style="display:inline-block">figure</h2></summary><div class="indented"><div id="f120fa5b-84fe-8237-8ee1-01132c6b6834" class="column-list" data-notion-column-list="" dir="auto"><div id="2ba0fa5b-84fe-82e5-870b-0127aa9d922e" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><h3 id="6820fa5b-84fe-8229-ad06-81949c19a321" class="" dir="auto">SONAL-B</h3><figure id="9030fa5b-84fe-8362-9af1-81cfe76ccf5e" class="image" data-notion-image="%EA%B7%B8%EB%A6%BC1.png" dir="ltr"><a href="%EA%B7%B8%EB%A6%BC1.png"><img style="width:336px" src="%EA%B7%B8%EB%A6%BC1.png"/></a></figure></div><div id="f950fa5b-84fe-8381-b541-01d7670d144c" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><h3 id="6890fa5b-84fe-83fd-8ff0-811dcdb53d43" class="" dir="auto">SONAL-Ｓ</h3><figure id="f360fa5b-84fe-83af-a9ca-0112c8c44917" class="image" data-notion-image="%EA%B7%B8%EB%A6%BC2.png" dir="ltr"><a href="%EA%B7%B8%EB%A6%BC2.png"><img style="width:690.3203125px" src="%EA%B7%B8%EB%A6%BC2.png"/></a></figure></div></div><div id="6730fa5b-84fe-830c-8706-018f00c6e820" class="column-list" data-notion-column-list="" dir="auto"><div id="6200fa5b-84fe-82d1-9481-0112ac448071" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><h3 id="3f80fa5b-84fe-8366-bb78-01c327911cda" class="" dir="auto">SONAL-Ｅ</h3><figure id="6570fa5b-84fe-8384-9b7f-01cd949e896f" class="image" data-notion-image="%EA%B7%B8%EB%A6%BC3.png" dir="ltr"><a href="%EA%B7%B8%EB%A6%BC3.png"><img style="width:288px" src="%EA%B7%B8%EB%A6%BC3.png"/></a></figure></div><div id="ead0fa5b-84fe-826b-8699-01b277975e60" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><h3 id="28f0fa5b-84fe-83e1-b879-81d751096c0a" class="" dir="auto">SONAL-Ｄ</h3><figure id="9240fa5b-84fe-8276-996d-814634f1dad2" class="image" data-notion-image="%EA%B7%B8%EB%A6%BC4.png" dir="ltr"><a href="%EA%B7%B8%EB%A6%BC4.png"><img style="width:321px" src="%EA%B7%B8%EB%A6%BC4.png"/></a></figure></div></div><h3 id="6a90fa5b-84fe-8358-b26c-81456344d6e2" class="" dir="auto">SONAL-Ｐ</h3><figure id="7db0fa5b-84fe-823f-87e7-010362aab241" class="image" style="text-align:left" data-notion-image="%EA%B7%B8%EB%A6%BC5.png" dir="ltr"><a href="%EA%B7%B8%EB%A6%BC5.png"><img style="width:336px" src="%EA%B7%B8%EB%A6%BC5.png"/></a></figure></div></details><h1 id="9070fa5b-84fe-82b1-a946-81bb1687d6e2" class="" dir="auto">C. Methods</h1><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-icon="💡" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="3d70fa5b-84fe-8227-89de-017bb9ad094c" dir="ltr"><div style="font-size:1.5em"><span class="icon" data-emoji="💡"></span></div><div style="width:100%"><p id="bd60fa5b-84fe-830c-9c77-81bdd805044e" class="" dir="auto">메서드별 접근 방법론 정리</p></div></aside><blockquote id="3550fa5b-84fe-8220-9695-819b829477d4" class="" dir="auto"><strong>News!</strong><br/>- 또 하나의 Text-style prmpt TTS 모델 등장!</blockquote><figure id="a700fa5b-84fe-8204-b1ac-81b878a21ad8" dir="ltr"><a href="https://github.com/k2-fsa/OmniVoice?tab=readme-ov-file" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">GitHub - k2-fsa/OmniVoice: High-Quality Voice Cloning TTS for 600+ Languages</div><div class="bookmark-description">High-Quality Voice Cloning TTS for 600+ Languages. Contribute to k2-fsa/OmniVoice development by creating an account on GitHub.</div></div><div class="bookmark-href"><img src="https://github.com/fluidicon.png" class="icon bookmark-icon"/>https://github.com/k2-fsa/OmniVoice?tab=readme-ov-file</div></div><img src="https://opengraph.githubassets.com/463e0c01545f4c57da5cd722204afbe82911505e87a079e4613150ac4479f2aa/k2-fsa/OmniVoice" class="bookmark-image"/></a></figure><p id="40f0fa5b-84fe-8364-b898-017e1e598eee" class="" dir="auto">
+</p><h2 id="fa90fa5b-84fe-82e9-ac85-81e91ce60cee" class="" dir="auto">C-0. 신기한 것 발견</h2><figure id="33f0fa5b-84fe-8267-a0ca-011cf154a696" dir="ltr"><a href="https://huggingface.co/spaces/ysharma/Make_Custom_Voices_With_KokoroTTS" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">huggingface.co</div></div><div class="bookmark-href">https://huggingface.co/spaces/ysharma/Make_Custom_Voices_With_KokoroTTS</div></div></a></figure><pre id="ab10fa5b-84fe-8398-9819-013167c68409" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># Use voice blending (60-40 mix)
+kokoro-tts input.txt output.wav --voice &quot;af_sarah:60,am_adam:40&quot;
+
+# Use equal voice blend (50-50)
+kokoro-tts input.txt --stream --voice &quot;am_adam,af_sarah&quot;</code></pre><p id="3e10fa5b-84fe-8206-99a8-81a760aec6c5" class="" dir="auto">⇒ 사실 생각해보면 특징 생성은 이미 학습했던 특징 분포에서 보간(interpolation)하거나 외삽(extrapolation)한 것</p><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-icon="💡" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="9880fa5b-84fe-83b0-9447-01bd7929a48c" dir="ltr"><div style="font-size:1.5em"><span class="icon" data-emoji="💡"></span></div><div style="width:100%"><p id="3940fa5b-84fe-83ef-a4ac-81648aace922" class="" dir="auto"><strong>새로운 가설!</strong></p><p id="0c70fa5b-84fe-826b-96c6-01977478871e" class="" dir="auto">Style Prompt TTS 모델의 화자 inconsistency가 학습 데이터 부족으로 인해 화자 디테일에 대한 특징 외삽(extrapolation) 불가능으로 인하여 Content Promt 정보가 섞이게 되는 것</p><p id="a000fa5b-84fe-834a-ac97-81c8eada7001" class="" dir="auto">⇒ 으로 보면 어떨지</p><p id="8e40fa5b-84fe-82fb-b7e7-01adc1e599cb" class="" dir="auto">⇒ 이렇게 수정하면 기존에 원인으로 생각하고 있던 가설 2개를 통합하는 설명 + 이전에 확인한 현상과 관련된 부분도 설명 가능</p><ul id="4dd0fa5b-84fe-83e2-ba8e-81eb7feb7daa" class="bulleted-list" dir="auto"><li style="list-style-type:disc">기존에는 `발생 원인은 모르겠으나 Content Prompt 정보가 섞여 들어가는 것 같다` 였는데, 이러한 설명은 기존에 확인된 Parler-tts의 화자 이름을 text style prompt에 포함했을 경우 왜 유사하게 나오는지를 설명할 수 없었음</li></ul></div></aside><aside class="block-color-gray_background callout" data-notion-callout="" data-notion-callout-icon="💡" data-notion-callout-background="gray_background" style="white-space:pre-wrap;display:flex" id="4180fa5b-84fe-82c6-bc61-81ece3428b0c" dir="ltr"><div style="font-size:1.5em"><span class="icon" data-emoji="💡"></span></div><div style="width:100%"><p id="0c90fa5b-84fe-8263-8c92-01c471934852" class="" dir="auto">기존에 발견했던 현상</p></div></aside><figure id="bd00fa5b-84fe-830d-baff-0124bb81e211" class="image" data-notion-image="image%207.png" dir="ltr"><a href="image%207.png"><img style="width:537px" src="image%207.png"/></a></figure><figure id="27e0fa5b-84fe-8356-9a11-814ebd89c6ec" class="image" data-notion-image="image%208.png" dir="ltr"><a href="image%208.png"><img style="width:703.9910888671875px" src="image%208.png"/></a></figure><p id="9f70fa5b-84fe-8234-badb-81e5dccfd72c" class="" dir="auto">⇒ Style Prompt TTS도 기존 모델들처럼 화자 이름을 지정하면 유사도가 높게 나온다고 Official하게 리포트됨</p><p id="4520fa5b-84fe-8324-a088-01269a7e0256" class="" dir="auto">
+</p><blockquote id="b6d0fa5b-84fe-8396-b702-0167d97ac2a9" class="" dir="auto">정리하면,</blockquote><p id="b4f0fa5b-84fe-83d7-9789-81e95f19736b" class="" dir="auto">현재 TTS 모델에서 발생하고 있는 스피커 inconsistency 문제는</p><ol type="1" id="c890fa5b-84fe-838c-abea-01ad7d2ea7a1" class="numbered-list" start="1" dir="auto"><li><strong>20~60 유사도 구간</strong>:<ul id="9260fa5b-84fe-82b1-97da-01089ba9a4e6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">스타일 프롬프트 TTS 모델들은 학습에 등장한 스타일 프롬프트로는 어떻게 생성해야 하는지는 이해하였으나</li></ul><ul id="a720fa5b-84fe-8216-9d64-016b00c95764" class="bulleted-list" dir="auto"><li style="list-style-type:disc">새로운 입력에 대해서는 이전에 학습했던 스타일의 중간 지점을 어떻게 찾아내야 하는 상황인데, 찾아내야 하다보니까, 콘텐츠 프롬프트에 영향을 받아버린다.</li></ul><ul id="c2c0fa5b-84fe-82b8-ad75-01b532d5edf7" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>진단 요약</strong>: 학습된 스타일의 중간점을 찾다가 content에 영향받음<ul id="6060fa5b-84fe-83a7-8a97-81f3f3e6045d" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Style prompt는 discrete한 텍스트 → 연속적 interpolation이 어려움</li></ul><ul id="1460fa5b-84fe-82ef-907d-81af189efe17" class="bulleted-list" dir="auto"><li style="list-style-type:circle">새로운 조합 시 모델이 &quot;어떤 스타일&quot;을 만들지 모호</li></ul><ul id="1660fa5b-84fe-8308-af68-81cd0e12ec89" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Content가 강한 conditioning signal로 작용해버림</li></ul><ul id="bd30fa5b-84fe-837d-9065-01e27d9d2827" class="bulleted-list" dir="auto"><li style="list-style-type:circle">이건 전형적인 <strong>entanglement</strong> 문제</li></ul></li></ul><ul id="8350fa5b-84fe-820f-af1a-81411e9d3f71" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>해결 방안</strong>: <code>스타일 프롬프트 TTS 모델들을 보이스 클로닝 모델의 특성을 띌 수 있도록 수정한다 형태</code>가 적절할지도</li></ul><ul id="0f60fa5b-84fe-8334-a9c6-810ac94fe4c5" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>가설 검증 방안</strong>: Parler TTS 모델에 학습에 사용된 화자 프롬프트를 넣었을 때와 새 프롬프트를 넣었을 때 유사도 벤치마크 수치 비교</li></ul></li></ol><ol type="1" id="0d50fa5b-84fe-8333-9b61-01718889f756" class="numbered-list" start="2" dir="auto"><li><strong>60~100 유사도 구간</strong>:<ul id="1f00fa5b-84fe-829f-9e88-81f6ffb951b6" class="bulleted-list" dir="auto"><li style="list-style-type:disc">보이스 임베딩과 같은 한정적인 정보로는 새로운 콘텐트 프롬프트에 대해 어떻게 처리해야 할지가 명확하지 않기 때문에 생성 보이스의 디테일이 달라지면서 디테일의 차이 때문에 유사도가 내려간다.</li></ul><ul id="d5a0fa5b-84fe-8381-bbb7-01091985b7c4" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>진단 요약</strong>: 제한된 embedding으로 새로운 content의 디테일 처리 불명확<ul id="eb50fa5b-84fe-82c7-8f39-011360346fb9" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Reference embedding은 <strong>global voice characteristics</strong>만 캡처</li></ul><ul id="e0a0fa5b-84fe-824e-8859-0141ec989b2f" class="bulleted-list" dir="auto"><li style="list-style-type:circle">새로운 content의 <strong>local prosody/intonation</strong> 처리는 모델 귀납편향에 의존</li></ul><ul id="e230fa5b-84fe-821f-a43a-819067fe8bd6" class="bulleted-list" dir="auto"><li style="list-style-type:circle">같은 화자가 다른 문장 읽을 때의 variance를 embedding이 표현 못함</li></ul><ul id="beb0fa5b-84fe-831f-a9f0-016447154832" class="bulleted-list" dir="auto"><li style="list-style-type:circle">이건 <strong>expressiveness의 under-specification</strong> 문제</li></ul></li></ul><ul id="6fa0fa5b-84fe-8230-9b30-01622814e494" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>해결 방안</strong>: ICL로 하나의 보이스 예시에 대해 추론 과정을 통해 디테일에 대해 어떻게 대응해야 할지 구체적으로 정하는 과정이 필요할 것으로 보임</li></ul><ul id="c640fa5b-84fe-828f-ac54-81a2503bef5f" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>가설 검증 방안</strong>: 보이스 클로닝 모델 중, ICL 기능이 탑재된 Qwen3 TTS 모델에 대해 ICL을 활성화 했을 때와 비활성화 했을 때 유사도 벤치마크 수치 비교</li></ul></li></ol><pre id="bb70fa5b-84fe-830b-9aad-014b56f2ccdf" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all">1번은 &quot;what voice&quot; 자체가 불안정
+2번은 &quot;how to speak&quot; 디테일이 불안정</code></pre><p id="1600fa5b-84fe-83de-949d-8149b74be1d9" class="" dir="auto">
+</p><h2 id="cdb0fa5b-84fe-8236-9149-013dc8705a73" class="" dir="auto">C-1. Selective Tuning (Token Addition)</h2><h3 id="af70fa5b-84fe-83cc-b610-0186f9c42588" class="" dir="auto">요약 설명</h3><ul id="25a0fa5b-84fe-839e-a6ed-013ae0dfe71e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">유사도를 올리는 용도로 설계된 special 토큰을 추가하여 같은 스타일 프롬프트- 유사한 레퍼런스 오디오-다른 콘텐츠 프롬프트 페어로 파인튜닝</li></ul><ul id="04c0fa5b-84fe-823b-b8b2-01e9a9688990" class="bulleted-list" dir="auto"><li style="list-style-type:disc">예를 들어, 어텐션 싱크를 명시적으로 고정하는 &lt;consistency&gt; 토큰 등 사용</li></ul><h3 id="5730fa5b-84fe-83b6-96ad-81f6219d3086" class="" dir="auto">이론적 한계</h3><ul id="bc90fa5b-84fe-82fa-9885-01641fe318d8" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Token 추가로 해결되는 문제가 아닐 수 있음</li></ul><h3 id="07c0fa5b-84fe-8245-886f-01a52d85b84c" class="" dir="auto">이전 실험에서 발견된 문제점</h3><ul id="1c90fa5b-84fe-83c2-b5cb-01ed86f7e992" class="bulleted-list" dir="auto"><li style="list-style-type:disc">모델 구조가 사실은 Decoder Only 형태가 아니었을 수 있음</li></ul><div id="5bd0fa5b-84fe-837d-b6ce-81af5d05c3fb" class="column-list" data-notion-column-list="" dir="auto"><div id="22f0fa5b-84fe-8223-a7e1-819d42097e39" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><figure id="fd00fa5b-84fe-8277-83a0-8111932231b5" class="image" data-notion-image="image%209.png" dir="ltr"><a href="image%209.png"><img style="width:4624px" src="image%209.png"/></a></figure><p id="49d0fa5b-84fe-83fc-a54d-81a10adcfb12" class="" dir="auto">
+</p></div><div id="1260fa5b-84fe-826c-b95e-0160242e633c" style="width:50%" class="column" data-notion-column-ratio="0.5" dir="auto"><figure id="74c0fa5b-84fe-824f-a1a4-01369b8d4592" class="image" data-notion-image="image%2010.png" dir="ltr"><a href="image%2010.png"><img style="width:2688px" src="image%2010.png"/></a></figure></div></div><h2 id="9c50fa5b-84fe-831a-a26a-01cf6d03a720" class="" dir="auto">C-2. Convertive Tuning (Text Style Prompt → Reference Embedding)</h2><h3 id="18c0fa5b-84fe-8228-93ca-815ceb65aa83" class="" dir="auto">요약 설명</h3><ul id="83b0fa5b-84fe-826b-880a-81d952388818" class="bulleted-list" dir="auto"><li style="list-style-type:disc">스타일 프롬프트를 입력받아 보이스 클로닝 모델에 입력할 수 있는 레퍼런스 임베딩으로 변환</li></ul><ul id="c300fa5b-84fe-83cb-8add-0197caa4bbac" class="bulleted-list" dir="auto"><li style="list-style-type:disc">align 과정이 필요한데, 다른 스타일 TTS 모델을 음성 생성 부분을 제거하고 레퍼런스 임베딩 변환기로 사용할 수 있다면 가능할 것으로 보임</li></ul><ul id="1150fa5b-84fe-8288-b9ed-81b635e3b771" class="bulleted-list" dir="auto"><li style="list-style-type:disc"><strong>두 paradigm의 bridge</strong><ul id="2fe0fa5b-84fe-83f8-a598-010d666f44f1" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Style prompt의 interpretability</li></ul><ul id="9f00fa5b-84fe-83ff-b4b4-01bd4287626c" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Voice cloning의 consistency</li></ul></li></ul><h3 id="9400fa5b-84fe-836d-a5f6-011befe8be18" class="" dir="auto">이론적 한계</h3><ul id="46c0fa5b-84fe-8245-a4e7-015aee66735e" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Embedding space mismatch:<ul id="3bd0fa5b-84fe-82b9-89f7-014bd0f5d6af" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Style TTS의 latent ≠ Voice cloning의 reference embedding</li></ul><ul id="37d0fa5b-84fe-832d-bf4e-81084c4887c3" class="bulleted-list" dir="auto"><li style="list-style-type:circle">두 space가 호환되려면 alignment 필요</li></ul><ul id="9650fa5b-84fe-8318-b228-019c307e4924" class="bulleted-list" dir="auto"><li style="list-style-type:circle">이건 non-trivial한 문제</li></ul></li></ul><ul id="c020fa5b-84fe-835b-a410-010178c53560" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Alignment 방법:<ul id="8200fa5b-84fe-8237-a37b-81a94fbb0350" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Option A: Joint training (둘 다 처음부터)</li></ul><ul id="2bb0fa5b-84fe-82ee-9580-818b232e672c" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Option B: Adapter/projection layer (freeze 후 align)</li></ul><ul id="4190fa5b-84fe-8359-aa68-810aa17212f4" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Option C: Contrastive learning (같은 audio → 같은 embedding)</li></ul></li></ul><ul id="7a50fa5b-84fe-8349-9a20-011b7fbbf6fb" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Information loss:<ul id="d930fa5b-84fe-82f0-9b9a-812c1e0bbedb" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Text style prompt → 실제 음성보다 정보 적음</li></ul><ul id="4880fa5b-84fe-83b3-88e1-017fc83877b4" class="bulleted-list" dir="auto"><li style="list-style-type:circle">&quot;젊은 여성의 밝은 목소리&quot; vs 실제 recording</li></ul><ul id="c0b0fa5b-84fe-838a-bf10-812afc9cc101" class="bulleted-list" dir="auto"><li style="list-style-type:circle">디테일 재현에 한계</li></ul></li></ul><h2 id="fc40fa5b-84fe-826b-8eb2-816d3b514b47" class="" dir="auto">C-3. Hypernetwork LoRA Generation</h2><h3 id="9fb0fa5b-84fe-82f3-b57a-81fd986e388a" class="" dir="auto">요약 설명</h3><ul id="4020fa5b-84fe-82df-b7f1-01040d318754" class="bulleted-list" dir="auto"><li style="list-style-type:disc">오디오와 스타일 프롬프트를 동시에 처리할 수 있는 인코더가 존재하고, 그 인코더의 출력으로 뒷단 TTS 모델에 붙일 수 있는 LoRA를 생성하여 모델을 forward 패스 만으로 튜닝</li></ul><h3 id="a7d0fa5b-84fe-834a-8b75-011442feb6a3" class="" dir="auto">이론적 한계</h3><ul id="bf60fa5b-84fe-8222-a40a-015c98eee2c7" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Training complexity:<ul id="df70fa5b-84fe-8317-a2a0-8111fb9033d7" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Hypernetwork를 어떻게 학습?</li></ul><ul id="a260fa5b-84fe-82fe-9416-81ad77c40847" class="bulleted-list" dir="auto"><li style="list-style-type:circle">&quot;좋은 LoRA&quot;의 정의는?</li></ul><ul id="ee10fa5b-84fe-82c3-bd6a-81e87d02873f" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Meta-learning objective 설계가 핵심</li></ul></li></ul><ul id="da50fa5b-84fe-821a-88af-81271f51d00d" class="bulleted-list" dir="auto"><li style="list-style-type:disc">LoRA space exploration:<ul id="c5b0fa5b-84fe-8262-a16a-811ee44553ee" class="bulleted-list" dir="auto"><li style="list-style-type:circle">LoRA parameter space가 거대함</li></ul><ul id="d750fa5b-84fe-83e7-a280-01e7ebccf8a7" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Hypernetwork가 이걸 잘 커버할 수 있나?</li></ul><ul id="d620fa5b-84fe-83ad-9bad-8146ab89b2cb" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Generalization 우려</li></ul></li></ul><ul id="2600fa5b-84fe-8357-83d3-0175f944e146" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Computational cost:<ul id="bab0fa5b-84fe-82b2-b728-0172e040fa95" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Hypernetwork 자체가 꽤 클 수 있음</li></ul><ul id="0310fa5b-84fe-8375-b1a1-01e89b88a6ea" class="bulleted-list" dir="auto"><li style="list-style-type:circle">LoRA 생성 + application overhead</li></ul><ul id="2350fa5b-84fe-8380-bbab-8134e49e9816" class="bulleted-list" dir="auto"><li style="list-style-type:circle">Real-time inference에 부담</li></ul></li></ul><h2 id="b5e0fa5b-84fe-83c8-8110-81b73624890b" class="" dir="auto">C-4. Test-time Training / Adaptation</h2><h3 id="1ce0fa5b-84fe-829e-96c0-010323b2652a" class="" dir="auto">요약 설명</h3><ul id="f0f0fa5b-84fe-8308-9281-0121698bf914" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Base TTS 모델에 TTT 모듈을 장착하고 모델을 런타임에 빠르게 튜닝</li></ul><ul id="3230fa5b-84fe-8304-ab75-011aa93b6aac" class="bulleted-list" dir="auto"><li style="list-style-type:disc">입력된 스타일 프롬프트에 대해 3가지 정도의 서로 다른 콘텐츠로 생성한 후, 그 3개의 음성이 코사인 유사도가 비슷하도록 런타임에 튜닝</li></ul><h3 id="fd50fa5b-84fe-83e5-97b3-81d7d1ba9b69" class="" dir="auto">이론적 한계</h3><ul id="f150fa5b-84fe-83ed-8ac8-0102fff0f0fc" class="bulleted-list" dir="auto"><li style="list-style-type:disc">Parler-TTS에 이미 유사한 방식으로 training 했던 기억이 있음</li></ul><ul id="0430fa5b-84fe-823d-9650-01117be5902a" class="bulleted-list" dir="auto"><li style="list-style-type:disc">학습 가능한 상태로 모델을 배포해야 하는 불편함</li></ul><hr id="69f0fa5b-84fe-82cf-bea4-0113c8fcdc82" dir="auto"/><p id="29e0fa5b-84fe-8331-8466-01580fdbfaab" class="" dir="auto">
+</p><h1 id="e6f0fa5b-84fe-8209-9d75-8186f10cabe6" class="" dir="auto">F. Feedback</h1><pre id="03e0fa5b-84fe-833f-a545-811c9bd985a4" class="code code-wrap" data-notion-code-syntax="markdown"><code class="language-markdown" style="white-space:pre-wrap;word-break:break-all"># 교수님 피드백 기록</code></pre><p id="cd30fa5b-84fe-822f-badf-81e7b23bcd26" class="" dir="auto">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
